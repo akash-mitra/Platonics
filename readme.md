@@ -30,6 +30,9 @@ Thank you for considering contributing to Bloggy framework!
 
 If you discover a security vulnerability within Bloggy, please send an e-mail to Akash Mitra at akashmitra@gmail.com. All security vulnerabilities will be promptly addressed.
 
+## Credit
+This Bloggy platform is built on top of @laravel framework by Taylor Otwell (@taylorotwell)
+
 ## License
 
 The Bloggy framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
