@@ -64,3 +64,58 @@ function populateSelect (e, url, p, defValue)
     		}
     	});
 }
+
+
+
+
+
+/*
+ |--------------------------------------------------------------------------
+ |  
+ |--------------------------------------------------------------------------
+ */
+function makeAjaxRequest (param)
+{
+	param.data['_token'] = $('meta[name="csrf-token"]').attr('content');
+	// console.log(param);
+	$.ajax ({
+		method: param.method,
+		url: param.to,
+		data: param.data,
+		beforeSend: (typeof param.before === 'undefined'? waitWheel("Talking to the server...") : param.before),
+		success: (typeof param.success === 'undefined'? ajaxSuccess : param.success),
+		error: (typeof param.success === 'undefined'? ajaxError : param.error),
+	});
+}
+
+function ajaxSuccess ()
+{
+	$('#loadingDiv').remove();
+	//console.log('1');	
+}
+
+function ajaxError ()
+{
+	let msg = '<div class="alert alert-danger"><strong>Error!</strong> Error occurred!</div>'
+	$('#loadingDivMsg').html (msg);
+	//console.log('2');
+}
+
+function waitWheel (msg)
+{
+	let content = '<div id="loadingDiv"><div><h7 id="loadingDivMsg"><i class="fa fa-spinner fa-spin fa-2x fa-fw"></i>&nbsp;' + msg + '</h7></div></div>';
+	$("body").append(content);
+}
+
+
+function getIconByUserType(type)
+{
+	if (type == 'Registered') 
+		return '<i class="fa fa-user-o"></i>&nbsp';
+	else if (type === 'Author')
+		return '<i class="fa fa-pencil"></i>&nbsp';
+	else if (type === 'Editor')
+		return '<i class="fa fa-scissors"></i>&nbsp';
+	else 
+		return '<i class="fa fa-dot-circle-o"></i>&nbsp';
+}

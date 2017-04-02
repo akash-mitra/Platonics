@@ -3,29 +3,29 @@
 @section('aside')
 	<div class="p20">
 		<div class="topline">
-			<h3>Admin Menu</h3>
+			<h3>Menu</h3>
 		</div>
 
-		<h4>Category Management</h4>
+		<!-- <h4>Category Management</h4>
 		<ul>
 			<li>Menu 1</li>
 			<li>Menu 2</li>
 			<li>Menu 3</li>
-		</ul>
+		</ul> -->
 	</div>
 @endsection
 
 @section('main')
 	<div class="p20">
 		<div class="topline">
-			Home > Admin > Settings
+			<a href="/">Home</a> > <a href="{{route('profile')}}">Profile</a>
 		</div>
 
-		<h3>
+		<h3 style="line-height: 26px">
 			<img src="{{ $user->avatar }}" style="display: block; margin: 0 10px 0 0" align="left">
 			{{ $user->name }}	
 			<br>
-			<small>Profile Page for {{ $user->name }}</small>
+			<small style="margin-top: 0px">Profile Page for {{ $user->name }}</small>
 		</h3>
 		<hr>
 		<h4>Basic Information</h4>
@@ -44,12 +44,12 @@
 				</tr>
 				<tr>
 					<td><i class="fa fa-fw fa-calendar-o"></i>&nbsp;Member Since:</td>
-					<td>{{ $user->created_at }}</td>
+					<td>{{ $user->created_at->toFormattedDateString() }}</td>
 					<td>Public</td>
 				</tr>
 				<tr>
 					<td><i class="fa fa-fw fa-clock-o"></i>&nbsp;Last updated:</td>
-					<td>{{ $user->updated_at }}</td>
+					<td>{{ $user->updated_at->diffForHumans() }}</td>
 					<td>Public</td>
 				</tr>
 				

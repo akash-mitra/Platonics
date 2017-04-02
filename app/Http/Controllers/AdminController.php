@@ -7,15 +7,21 @@ use Illuminate\Http\Request;
 
 class AdminController extends Controller
 {
-    protected function show ()
-    {
-    	return view ('admin.show');
-    }
+
+	public function __construct()
+	{
+		$this->middleware('admin');
+	}
+
+	protected function show ()
+	{
+		return view ('admin.show');
+	}
 
 
-   protected function users ()
-   {
-   	$users = User::all();
-   	return view('admin.users')->withUsers($users);
-   }
+	protected function users ()
+	{
+		$users = User::all();
+		return view('admin.users')->withUsers($users);
+	}
 }

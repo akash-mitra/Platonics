@@ -17,7 +17,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'type', 'email', 'password', 'slug'
     ];
 
     /**
@@ -48,4 +48,23 @@ class User extends Authenticatable
     {
         return $this->hasMany(Article::class);
     }
+
+
+    public function setType ($type)
+    {
+        // error out if provided type is not recognizable
+        if (! in_array($type, ['Admin', 'Registered', 'Author', 'Editor']))
+            abort (422, 'Invalid argument');
+
+        $this->type = $type;
+        return $this->save();
+
+    }
+
+    // use it as $users = App\User::ofType('admin')->get();
+    public function scopeOfType($query, $type)
+    {
+        return $query->where('type', $type);
+    }
+
 }

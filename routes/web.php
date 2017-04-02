@@ -21,8 +21,11 @@ Route::get('/', function () { return view('index'); })->name('homepage');
 Auth::routes();
 Route::get('/redirect/{provider}', 'Auth\RegisterController@redirectToProvider');
 Route::get('/auth/{provider}/callback', 'Auth\RegisterController@handleProviderCallback');
-Route::get('/profile', 'ProfileController@user')->name('profile');
+Route::get('/profile', 'ProfileController@self')->name('profile');
+Route::get('/profile/user/{slug}', 'ProfileController@user')->name('user');
 
+Route::post('/profile/user/change/type', 'ProfileController@setType')->name('user-change-type');
+Route::post('/profile/user/delete', 'ProfileController@delete')->name('delete-user');
 /* 
  |--------------------------------------------------------------------------
  | admin user and related routes 

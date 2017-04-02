@@ -158,6 +158,22 @@ blockquote {
 	padding: 10px 0;
 	margin-bottom: 20px;
 }
+
+
+#loadingDiv{
+    position: fixed;
+    top: 50%;
+    left: 30%;
+    width: 40%;
+    height: 65px;
+    background-color: #fff;
+    z-index: 10000000;
+    opacity: 0.9;
+    padding: 20px;
+    border: 1px solid #AAA;
+    box-shadow: 8px 8px 20px #888;
+    display: table;
+}
 	
 /*
  * Social Buttons for Bootstrap

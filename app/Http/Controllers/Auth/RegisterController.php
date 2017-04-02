@@ -120,7 +120,7 @@ class RegisterController extends Controller
         if ($loginUser)
         {
             // get the user
-            $user = $loginUser->user;
+            $user = $loginUser->user; 
 
             // update the avatar in user and login provider
             $user->avatar = $providerUser->getAvatar();
@@ -141,11 +141,14 @@ class RegisterController extends Controller
                 'email' => $providerUser->getEmail()
             ]);
 
-            // do not update the name if already there
+            // do not update the name and type if already there
             $user->name   = empty($user->name)? $providerUser->getName(): $user->name;
+            $user->type   = empty($user->type)? 'Registered': $user->type; 
+
 
             // refresh the avatar everytime
             $user->avatar = $providerUser->getAvatar();
+            $user->slug   = uniqid (mt_rand(), true);
 
             // persist the record to database
             $user->save();
