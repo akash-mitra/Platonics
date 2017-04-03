@@ -34,7 +34,7 @@
 						<td>{{$category->id}}</td>
 						
 						<td>
-							<a class="" href="{{route('category-view', str_slug($category->id . ' ' . $category->title))}}">
+							<a class="" href="{{route('category-view', $category->name)}}">
 							{{$category->name}}
 							</a>
 						</td>

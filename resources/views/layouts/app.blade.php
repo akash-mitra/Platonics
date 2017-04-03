@@ -47,8 +47,9 @@
                 <div class="collapse navbar-collapse" id="app-navbar-collapse">
                     <!-- Left Side Of Navbar -->
                     <ul class="nav navbar-nav">
-                        <li><a href="{{ route('homepage') }}">Content</a></li>
-                        <li><a href="{{ route('admin') }}">Admin</a></li>
+                        @foreach(App\Category::all() as $c)
+                            <li><a href="{{route('category-view', $c->name)}}">{{$c->name}}</a></li>
+                        @endforeach
                     </ul>
 
                     <!-- Right Side Of Navbar -->

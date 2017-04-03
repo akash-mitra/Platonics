@@ -53,4 +53,11 @@ class CategoryController extends Controller
             ->route('category-edit', $id)
             ->withMessage('Category saved');
     }
+
+
+    protected function show ($name)
+    {
+        $articles = Category::whereName($name)->first()->articles()->get();
+        return view ('category.show', compact('articles'));
+    }
 }
