@@ -44,6 +44,15 @@
                             {{ csrf_field() }}
                         </form>
                     </li>
+
+                    @if(Auth::user()->type == 'Admin')
+                        <li>
+                            <a href="{{ route('admin')}}">
+                                <i class="fa fa-fw fa-dot-circle-o"></i>&nbsp;
+                                Admin Menu
+                            </a>
+                        </li>
+                    @endif
                 </ul>
             </li>
         @endif

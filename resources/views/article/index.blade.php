@@ -5,7 +5,7 @@
 @endsection
 
 @section('main')
-
+	
 	<div class="p30">
 		<div class="topline">
 			<a href="/">Home</a> > <a href="/admin">Admin</a>
@@ -25,7 +25,7 @@
 		<table class="table table-sm">
 			<thead>
 				<tr>
-					<th>#</th><th>Title</th><th>Author</th><th>Last Updated</th><th>Actions</th>
+					<th>#</th><th>Title</th><th>Category</th><th>Author</th><th>Published</th><th>Last Updated</th><th>Actions</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -38,7 +38,9 @@
 							{{$article->title}}
 							</a>
 						</td>
-						<td>{{$article->name}}</td>
+						<td>{{$article->category}}</td>
+						<td>{{$article->author}}</td>
+						<td>{{\Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $article->created_at)->toFormattedDateString()}}</td>
 						<td>
 							{{\Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $article->updated_at)->diffForHumans()}}
 						</td>

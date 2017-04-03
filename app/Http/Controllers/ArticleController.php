@@ -14,10 +14,17 @@ class ArticleController extends Controller
         $this->middleware('auth');
     }
 
-    protected function list ()
+    /*
+     * This is a helper function to query only the attributes
+     * required in this view. This helps in avoiding selection
+     * of large text columns and clog up memory
+     */
+    private function list ()
     {
-        return DB::select('select a.id, a.title, a.created_at, a.updated_at, b.name 
-            from articles a inner join users b on a.user_id = b.id
+        return DB::select('select a.id, a.title, a.created_at, a.updated_at, u.name author, c.name category 
+            from articles a 
+            inner join users u on a.user_id = u.id 
+            inner join categories c on a.category_id = c.id
             order by a.updated_at desc');
     }
 

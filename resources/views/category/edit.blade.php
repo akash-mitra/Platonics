@@ -7,10 +7,12 @@
 @section('main')
 	<div class="p30">
 		<div class="topline">
-			Home > Admin > Edit category
+			<a href="/">Home</a> &gt;
+			<a href="{{route('admin')}}">Admin</a> &gt;
+			<a href="{{route('category-list')}}">Categories</a> &gt;
 		</div>
 		<br>
-		
+		  
 		  <form method="post" action="{{route('category-save')}}" id="frm-edit">
 		  	{{ csrf_field() }}
 		  	{{ method_field('patch') }}
@@ -39,7 +41,12 @@
 			    	data-validation='required'>{!! $category->description !!}</textarea>
 			</div>
 		</form>
-		<button id="btn-submit" class="btn btn-success pull-right">Update</button>  
+		<p>
+		  <button id="btn-submit" class="btn btn-success pull-right">Update</button>  
+		  
+		  <button id="btn-close" class="btn btn-default pull-left">Close</button>  
+
+		 </p>
 		<p>&nbsp;</p>
 	</div>
 	
@@ -51,6 +58,10 @@
 		$('#btn-submit').click (function () {
 			if (validate('#frm-edit')) 
 				$('#frm-edit').submit();
+		});
+
+		$('#btn-close').click (function () {
+			location.href = "{{route('category-list')}}";
 		});
 
 	</script>

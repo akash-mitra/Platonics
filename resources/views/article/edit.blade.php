@@ -7,7 +7,9 @@
 @section('main')
 	<div class="p30">
 		<div class="topline">
-			Home > Admin > Settings
+			<a href="/">Home</a> &gt;
+			<a href="{{route('admin')}}">Admin</a> &gt;
+			<a href="{{route('article-index')}}">Articles</a> &gt;
 		</div>
 		<br>
 		
@@ -21,8 +23,15 @@
 		    	<a href="#meta" aria-controls="meta" role="tab" data-toggle="tab">Meta</a>
 		    </li>
 
+		    
 		    <li role="presentation" class="pull-right">
 		    	<button id="btn-submit" class="btn btn-success">Save</button>
+		    </li>
+		    <li role="presentation" class="pull-right">
+		    	&nbsp;
+		    </li>
+		    <li role="presentation" class="pull-right">
+		    	<button id="btn-close" class="btn btn-default">Close</button>
 		    </li>
 		  </ul>
 
@@ -126,6 +135,11 @@
 
 @section('page.script')
 	<script>
+
+		$('#btn-close').click (function () {
+			location.href= "{{route('article-index')}}";
+		});
+		
 		$('#btn-submit').click (function () {
 			if (validate('#frm-edit')) 
 				$('#frm-edit').submit();

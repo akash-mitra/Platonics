@@ -58,6 +58,9 @@ class CategoryController extends Controller
     protected function show ($name)
     {
         $articles = Category::whereName($name)->first()->articles()->get();
-        return view ('category.show', compact('articles'));
+        if (count($articles) != 0)
+            return view ('category.show', compact('articles'));
+        else 
+            return view ('category.empty')->withCategory($name);
     }
 }
