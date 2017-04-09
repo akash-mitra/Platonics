@@ -23,6 +23,7 @@ class CategoryController extends Controller
     	$doc = new Category ([
     		'name' => strip_tags($request->input('head')),
     		'description' => $request->input('body'),
+            'parent_id' => $request->input('cat'),
     	]);
 
     	$doc->save();
@@ -47,6 +48,7 @@ class CategoryController extends Controller
 
         $category->name = strip_tags($request->input('head'));
         $category->description = $request->input('body'); 
+        $category->parent_id = $request->input('cat'); 
         $category->save();
         
         return redirect()

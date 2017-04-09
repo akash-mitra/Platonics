@@ -25,18 +25,24 @@
 		<table class="table table-sm">
 			<thead>
 				<tr>
-					<th>#</th><th>Category</th><th>Description</th><th>Last Updated</th><th>Actions</th>
+					<th>#</th><th>Category</th><th>Parent Category</th><th>Description</th><th>Last Updated</th><th>Actions</th>
 				</tr>
 			</thead>
 			<tbody>
 				@foreach($categories as $category)
 					<tr>
 						<td>{{$category->id}}</td>
-						
 						<td>
 							<a class="" href="{{route('category-view', $category->name)}}">
 							{{$category->name}}
 							</a>
+						</td>
+						<td>
+							@if($category->parent()->count() == 0)
+								None
+							@else
+								{{ $category->parent->name }}
+							@endif
 						</td>
 						<td>{{ substr(strip_tags($category->description), 0, 50) . (strlen($category->description)>50?"...":"") }}</td>
 						<td>

@@ -15,6 +15,7 @@ class ApiCategoryController extends Controller
 		/* 'database_field' => 'new_label' */
 		'name' => 'label',
 		'id'  => 'record',
+		'parent_id' => 'parent_record'
 	];
 
 

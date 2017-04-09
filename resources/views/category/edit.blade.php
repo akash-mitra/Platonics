@@ -31,6 +31,15 @@
 			</div>
 
 			<div class="form-group">
+			    <label for="inputCat">Select a category</label>
+			    <select 
+			    	class="form-control custom-control" 
+			    	id="inputCat" 
+			    	name="cat">
+			    </select>
+			</div>
+
+			<div class="form-group">
 			    <label for="inputText">Category Description</label>
 			    <textarea 
 			    	class="form-control custom-control" 
@@ -62,6 +71,22 @@
 
 		$('#btn-close').click (function () {
 			location.href = "{{route('category-list')}}";
+		});
+
+		$(document).ready(function () {
+			populateSelect ('#inputCat', 
+				'{{route("api-categories")}}',
+				{"key": "record", "value":"label"},
+				'{{$category->parent_id}}');
+
+			@if(empty($category->parent_id))
+				// add one aadditional record for blank category "--"
+				$('#inputCat').append($('<option>', {
+				    value: '',
+				    text: '--',
+				    selected: true
+				}));
+			@endif
 		});
 
 	</script>

@@ -26,6 +26,15 @@
 			</div>
 
 			<div class="form-group">
+			    <label for="inputCat">Select parent category</label>
+			    <select 
+			    	class="form-control custom-control" 
+			    	id="inputCat" 
+			    	name="cat">
+			    </select>
+			</div>
+
+			<div class="form-group">
 			    <label for="inputText">Category Description</label>
 			    <textarea 
 			    	class="form-control custom-control" 
@@ -45,10 +54,24 @@
 
 @section('page.script')
 	<script>
+		$(document).ready(function () {
+
+			// populate the category selection options 
+			populateSelect ('#inputCat', '{{route("api-categories")}}');
+
+			// add one aadditional record for blank category "--"
+			$('#inputCat').append($('<option>', {
+			    value: '',
+			    text: '--'
+			}));
+		});
+
+		// form submit
 		$('#btn-submit').click (function () {
 			if (validate('#frm-create')) 
 				$('#frm-create').submit();
 		});
+
 
 	</script>
 @endsection
