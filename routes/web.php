@@ -63,6 +63,6 @@ Route::patch('/admin/article/save', 'ArticleController@save')->name('article-sav
  |--------------------------------------------------------------------------
  */
 Route::get('/article/{slug}', 'ArticleController@show')->name('article-view');
-Route::get('/category/{name}', 'CategoryController@show')->name('category-view');
+Route::get('/category/{slug}', 'CategoryController@show')->name('category-view');
 
 Route::get('/api/v1/get/categories', 'API\v1\ApiCategoryController@getCategories')->name('api-categories');

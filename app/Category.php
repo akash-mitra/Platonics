@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class Category extends Model
 {
     protected $fillable = [
-    	'name', 'parent_id', 'description'
+    	'name', 'slug', 'parent_id', 'description'
     ];
 
     // this ensure accessor property is included in the Category object
@@ -31,7 +31,7 @@ class Category extends Model
 
     public function getUrlAttribute()
     {
-        return '/category/' . $this->name;
+        return '/category/' . $this->slug;
     }
 
 }

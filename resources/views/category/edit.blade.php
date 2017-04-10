@@ -31,6 +31,19 @@
 			</div>
 
 			<div class="form-group">
+			    <label for="inputUrl">URL Slug</label>
+			    <input 
+			    	type="text" 
+			    	class="form-control custom-control" 
+			    	id="inputUrl" 
+			    	name="url" 
+			    	data-validation='required' 
+			    	value="{{$category->slug}}" 
+			    	readonly 
+			    />
+			</div>
+
+			<div class="form-group">
 			    <label for="inputCat">Select a category</label>
 			    <select 
 			    	class="form-control custom-control" 
@@ -64,13 +77,23 @@
 
 @section('page.script')
 	<script>
+		// for submit handling
 		$('#btn-submit').click (function () {
 			if (validate('#frm-edit')) 
 				$('#frm-edit').submit();
 		});
 
+		// handles the close button by redirecting
+		// the page to the category list 
 		$('#btn-close').click (function () {
 			location.href = "{{route('category-list')}}";
+		});
+
+		// This code generates the Slug as and when category
+		// name is typed out
+		$('#inputTitle').keyup(function () {
+			let url = $('#inputTitle').val();
+			$('#inputUrl').val(url.toLowerCase().replace(/ /g, '-')); 
 		});
 
 		$(document).ready(function () {

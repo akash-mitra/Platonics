@@ -7,7 +7,8 @@
 @section('main')
 	<div class="p30">
 		<div class="topline">
-			Home > Admin > Create new Category
+			<a href="/">Home</a> > 
+			<a href="route('admin')">Admin</a> > Create new Category
 		</div>
 		<br>
 		  <!-- Tab panes -->
@@ -22,6 +23,18 @@
 			    	placeholder="News or Sports..."
 			    	name="head" 
 			    	data-validation='required'
+			    />
+			</div>
+
+			<div class="form-group">
+			    <label for="inputUrl">URL Slug</label>
+			    <input 
+			    	type="text" 
+			    	class="form-control custom-control" 
+			    	id="inputUrl" 
+			    	name="url" 
+			    	data-validation='required' 
+			    	readonly 
 			    />
 			</div>
 
@@ -64,6 +77,13 @@
 			    value: '',
 			    text: '--'
 			}));
+		});
+
+		// This code generates the Slug as and when category
+		// name is typed out
+		$('#inputTitle').keyup(function () {
+			let url = $('#inputTitle').val();
+			$('#inputUrl').val(url.toLowerCase().replace(/ /g, '-')); 
 		});
 
 		// form submit

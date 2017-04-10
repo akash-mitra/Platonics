@@ -12,6 +12,11 @@ class Article extends Model
 		'title', 'intro', 'category_id', 'fulltext', 'metakey', 'metadesc', 'publish'
 	];
 
+	// this ensure accessor property is included in the Article object
+	protected $appends = [
+	    'url'
+	];
+
 
 	public function author()
 	{
@@ -26,5 +31,10 @@ class Article extends Model
 	public function getTommyAttribute()
 	{
 		return $this->id;
+	}
+
+	public function getUrlAttribute ()
+	{
+		return '/article/' . str_slug($this->id . ' ' . $this->title);
 	}
 }

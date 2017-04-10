@@ -20,8 +20,10 @@ class CategoryController extends Controller
 
     protected function store (Request $request)
     {
+        dd($request->input());
     	$doc = new Category ([
     		'name' => strip_tags($request->input('head')),
+            'slug' => strip_tags($request->input('url')),
     		'description' => $request->input('body'),
             'parent_id' => $request->input('cat'),
     	]);
@@ -47,6 +49,7 @@ class CategoryController extends Controller
         $category = Category::findOrFail($id);
 
         $category->name = strip_tags($request->input('head'));
+        $category->slug = $request->input('url'); 
         $category->description = $request->input('body'); 
         $category->parent_id = $request->input('cat'); 
         $category->save();
@@ -57,12 +60,13 @@ class CategoryController extends Controller
     }
 
 
-    protected function show ($name)
+    protected function show ($slug)
     {
-        $articles = Category::whereName($name)->first()->articles()->get();
+        $category = Category::whereSlug($slug)->first();
+        $articles = $category->articles()->get();
         if (count($articles) != 0)
             return view ('category.show', compact('articles'));
         else 
-            return view ('category.empty')->withCategory($name);
+            return view ('category.empty')->withCategory($category->name);
     }
 }

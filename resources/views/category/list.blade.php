@@ -33,7 +33,7 @@
 					<tr>
 						<td>{{$category->id}}</td>
 						<td>
-							<a class="" href="{{route('category-view', $category->name)}}">
+							<a class="" href="{{route('category-view', $category->slug)}}">
 							{{$category->name}}
 							</a>
 						</td>
