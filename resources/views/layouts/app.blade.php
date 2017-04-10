@@ -46,11 +46,7 @@
 
                 <div class="collapse navbar-collapse" id="app-navbar-collapse">
                     <!-- Left Side Of Navbar -->
-                    <ul class="nav navbar-nav">
-                        @foreach(App\Category::where('parent_id', null)->get() as $c)
-                            <li><a href="{{route('category-view', $c->name)}}">{{$c->name}}</a></li>
-                        @endforeach
-                    </ul>
+                    @include('partials.menu')
 
                     <!-- Right Side Of Navbar -->
                     @include('partials.userbar')

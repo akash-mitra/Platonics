@@ -12,6 +12,10 @@ class Category extends Model
     	'name', 'parent_id', 'description'
     ];
 
+    // this ensure accessor property is included in the Category object
+    protected $appends = [
+        'url'
+    ];
 
     public function articles ()
     {
@@ -22,6 +26,12 @@ class Category extends Model
     public function parent()
     {
     	return $this->hasOne('App\Category', 'id', 'parent_id');
+    }
+
+
+    public function getUrlAttribute()
+    {
+        return '/category/' . $this->name;
     }
 
 }
