@@ -72,9 +72,12 @@ class CategoryController extends Controller
         $category = Category::whereSlug($slug)->first();
         $articles = $category->articles()->get();
         if (count($articles) != 0)
-            return view ('category.show', compact('articles'));
+            return view ('category.show', [
+                'category' => $category, 
+                'articles' => $articles
+            ]);
         else 
-            return view ('category.empty')->withCategory($category->name);
+            return view ('category.empty')->withCategory($category);
     }
 
 

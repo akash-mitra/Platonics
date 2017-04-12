@@ -11,10 +11,10 @@
 			<a href="/">Home</a> &gt; 
 		</div>
 
-		<h3>{{$articles[0]->category->name}}</h3>
-		<!-- <h5>
-			List of all articles under this category
-		</h5> -->
+		<h3>{{$category->name}}</h3>
+		<p>
+			{{$category->description}}
+		</p>
 		<hr>
 		
 		@foreach($articles as $article)

@@ -11,7 +11,7 @@ class ArticleController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        //$this->middleware('auth');
     }
 
     /*
@@ -43,6 +43,7 @@ class ArticleController extends Controller
     	$id = substr($slug, 0, strpos($slug . '-', '-'));
 
     	$article = Article::findOrFail($id);
+
     	if ($article->publish == '1')
     	   return view ('article.show', compact('article'));
 
