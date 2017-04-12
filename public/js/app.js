@@ -45,16 +45,20 @@ function validate (e)
  | the ajax response data.
  |--------------------------------------------------------------------------
  */
-function populateSelect (e, url, p, defValue)
+function populateSelect (e, url, p, defValue, exclusionList)
 {
 	if (typeof p === 'undefined') p = {"key": "record", "value": "label"};
+	if (typeof exclusionList === 'undefined') exclusionList = [];
 	$.get(url, function (data) {
 		let l = data.length;
 		if (l != 0) 
 		{
 			let fragment = document.createDocumentFragment();
     			for (i = 0; i < l; i++) {
-        			var opt = document.createElement('option');
+    				if (exclusionList.indexOf(data[i][p.key]) !== -1) 
+    					{ continue; }
+
+        			let opt = document.createElement('option');
         			opt.innerHTML = data[i][p.value];
         			opt.value = data[i][p.key];
         			if (data[i][p.key] == defValue) opt.selected = true;

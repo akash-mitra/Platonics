@@ -14,6 +14,10 @@
 		  <!-- Nav tabs -->
 		  <ul class="nav nav-tabs" role="tablist">
 		    <li role="presentation" class="active">
+		    	<a href="#info" aria-controls="info" role="tab" data-toggle="tab">Info</a>
+		    </li>
+
+		    <li role="presentation">
 		    	<a href="#compose" aria-controls="compose" role="tab" data-toggle="tab">Compose</a>
 		    </li>
 
@@ -30,7 +34,7 @@
 		  <form method="post" action="{{route('article-store')}}" id="frm-create">
 		  	{{ csrf_field() }}
 		  	<div class="tab-content">
-			    <div role="tabpanel" class="tab-pane active" id="compose">
+			    <div role="tabpanel" class="tab-pane active" id="info">
 			    	<div class="m15">
 				    	<div class="form-group">
 					    <label for="inputTitle">Article Heading</label>
@@ -61,8 +65,11 @@
 					    	placeholder="Let me introduce the story by..."
 					    	name="summary"></textarea>
 					</div>
-
-				    	<div class="form-group">
+			    	</div>
+			    </div><!-- info panel -->
+			    <div role="tabpanel" class="tab-pane" id="compose">
+			    	<div class="m15">
+			    		<div class="form-group">
 					    <label for="inputText">Article Body</label>
 					    <textarea 
 					    	class="form-control custom-control" 

@@ -38,7 +38,7 @@
 							{{$article->title}}
 							</a>
 						</td>
-						<td>{{$article->category}}</td>
+						<td>{{empty($article->category)?'N/A':$article->category}}</td>
 						<td>{{$article->author}}</td>
 						<td>{{\Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $article->created_at)->toFormattedDateString()}}</td>
 						<td>

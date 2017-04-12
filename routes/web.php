@@ -55,6 +55,7 @@ Route::get('/admin/article/create', 'ArticleController@create')->name('article-c
 Route::post('/admin/article/store', 'ArticleController@store')->name('article-store');
 Route::get('/admin/article/edit/{id}', 'ArticleController@edit')->name('article-edit');
 Route::patch('/admin/article/save', 'ArticleController@save')->name('article-save');
+Route::post('/admin/article/delete/{id}', 'ArticleController@destroy')->name('article-delete');
 
 
 /* 

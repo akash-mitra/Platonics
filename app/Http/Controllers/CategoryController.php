@@ -20,7 +20,6 @@ class CategoryController extends Controller
 
     protected function store (Request $request)
     {
-        dd($request->input());
     	$doc = new Category ([
     		'name' => strip_tags($request->input('head')),
             'slug' => strip_tags($request->input('url')),
@@ -45,13 +44,21 @@ class CategoryController extends Controller
 
     protected function save (Request $request)
     {
-    	$id = $request->input('id');
-        $category = Category::findOrFail($id);
+        $id = $request->input('id');
+        $parent_id = $request->input('cat');
 
+        // make sure the supplied parent is not actually
+        // also a child of this category
+        if (! empty ($parent_id) && $this->hasCyclicDependency ($id, $parent_id))
+            return redirect()
+            ->route('category-edit', $id)
+            ->withMessage('The selected parent category is also a child of this category');
+    	
+        $category = Category::findOrFail($id);
         $category->name = strip_tags($request->input('head'));
         $category->slug = $request->input('url'); 
         $category->description = $request->input('body'); 
-        $category->parent_id = $request->input('cat'); 
+        $category->parent_id = $parent_id; 
         $category->save();
         
         return redirect()
@@ -68,5 +75,13 @@ class CategoryController extends Controller
             return view ('category.show', compact('articles'));
         else 
             return view ('category.empty')->withCategory($category->name);
+    }
+
+
+    private function hasCyclicDependency ($id, $parent_id)
+    {
+        $parent_category = Category::findOrFail($parent_id);
+        if ($parent_category->parent->id == $id) return true;
+        else return false;
     }
 }

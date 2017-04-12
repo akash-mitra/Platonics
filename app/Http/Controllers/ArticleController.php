@@ -23,8 +23,8 @@ class ArticleController extends Controller
     {
         return DB::select('select a.id, a.title, a.created_at, a.updated_at, u.name author, c.name category 
             from articles a 
-            inner join users u on a.user_id = u.id 
-            inner join categories c on a.category_id = c.id
+            left outer join users u on a.user_id = u.id 
+            left outer join categories c on a.category_id = c.id
             order by a.updated_at desc');
     }
 
@@ -58,13 +58,13 @@ class ArticleController extends Controller
     protected function store (Request $request)
     {
     	$doc = new Article ([
-    		'title' => $request->input('head'),
-    		'intro' => $request->input('summary'),
+    		'title'       => $request->input('head'),
+    		'intro'       => $request->input('summary'),
             'category_id' => $request->input('cat'),
-    		'fulltext' => $request->input('body'),
-    		'metakey' => $request->input('keys'),
-    		'metadesc' => $request->input('desc'),
-            'publish' => $request->has('publish') ? 1 : 0
+    		'fulltext'    => $request->input('body'),
+    		'metakey'     => $request->input('keys'),
+    		'metadesc'    => $request->input('desc'),
+            'publish'     => $request->has('publish') ? 1 : 0
     	]);
 
     	$article = Auth::user()->articles()->save($doc);
@@ -87,18 +87,28 @@ class ArticleController extends Controller
         $id = $request->input('id');
         $article = Article::findOrFail($id);
         
-        $article->title = $request->input('head');
-        $article->intro = $request->input('summary');
-        $article->category_id = $request->input('cat');
-        $article->fulltext = $request->input('body'); 
-        $article->metakey = $request->input('keys');
-        $article->metadesc = $request->input('desc');
-        $article->publish = $request->has('publish') ? 1 : 0;
+        $article->title         = $request->input('head');
+        $article->intro         = $request->input('summary');
+        $article->category_id   = $request->input('cat');
+        $article->fulltext      = $request->input('body'); 
+        $article->metakey       = $request->input('keys');
+        $article->metadesc      = $request->input('desc');
+        $article->publish       = $request->has('publish') ? 1 : 0;
 
         $article->save();
         
         return redirect()
             ->route('article-edit', $id)
+            ->withMessage('Article saved');
+    }
+
+    protected function destroy ($id)
+    {
+        $article = Article::findOrFail($id);
+        $article->delete();
+
+        return redirect()
+            ->route('article-index')
             ->withMessage('Article saved');
     }
 }

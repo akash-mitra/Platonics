@@ -15,7 +15,12 @@
 		
 		  <!-- Nav tabs -->
 		  <ul class="nav nav-tabs" role="tablist">
+
 		    <li role="presentation" class="active">
+		    	<a href="#info" aria-controls="info" role="tab" data-toggle="tab">Info</a>
+		    </li>
+
+		    <li role="presentation">
 		    	<a href="#compose" aria-controls="compose" role="tab" data-toggle="tab">Compose</a>
 		    </li>
 
@@ -23,7 +28,11 @@
 		    	<a href="#meta" aria-controls="meta" role="tab" data-toggle="tab">Meta</a>
 		    </li>
 
+		    <li role="presentation">
+		    	<a href="#manage" aria-controls="manage" role="tab" data-toggle="tab">Manage</a>
+		    </li>
 		    
+
 		    <li role="presentation" class="pull-right">
 		    	<button id="btn-submit" class="btn btn-success">Save</button>
 		    </li>
@@ -41,7 +50,7 @@
 		  	{!! method_field('patch') !!}
 		  	<input type="hidden" name="id" value="{{$article->id}}">
 		  	<div class="tab-content">
-			    <div role="tabpanel" class="tab-pane active" id="compose">
+		  	    <div role="tabpanel" class="tab-pane active" id="info">
 			    	<div class="m15">
 				    	<div class="form-group">
 					    <label for="inputTitle">Article Heading</label>
@@ -74,7 +83,10 @@
 					    	name="summary"
 					    	>{{$article->intro}}</textarea>
 					</div>
-
+			    	</div>
+			    </div><!-- info panel -->
+			    <div role="tabpanel" class="tab-pane" id="compose">
+			    	<div class="m15">
 				    	<div class="form-group">
 					    <label for="inputText">Article Body</label>
 					    <textarea 
@@ -126,7 +138,24 @@
 					</div>
 			    	</div>
 			    </div><!-- meta panel -->
-		  </div><!-- tabcontent -->
+			    <div role="tabpanel" class="tab-pane" id="manage">
+			    	<div class="m15">
+			    		<h4>Delete Article</h4>
+			    		<p>
+			    			If you delete an article, there is no way to retrieve it back. Alternatively, you may also unpublish or hide an article by going to "Meta" tab and unticking "Article is viewable" checkbox.
+			    		</p>
+				    	<a href="#" id="btnDelArticle" class="btn btn-danger">
+				    		Delete this article
+				    	</a>
+				    	<hr>
+				    	<p>&nbsp;</p>
+			    	</div>
+			    </div><!-- manage panel -->
+		  	</div><!-- tabcontent -->
+		</form>
+
+		<form method="POST" action="{{route('article-delete', $article->id)}}" id="frm-delete">
+			{{csrf_field()}}
 		</form>
 	</div>
 	
@@ -143,6 +172,12 @@
 		$('#btn-submit').click (function () {
 			if (validate('#frm-edit')) 
 				$('#frm-edit').submit();
+		});
+
+		$('#btnDelArticle').click (function () {
+			if(confirm('Are you sure to delete this article?')) {
+				$('#frm-delete').submit();
+			}
 		});
 
 		$(document).ready(function () {
