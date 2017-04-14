@@ -11,22 +11,9 @@ class ArticleController extends Controller
 {
     public function __construct()
     {
-        //$this->middleware('auth');
+        $this->middleware('auth')->except(['show', 'index']);
     }
 
-    /*
-     * This is a helper function to query only the attributes
-     * required in this view. This helps in avoiding selection
-     * of large text columns and clog up memory
-     */
-    private function list ()
-    {
-        return DB::select('select a.id, a.title, a.created_at, a.updated_at, u.name author, c.name category 
-            from articles a 
-            left outer join users u on a.user_id = u.id 
-            left outer join categories c on a.category_id = c.id
-            order by a.updated_at desc');
-    }
 
     protected function index ()
     {
@@ -111,5 +98,20 @@ class ArticleController extends Controller
         return redirect()
             ->route('article-index')
             ->withMessage('Article saved');
+    }
+
+
+    /*
+     * This is a helper function to query only the attributes
+     * required in this view. This helps in avoiding selection
+     * of large text columns and clog up memory
+     */
+    private function list ()
+    {
+        return DB::select('select a.id, a.title, a.created_at, a.updated_at, u.name author, c.name category 
+            from articles a 
+            left outer join users u on a.user_id = u.id 
+            left outer join categories c on a.category_id = c.id
+            order by a.updated_at desc');
     }
 }

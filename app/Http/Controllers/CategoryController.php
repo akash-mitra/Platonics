@@ -7,16 +7,39 @@ use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth')->except(['show', 'list']);
+    }
+
+
     protected function list ()
     {
     	$categories = Category::all();
     	return view('category.list', compact('categories'));
     }
 
+
+    protected function show ($slug)
+    {
+        $category = Category::whereSlug($slug)->first();
+        $articles = $category->articles()->get();
+        if (count($articles) != 0)
+            return view ('category.show', [
+                'category' => $category, 
+                'articles' => $articles
+            ]);
+        else 
+            return view ('category.empty')->withCategory($category);
+    }
+
+
     protected function create ()
     {
     	return view ('category.create');
     }
+
 
     protected function store (Request $request)
     {
@@ -64,20 +87,6 @@ class CategoryController extends Controller
         return redirect()
             ->route('category-edit', $id)
             ->withMessage('Category saved');
-    }
-
-
-    protected function show ($slug)
-    {
-        $category = Category::whereSlug($slug)->first();
-        $articles = $category->articles()->get();
-        if (count($articles) != 0)
-            return view ('category.show', [
-                'category' => $category, 
-                'articles' => $articles
-            ]);
-        else 
-            return view ('category.empty')->withCategory($category);
     }
 
 
