@@ -67,4 +67,10 @@ class User extends Authenticatable
         return $query->where('type', $type);
     }
 
+
+    public function getUrlAttribute()
+    {
+        return '/profile/user/' . $this->slug;
+    }
+
 }

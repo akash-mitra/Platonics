@@ -41,7 +41,7 @@ class ArticleTest extends TestCase
 			// then I am able to see the article title
 		  	->assertSee($this->article->title) 
 		  	// and it's written by the same user
-		  	->assertSee('Written by ' . $this->user->name); 
+		  	->assertSee('Written by <a href="' . $this->user->url . '">' . $this->user->name . '</a>'); 
 	}
 
 }

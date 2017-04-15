@@ -20,7 +20,7 @@
 	
 	<div class="article-info">
 		<span class="small pull-left">
-			Written by {{$article->author->name}}
+			Written by <a href="{{$article->author->url}}">{{$article->author->name}}</a>
 		</span>
 		<span class="small pull-right">
 			Last updated {{$article->updated_at->diffForHumans()}}
