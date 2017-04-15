@@ -39,7 +39,11 @@ $factory->define(App\Article::class, function (Faker\Generator $faker) {
     return [
         'title' => $faker->sentence,
         'intro' => $faker->paragraph,
-        'fulltext' => $faker->paragraph(3, true),
+        'fulltext' => $faker->paragraph(5, true)
+                      . '<h3>' . $faker->sentence() . '</h3>'
+                      . $faker->paragraph(5, true)
+                      . '<h3>' . $faker->sentence() . '</h3>'
+                      . $faker->paragraph(3, true),
         'publish' => '1',
     ];
 });
