@@ -101,7 +101,7 @@
 			// populate the category drop-down with list of all
 			// available categories. An array of exclusion list
 			// id is provided as the last parameter to exclude
-			// the the current category to appear as parent in 
+			// its own category to appear as parent in 
 			// the dropdown list
 			populateSelect ('#inputCat', 
 				'{{route("api-categories")}}',
@@ -110,15 +110,20 @@
 				[{{$category->id}}]); // exclusion list
 
 			// if the parent category id is blank in the database
-			// the same is represented as "--" in front-end
-			@if(empty($category->parent_id))
-				// add one aadditional record for blank category "--"
-				$('#inputCat').append($('<option>', {
+			// the same is represented as "--" in front-end	
+			let blankChoice = false;
+			@if(empty($category->parent_id))	
+				blankChoice = true;
+			@endif
+
+			// add one aadditional record for blank category "--"
+			$('#inputCat').append($('<option>', {
 				    value: '',
 				    text: '--',
-				    selected: true
-				}));
-			@endif
+				    selected: blankChoice
+			}));
+
+			
 		});
 
 	</script>

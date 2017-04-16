@@ -2,7 +2,7 @@
 
 namespace App;
 
-use App\Article;
+use App\Page;
 use App\LoginProvider;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -44,9 +44,9 @@ class User extends Authenticatable
 
 
 
-    public function articles ()
+    public function pages ()
     {
-        return $this->hasMany(Article::class);
+        return $this->hasMany(Page::class);
     }
 
 

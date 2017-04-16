@@ -1,6 +1,6 @@
 <?php
 
-use App\Article;
+use App\Page;
 use App\Category;
 use App\User;
 use Illuminate\Database\Seeder;
@@ -18,7 +18,7 @@ class DatabaseSeeder extends Seeder
     	$noOfUsers = 10;
     	$noOfCategories = 7;
     	$noOfParentCategories = 2;
-    	$maxArticlePerCategory = 10;
+    	$maxPagePerCategory = 10;
 
         // create a few users
         $userIds = factory(User::class, $noOfUsers)->create()->pluck('id')->all();
@@ -36,16 +36,16 @@ class DatabaseSeeder extends Seeder
     			},
     		])
     		// and under each of these categories
-    		->each(function ($category) use ($maxArticlePerCategory, $noOfUsers, $userIds) {
-    			// create articles
-    			$articles = factory(Article::class, rand(0, $maxArticlePerCategory))
+    		->each(function ($category) use ($maxPagePerCategory, $noOfUsers, $userIds) {
+    			// create pages
+    			$pages = factory(Page::class, rand(0, $maxPagePerCategory))
     				->make([
     					// written by one of the users previously created
     					'user_id' => function () use ($noOfUsers, $userIds) { 
     						return $userIds[rand(0, $noOfUsers-1)];
     						}
     					]);
-    			$category->articles()->saveMany($articles);
+    			$category->pages()->saveMany($pages);
     		});
     }
 }

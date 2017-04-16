@@ -17,16 +17,19 @@
 		</p>
 		<hr>
 		
-		@foreach($articles as $article)
+		@foreach($pages as $page)
 			@if($loop->index % 2 === 0)
 				<div class="row">
 			@endif
 			<div class="col-md-6">
 				<h4>
-					<a href="{{route('article-view', str_slug($article->id . ' ' . $article->title))}}">{{$article->title}}</a>
+					<a href="{{route('page-view', [
+						'categorySlug' => $category->slug,
+						'page' => str_slug($page->id . ' ' . $page->title, '-'),
+					])}}">{{$page->title}}</a>
 				</h4>
 				<p>
-					{{$article->intro}}
+					{{$page->intro}}
 				</p>
 			</div>
 			@if($loop->index % 2 === 1)

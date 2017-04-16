@@ -3,7 +3,7 @@
 namespace Tests\SIT;
 
 use App\User;
-use App\Article;
+use App\Page;
 use App\Category;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
@@ -12,7 +12,7 @@ class CategoryTest extends TestCase
 {
 	use DatabaseTransactions;
 
-	protected $user, $category1, $category2, $category3, $article1, $article2, $article3;
+	protected $user, $category1, $category2, $category3, $page1, $page2, $page3;
 
 	public function setUp ()
 	{
@@ -28,16 +28,16 @@ class CategoryTest extends TestCase
 		// and one subcategory under first parent category
 		$this->category3 = factory(Category::class)->create(['parent_id' => $this->category1->id]);
 
-		// create a few articles in them
-		$this->article1 = factory(Article::class)->create([
+		// create a few pages in them
+		$this->page1 = factory(Page::class)->create([
 			"category_id" => $this->category1->id, 
 			"user_id" => $this->user->id
 		]);
-		$this->article2 = factory(Article::class)->create([
+		$this->page2 = factory(Page::class)->create([
 			"category_id" => $this->category1->id, 
 			"user_id" => $this->user->id
 		]);
-		$this->article3 = factory(Article::class)->create([
+		$this->page3 = factory(Page::class)->create([
 			"category_id" => $this->category3->id, 
 			"user_id" => $this->user->id
 		]);
@@ -46,26 +46,26 @@ class CategoryTest extends TestCase
 	public function test_if_a_category_and_its_contents_are_viewable_via_url ()
 	{
 		// given I have a category (1)
-		// and an article (1) under this category
+		// and an page (1) under this category
 		// when I visit the category url,
-		$this->get('/category/' . $this->category1->slug)
+		$this->get($this->category1->slug)
 
 		// then I am able to see the category description 
 			->assertSee($this->category1->description)
-		// and I am able to see the article intro text
-			->assertSee($this->article1->intro);
+		// and I am able to see the page intro text
+			->assertSee($this->page1->intro);
 	}
 
 
 
-	public function test_if_a_category_can_retrieve_all_articles_in_it()
+	public function test_if_a_category_can_retrieve_all_pages_in_it()
 	{
-		// given I have a category (1) and 2 articles (1 and 2) in it
-		// when I retrieve the articles of this category 
-		$articles = $this->category1->articles;
+		// given I have a category (1) and 2 pages (1 and 2) in it
+		// when I retrieve the pages of this category 
+		$pages = $this->category1->pages;
 	
-		// then I can retrieve exactly 2 articles
-		$this->assertCount(2, $articles);
+		// then I can retrieve exactly 2 pages
+		$this->assertCount(2, $pages);
 	}
 
 

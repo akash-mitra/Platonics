@@ -24,4 +24,9 @@ class AdminController extends Controller
 		$users = User::all();
 		return view('admin.users')->withUsers($users);
 	}
+
+	protected function designer ()
+	{
+		return view('admin.designer');
+	}
 }

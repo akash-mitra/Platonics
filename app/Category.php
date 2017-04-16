@@ -2,7 +2,7 @@
 
 namespace App;
 
-use App\Article;
+use App\Page;
 //use App\Category;
 use Illuminate\Database\Eloquent\Model;
 
@@ -17,9 +17,9 @@ class Category extends Model
         'url'
     ];
 
-    public function articles ()
+    public function pages ()
     {
-    	return $this->hasMany(Article::class);
+    	return $this->hasMany(Page::class);
     }
 
 
@@ -31,7 +31,7 @@ class Category extends Model
 
     public function getUrlAttribute()
     {
-        return '/category/' . $this->slug;
+        return '/' . $this->slug;
     }
 
 }

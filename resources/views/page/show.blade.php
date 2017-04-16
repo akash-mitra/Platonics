@@ -15,23 +15,23 @@
 		Home > $category > Settings
 	</div> -->
 	<h3>
-		{{$article->title}}
+		{{$page->title}}
 	</h3>
 	
 	<div class="article-info">
 		<span class="small pull-left">
-			Written by <a href="{{$article->author->url}}">{{$article->author->name}}</a>
+			Written by <a href="{{$page->author->url}}">{{$page->author->name}}</a>
 		</span>
 		<span class="small pull-right">
-			Last updated {{$article->updated_at->diffForHumans()}}
+			Last updated {{$page->updated_at->diffForHumans()}}
 		</span>
 	</div>
 	
 	<p class="lead">
-		{!! $article->intro !!}
+		{!! $page->intro !!}
 	</p>
 	<div class="article-body">
-		{!! $article->fulltext !!}
+		{!! $page->fulltext !!}
 	</div>
 	<div class="article-footer">
 		<div class="row">

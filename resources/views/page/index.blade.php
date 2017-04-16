@@ -12,14 +12,14 @@
 		</div>
 		
 		
-		<a href="{{route('article-create')}}" class="btn btn-success pull-right m15">
+		<a href="{{route('page-create')}}" class="btn btn-success pull-right m15">
 			<i class="fa fa-plus-square-o"></i>&nbsp;
-			New Article
+			New Page
 		</a>
 
-		<h3>Article</h3>
+		<h3>Page</h3>
 		<h5>
-			List of all articles
+			List of all pages
 		</h5>
 		<hr>
 		<table class="table table-sm">
@@ -29,23 +29,23 @@
 				</tr>
 			</thead>
 			<tbody>
-				@foreach($articles as $article)
+				@foreach($pages as $page)
 					<tr>
-						<td>{{$article->id}}</td>
+						<td>{{$page->id}}</td>
 						
 						<td>
-							<a class="" href="{{route('article-view', str_slug($article->id . ' ' . $article->title))}}">
-							{{$article->title}}
+							<a class="" href="{{ '/' . str_slug($page->category) . '/' . str_slug($page->id . ' ' . $page->title, '-')}}">
+							{{$page->title}}
 							</a>
 						</td>
-						<td>{{empty($article->category)?'N/A':$article->category}}</td>
-						<td>{{$article->author}}</td>
-						<td>{{\Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $article->created_at)->toFormattedDateString()}}</td>
+						<td>{{empty($page->category)?'N/A':$page->category}}</td>
+						<td>{{$page->author}}</td>
+						<td>{{\Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $page->created_at)->toFormattedDateString()}}</td>
 						<td>
-							{{\Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $article->updated_at)->diffForHumans()}}
+							{{\Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $page->updated_at)->diffForHumans()}}
 						</td>
 						<td>
-							<a class="btn btn-sm btn-default" href="{{route('article-edit', $article->id)}}">
+							<a class="btn btn-sm btn-default" href="{{route('page-edit', $page->id)}}">
 								<i class="fa fa-pencil-square-o"></i>&nbsp;
 								Edit
 							</a>

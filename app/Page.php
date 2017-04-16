@@ -6,7 +6,7 @@ use App\Category;
 use App\User;
 use Illuminate\Database\Eloquent\Model;
 
-class Article extends Model
+class Page extends Model
 {
 	protected $fillable = [
 		'title', 'intro', 'category_id', 'fulltext', 'metakey', 'metadesc', 'publish'
@@ -35,6 +35,6 @@ class Article extends Model
 
 	public function getUrlAttribute ()
 	{
-		return '/article/' . str_slug($this->id . ' ' . $this->title);
+		return '/' . $this->category->slug . '/' . str_slug($this->id . ' ' . $this->title);
 	}
 }

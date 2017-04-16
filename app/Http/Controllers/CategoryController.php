@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Page;
 use App\Category;
 use Illuminate\Http\Request;
 
@@ -21,14 +22,14 @@ class CategoryController extends Controller
     }
 
 
-    protected function show ($slug)
+    protected function show ($categorySlug)
     {
-        $category = Category::whereSlug($slug)->first();
-        $articles = $category->articles()->get();
-        if (count($articles) != 0)
+        $category = Category::whereSlug($categorySlug)->first();
+        $pages = $category->pages;
+        if (count($pages) != 0)
             return view ('category.show', [
                 'category' => $category, 
-                'articles' => $articles
+                'pages' => $pages
             ]);
         else 
             return view ('category.empty')->withCategory($category);
@@ -93,7 +94,9 @@ class CategoryController extends Controller
     private function hasCyclicDependency ($id, $parent_id)
     {
         $parent_category = Category::findOrFail($parent_id);
-        if ($parent_category->parent->id == $id) return true;
+        $p = $parent_category->parent;
+        if(empty($p)) return false;
+        if ($p->id == $id) return true;
         else return false;
     }
 }
