@@ -12,8 +12,7 @@ use Illuminate\Support\Facades\Redis;
 */
 
 Route::get('/', function () { 
-	$type = Redis::get('bloggy:config:layout:home:type');
-	return view('homepage.' . $type); 
+	return view('homepage.default'); 
 })->name('homepage');
 
 /* 
@@ -34,7 +33,7 @@ Route::get('/categories', 'CategoryController@list')->name('category-list');
 Auth::routes();
 Route::get('/redirect/{provider}', 'Auth\RegisterController@redirectToProvider');
 Route::get('/auth/{provider}/callback', 'Auth\RegisterController@handleProviderCallback');
-Route::get('/profile', 'ProfileController@self')->name('profile');
+Route::get('/profile', 'ProfileController@user')->name('profile');
 Route::get('/profile/user/{slug}', 'ProfileController@user')->name('user');
 
 Route::post('/profile/user/change/type', 'ProfileController@setType')->name('user-change-type');
@@ -73,6 +72,18 @@ Route::patch('/admin/page/save', 'PageController@save')->name('page-save');
 Route::post('/admin/page/delete/{id}', 'PageController@destroy')->name('page-delete');
 
 
+/* 
+ |--------------------------------------------------------------------------
+ | Blogging related routes that only admin can access
+ |--------------------------------------------------------------------------
+ */
+Route::get('/admin/modules', 'ModuleController@index')->name('module-list');
+Route::get('/admin/module/create', 'ModuleController@create')->name('module-create');
+Route::post('/admin/module/store', 'ModuleController@store')->name('module-store');
+Route::patch('/admin/module/save', 'ModuleController@update')->name('module-update');
+Route::get('/admin/module/{id}', 'ModuleController@show')->name('module-show');
+Route::get('/admin/module/edit/{id}', 'ModuleController@edit')->name('module-edit');
+Route::post('/admin/module/delete/{id}', 'ModuleController@destroy')->name('module-delete');
 
 
 Route::get('/api/v1/get/categories', 'API\v1\ApiCategoryController@getCategories')->name('api-categories');

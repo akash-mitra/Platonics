@@ -32,10 +32,10 @@ class PageController extends Controller
 
     	$page = Page::findOrFail($id);
         
-    	if (
-            $page->publish == '1' 
-            && ($page->category_id == null || $page->category->slug === $categorySlug)
-            )
+        
+    	if ($page->publish == '1' 
+                && ($page->category_id == null 
+                || $page->category->slug === $categorySlug))
     	   return view ('page.show', compact('page'));
 
         abort(404, 'Page Not Found');
@@ -48,12 +48,15 @@ class PageController extends Controller
     }
 
     protected function store (Request $request)
-    {
+    {        
+        $markdown = $request->input('body');
+        $markup   = $this->_getHTML($markdown);
     	$doc = new Page ([
     		'title'       => $request->input('head'),
     		'intro'       => $request->input('summary'),
             'category_id' => $request->input('cat'),
-    		'fulltext'    => $request->input('body'),
+    		'markup'      => $markup,
+            'markdown'    => $markdown,
     		'metakey'     => $request->input('keys'),
     		'metadesc'    => $request->input('desc'),
             'publish'     => $request->has('publish') ? 1 : 0
@@ -82,7 +85,8 @@ class PageController extends Controller
         $page->title         = $request->input('head');
         $page->intro         = $request->input('summary');
         $page->category_id   = $request->input('cat');
-        $page->fulltext      = $request->input('body'); 
+        $page->markdown      = $request->input('body'); 
+        $page->markup        = $this->_getHTML($request->input('body'));
         $page->metakey       = $request->input('keys');
         $page->metadesc      = $request->input('desc');
         $page->publish       = $request->has('publish') ? 1 : 0;
@@ -126,5 +130,17 @@ class PageController extends Controller
             left outer join users u on a.user_id = u.id 
             left outer join categories c on a.category_id = c.id
             order by a.updated_at desc');
+    }
+
+
+    private function _getHTML ($markdown) 
+    {
+        /* 
+         * We will convert the markdown to html
+         * markup and store both the markup and the
+         * markdown versions in the database for future.
+         */
+        $parser   = new \Parsedown();
+        return $parser->text($markdown);
     }
 }

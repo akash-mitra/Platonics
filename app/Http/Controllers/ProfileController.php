@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 
 class ProfileController extends Controller
@@ -15,19 +16,23 @@ class ProfileController extends Controller
 	}
 
 
-	protected function self()
+	protected function user ($slug = null)
 	{
-		$user = Auth::user();
-		return view('profile.index', compact('user'));	
-	}
-
-
-	protected function user ($slug)
-	{
-		$user = User::whereSlug($slug)
+		// $slug will be null if an anuthenticated
+		// user wants to visit his/her own profile
+		if ($slug == null) $user = Auth::user();
+		else $user = User::whereSlug($slug)
 			->get($this->profileVisibility(Auth::user()->type))
-		             	->first();
-		return view('profile.index', compact('user'));	
+			->first();
+
+		if(empty($user)) 
+    			return response()->view('errors.404', [], 404);
+		
+
+		// get all article pages written by this user				
+		$pages = $user->articles();
+		
+		return view('profile.index', ['user' => $user, 'pages' => $pages]);	
 	}
 
 
@@ -53,9 +58,9 @@ class ProfileController extends Controller
 	private function profileVisibility ($lookerType)
 	{
 		if ($lookerType == 'Registered') 
-			return ['name', 'avatar', 'created_at', 'updated_at'];
+			return ['id', 'name', 'avatar', 'created_at', 'updated_at'];
 		if ($lookerType == 'Admin') 
-			return ['name', 'avatar', 'email', 'created_at', 'updated_at', 'slug'];
-		return ['slug'];
+			return ['id', 'name', 'avatar', 'email', 'created_at', 'updated_at', 'slug'];
+		return ['id', 'slug'];
 	}
 }

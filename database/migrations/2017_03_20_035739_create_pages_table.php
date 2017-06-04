@@ -19,7 +19,8 @@ class CreatePagesTable extends Migration
             $table->integer('category_id')->unsigned()->references('id')->on('categories');
             $table->string('title');
             $table->text('intro')->nullable();
-            $table->mediumText('fulltext');
+            $table->mediumText('markdown');
+            $table->mediumText('markup');
             $table->text('metakey')->nullable();
             $table->text('metadesc')->nullable();
             $table->char('publish', 1);

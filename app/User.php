@@ -4,6 +4,7 @@ namespace App;
 
 use App\Page;
 use App\LoginProvider;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -47,6 +48,25 @@ class User extends Authenticatable
     public function pages ()
     {
         return $this->hasMany(Page::class);
+    }
+
+
+    /**
+     * This function provides a list of user articles with
+     * article title, id, category slug and publish date.
+     * This is very similar to pages() method, but unlike 
+     * pages() this does not return article body, which
+     * means volume of return data is much lesser and
+     * the results are easily cachable.
+     */
+    public function articles ()
+    {
+        $articles = DB::table('pages')
+                    ->leftjoin('categories', 'pages.category_id', 'categories.id')
+                    ->where('user_id', $this->id)
+                    ->select('pages.id','pages.title', 'pages.created_at', 'categories.slug')
+                    ->get();
+        return $articles;
     }
 
 

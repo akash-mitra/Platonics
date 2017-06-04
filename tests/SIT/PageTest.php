@@ -24,7 +24,7 @@ class PageTest extends TestCase
 		// and one category
 		$this->category = factory(Category::class)->create(['parent_id' => null]);
 
-		// create an page in the category
+		// create a page in the category
 		$this->page = factory(Page::class)->create([
 			"category_id" => $this->category->id, 
 			"user_id" => $this->user->id

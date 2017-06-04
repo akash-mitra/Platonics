@@ -70,7 +70,7 @@
 			    <div role="tabpanel" class="tab-pane" id="compose">
 			    	<div class="m15">
 			    		<div class="form-group">
-					    <label for="inputText">Page Body</label>
+					    <!-- <label for="inputText">Page Body</label> -->
 					    <textarea 
 					    	class="form-control custom-control" 
 					    	id="inputText" 
@@ -124,13 +124,35 @@
 
 
 @section('page.script')
+	<link rel="stylesheet" href="/css/simplemde/simplemde.css">
+	<script src="/js/simplemde/simplemde.min.js"></script>
 	<script>
+		var simplemde;
+
 		$('#btn-submit').click (function () {
-			if (validate('#frm-create')) 
-				$('#frm-create').submit();
+			//$("#inputText").val(simplemde.value());
+			//var html = simplemde.options.previewRender(value);
+			//console.log(html);
+			// if (validate('#frm-create')) 
+			// 	$('#frm-create').submit();
 		});
 
 		$(document).ready(function () {
+
+			// textarea
+			simplemde = new SimpleMDE({ 
+				element: $("#inputText")[0],
+				autoDownloadFontAwesome: false,
+				spellChecker: true,
+				toolbar: [
+						"heading-3", "bold", "italic", "|", 
+						"ordered-list", "unordered-list", "quote", "table", "code", "|",
+						"link", "image", "|",
+						"side-by-side", "preview", "fullscreen"
+					],
+			});
+
+			// make sure the category select list is prepopulated
 			populateSelect ('#inputCat', '{{route("api-categories")}}');
 
 			// add one aadditional record for blank category "--"

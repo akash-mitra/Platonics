@@ -9,10 +9,10 @@ use Illuminate\Database\Eloquent\Model;
 class Page extends Model
 {
 	protected $fillable = [
-		'title', 'intro', 'category_id', 'fulltext', 'metakey', 'metadesc', 'publish'
+		'title', 'intro', 'category_id', 'markup', 'markdown', 'metakey', 'metadesc', 'publish'
 	];
 
-	// this ensure accessor property is included in the Article object
+	// this ensure accessor property is included in the Page object
 	protected $appends = [
 	    'url'
 	];

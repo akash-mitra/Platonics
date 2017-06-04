@@ -55,6 +55,39 @@
 				
 			</tbody>
 		</table>
+
+		<p>&nbsp;</p>
+		<h4>Articles by {{ $user->name }}</h4>
+		<hr>
+
+		@if(count($pages)> 0)
+			<table class="timple table">
+				<thead>
+					<tr><th>#</th><th>Article</th><th>Published</th></tr>
+				</thead>
+				@foreach($pages as $page)
+					<tr>
+						<td>
+							{{$loop->iteration}}
+						</td>
+						<td>
+							<a href="{{'/' . $page->slug . '/' . str_slug($page->id . ' ' . $page->title)}}">
+								{{$page->title}}	
+							</a>
+						</td>
+						<td>
+							{{ Carbon\Carbon::parse($page->created_at)->format('d-M-Y')}}
+						</td>
+					</tr>
+				@endforeach
+			</table>
+		@else
+			<p>
+				{{ $user->name }} has not contributed any article yet.
+			</p>
+		@endif
+
+
 		<p>&nbsp;</p>
 		<h4>Social Authentication Providers</h4>
 		<hr>

@@ -88,7 +88,7 @@
 			    <div role="tabpanel" class="tab-pane" id="compose">
 			    	<div class="m15">
 				    	<div class="form-group">
-					    <label for="inputText">Page Body</label>
+					    <!-- <label for="inputText">Page Body</label> -->
 					    <textarea 
 					    	class="form-control custom-control" 
 					    	id="inputText" 
@@ -96,7 +96,7 @@
 					    	name="body"
 					    	style="height: 350px" 
 					    	data-validation='required'
-					    	>{{$page->fulltext}}</textarea>
+					    	>{{nl2br($page->markdown)}}</textarea>
 					</div>
 			    	</div>
 			    </div><!-- compose panel -->
@@ -154,6 +154,7 @@
 		  	</div><!-- tabcontent -->
 		</form>
 
+
 		<form method="POST" action="{{route('page-delete', $page->id)}}" id="frm-delete">
 			{{csrf_field()}}
 		</form>
@@ -163,7 +164,12 @@
 
 
 @section('page.script')
+
+	<link rel="stylesheet" href="/css/simplemde/simplemde.css">
+	<script src="/js/simplemde/simplemde.min.js"></script>
 	<script>
+
+		var simplemde;
 
 		$('#btn-close').click (function () {
 			location.href= "{{route('page-index')}}";
@@ -181,6 +187,32 @@
 		});
 
 		$(document).ready(function () {
+
+			// textarea
+			simplemde = new SimpleMDE({ 
+				element: $("#inputText")[0],
+				autoDownloadFontAwesome: false,
+				autofocus: true,
+				spellChecker: true,
+				toolbar: [
+						"heading-3", "bold", "italic", "|", 
+						"ordered-list", "unordered-list", "quote", "table", "code", "|",
+						"link", "image", "|",
+						"side-by-side", "preview", "fullscreen"
+					],
+			});
+
+			//setTimeout(function() { simplemde.codemirror.refresh(); }, 0);
+			setTimeout(function() {
+				$( "div.CodeMirror-scroll" )[0].click();
+				$( "div.CodeMirror-scroll" ).trigger('click');
+				$( "#inputText" ).trigger('click');
+			}, 1000);
+
+			$( "div.CodeMirror-scroll" )[0].click();
+			$( "div.CodeMirror-scroll" ).trigger('click');
+			$( "#inputText" ).trigger('click');
+
 			populateSelect ('#inputCat', 
 				'{{route("api-categories")}}',
 				{"key": "record", "value":"label"},

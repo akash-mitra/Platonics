@@ -18,9 +18,11 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
     return [
         'name' => $faker->name,
         'email' => $faker->unique()->safeEmail,
+        'type' => 'Registered',
         'slug' => uniqid (mt_rand(), true),
         'password' => $password ?: $password = bcrypt('secret'),
         'remember_token' => str_random(10),
+        'created_at' => $faker->dateTime(),
     ];
 });
 
@@ -36,14 +38,17 @@ $factory->define(App\Category::class, function (Faker\Generator $faker) {
 
 
 $factory->define(App\Page::class, function (Faker\Generator $faker) {
+
+    $para1 = $faker->paragraph(5, true);
+    $para2 = $faker->paragraph(6, true);
+    $para3 = $faker->paragraph(3, true);
+    $head1 = $faker->sentence();
+    $head2 = $faker->sentence();
     return [
         'title' => $faker->sentence,
         'intro' => $faker->paragraph,
-        'fulltext' => $faker->paragraph(5, true)
-                      . '<h3>' . $faker->sentence() . '</h3>'
-                      . $faker->paragraph(5, true)
-                      . '<h3>' . $faker->sentence() . '</h3>'
-                      . $faker->paragraph(3, true),
+        'markdown' => $para1 . "\n### " . $head1 . "\n" . $para2 . "\n### " . $head2 . "\n". $para3,
+        'markup' => '<p>' . $para1 . '</p><h3>' . $head1 . '</h3><p>' . $para2 . '</p><h3>'. $head2 . '</h3><p>'. $para3 . '</p>',
         'publish' => '1',
     ];
 });

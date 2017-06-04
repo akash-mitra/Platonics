@@ -5,6 +5,7 @@
 		<h4>Related </h4>
 		<p>
 			This is some related article on this topic
+			<?php echo BladeHelper::loadModule("testdcdc");  ?>
 		</p>
 	</div>
 @endsection
@@ -31,7 +32,7 @@
 		{!! $page->intro !!}
 	</p>
 	<div class="article-body">
-		{!! $page->fulltext !!}
+		{!! $page->markup !!}
 	</div>
 	<div class="article-footer">
 		<div class="row">

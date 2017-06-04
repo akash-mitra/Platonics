@@ -1,6 +1,37 @@
 <?php
+use Symfony\Component\Debug\Exception\FatalThrowableError;
 
 class BladeHelper {
+
+	// public static function render($__php, $__data = array())
+	// {
+	// 	$__data['__env'] = app(\Illuminate\View\Factory::class);
+	// 	$obLevel = ob_get_level();
+	// 	ob_start();
+	// 	extract($__data, EXTR_SKIP);
+	// 	try {
+	// 		eval('?' . '>' . $__php);
+	// 	} 
+	// 	catch (Exception $e) {
+	// 		while (ob_get_level() > $obLevel) 
+	// 			ob_end_clean();
+	// 		throw $e;
+	// 	} 
+	// 	catch (Throwable $e) {
+	// 		while (ob_get_level() > $obLevel) 
+	// 			ob_end_clean();
+	// 		throw new FatalThrowableError($e);
+	// 	}
+	// 	return ob_get_clean();
+	// }
+
+
+
+	public static function loadModule ($name)
+	{
+		$r = DB::table('modules')->where('name', $name)->get();
+		return $r[0]->html ?? null;
+	}
 
 	// This function take objects with form {id: "", parent_id: ""} and 
 	// creates a tree structure using recursion.

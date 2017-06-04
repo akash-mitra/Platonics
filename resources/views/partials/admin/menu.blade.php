@@ -12,6 +12,9 @@
 		<li>
 			<a href="{{route('category-list')}}">Categories</a>
 		</li>
+		<li>
+			<a href="{{route('module-list')}}">Modules</a>
+		</li>
 		<li>Tags</li>
 	</ul>
 
@@ -26,7 +29,7 @@
 		
 	</ul>
 
-	<div class="topline">
+	<!-- <div class="topline">
 		<h3>Manage Layouts</h3>
 	</div>
 	<p></p>
@@ -35,5 +38,5 @@
 			<a href="{{route('admin-designer')}}">Homepage Designer</a>
 		</li>
 		
-	</ul>
+	</ul> -->
 </div>
