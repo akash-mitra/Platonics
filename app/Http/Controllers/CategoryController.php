@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Page;
 use App\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CategoryController extends Controller
 {
@@ -24,8 +25,9 @@ class CategoryController extends Controller
 
     protected function show ($categorySlug)
     {
-        $category = Category::whereSlug($categorySlug)->first();
+        $category = Category::whereSlug($categorySlug)->firstOrFail();
         $pages = $category->pages;
+        
         if (count($pages) != 0)
             return view ('category.show', [
                 'category' => $category, 
@@ -38,12 +40,15 @@ class CategoryController extends Controller
 
     protected function create ()
     {
+        if(! $this->hasPermission ('create')) return redirect()->back();
     	return view ('category.create');
     }
 
 
     protected function store (Request $request)
     {
+        if(! $this->hasPermission ('store')) return redirect()->back();
+
     	$doc = new Category ([
     		'name' => strip_tags($request->input('head')),
             'slug' => strip_tags($request->input('url')),
@@ -53,21 +58,26 @@ class CategoryController extends Controller
 
     	$doc->save();
     	
-    	return redirect()
-    		->route('category-list')
-    		->withMessage('New category created');
+        flash('New category ' . $doc->name . ' created successfully')->success();
+    	return redirect()->route('category-list');		
     }
 
 
     protected function edit ($id)
     {
+        if(! $this->hasPermission ('edit')) return redirect()->back();
+
         $category = Category::findOrFail($id);
+
         return view ('category.edit', compact('category'));
     }
 
 
     protected function save (Request $request)
     {
+
+        if(! $this->hasPermission ('save')) return redirect()->back();
+
         $id = $request->input('id');
         $parent_id = $request->input('cat');
 
@@ -85,9 +95,8 @@ class CategoryController extends Controller
         $category->parent_id = $parent_id; 
         $category->save();
         
-        return redirect()
-            ->route('category-edit', $id)
-            ->withMessage('Category saved');
+        flash('Category saved')->success();
+        return redirect()->route('category-edit', $id);
     }
 
 
@@ -98,5 +107,20 @@ class CategoryController extends Controller
         if(empty($p)) return false;
         if ($p->id == $id) return true;
         else return false;
+    }
+
+
+    private function hasPermission ($action)
+    {
+            $type = Auth::user()->type;
+
+            // admin should be able to do anything
+            if ($type == 'Admin') {
+                return true;
+            }
+            
+            // for everything else, deny permission
+            flash ('You do not have permission to ' . $action . ' category')->warning();
+            return false;
     }
 }

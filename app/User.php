@@ -5,8 +5,10 @@ namespace App;
 use App\Page;
 use App\LoginProvider;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+
 
 class User extends Authenticatable
 {
@@ -91,6 +93,23 @@ class User extends Authenticatable
     public function getUrlAttribute()
     {
         return '/profile/user/' . $this->slug;
+    }
+
+
+    public static function permittedAttributes ()
+    {
+        $lookerType = Auth::user()->type;
+
+        if ($lookerType === 'Registered') // no email, no type, no last_updated
+            return ['id', 'name', 'avatar', 'created_at', 'slug'];
+
+        if ($lookerType === 'Author') // no email
+            return ['id', 'name', 'avatar', 'type', 'created_at', 'updated_at', 'slug'];
+
+        if (in_array($lookerType, ['Admin', 'Editor'])) 
+            return ['id', 'name', 'avatar', 'email', 'type', 'created_at', 'updated_at', 'slug'];
+
+        return ['id', 'slug'];
     }
 
 }

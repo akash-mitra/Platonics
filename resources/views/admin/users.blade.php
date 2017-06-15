@@ -26,7 +26,13 @@
 		<table class="table table-sm">
 			<thead>
 				<tr>
-					<th>ID</th><th>User Name</th><th>Type</th><th>Email</th><th>Created</th>
+					<th>ID</th>
+					<th>User Name</th>
+					<th>Type</th>
+					@if(Auth::user()->type != 'Author')
+					<th>Email</th>
+					@endif
+					<th>Created</th> 
 				</tr>
 			</thead>
 			<tbody>
@@ -57,6 +63,7 @@
 						<i class="fa fa-pencil"></i>&nbsp; 
 					@endif
 				  </button>
+				  @if(Auth::user()->type == 'Admin')
 				  <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 				    <span class="caret"></span>
 				    <span class="sr-only">Toggle Dropdown</span>
@@ -83,10 +90,13 @@
 				    	Delete
 				    </a></li>
 				  </ul>
+				  @endif
 				</div>
 				
 				</td>
+				@if(Auth::user()->type != 'Author')
 				<td>{{$u->email}}</td>
+				@endif 
 				<td>{{$u->created_at->diffForHumans()}}</td>
 			      </tr>
 			    @endforeach

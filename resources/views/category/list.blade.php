@@ -12,7 +12,7 @@
 		</div>
 		
 		
-		<a href="{{route('category-create')}}" class="btn btn-success pull-right m15">
+		<a href="{{route('category-create')}}" class="btn btn-success pull-right m15 {{ (Auth::user()->type === 'Admin'?'':'disabled') }}">
 			<i class="fa fa-plus-square-o"></i>&nbsp;
 			New Category
 		</a>
@@ -49,7 +49,7 @@
 							{{ $category->updated_at->diffForHumans()}}
 						</td>
 						<td>
-							<a class="btn btn-sm btn-default" href="{{route('category-edit', $category->id)}}">
+							<a class="btn btn-sm btn-default {{ (Auth::user()->type === 'Admin'?'':'disabled') }}" href="{{route('category-edit', $category->id)}}">
 								<i class="fa fa-pencil-square-o"></i>
 							</a>
 						</td>

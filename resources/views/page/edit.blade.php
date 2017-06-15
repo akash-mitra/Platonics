@@ -93,10 +93,16 @@
 					    	class="form-control custom-control" 
 					    	id="inputText" 
 					    	placeholder="Once up on a time there was a blogger..."
-					    	name="body"
+					    	name="body" 
+					    	oninput="this.editor.update()" 
 					    	style="height: 350px" 
 					    	data-validation='required'
-					    	>{{nl2br($page->markdown)}}</textarea>
+					    	>{{$page->markdown}}</textarea>
+					</div>
+
+					<label>Preview Pane</label>
+					<div id="preview">
+						 <!-- place for the preview to appear -->
 					</div>
 			    	</div>
 			    </div><!-- compose panel -->
@@ -165,8 +171,7 @@
 
 @section('page.script')
 
-	<link rel="stylesheet" href="/css/simplemde/simplemde.css">
-	<script src="/js/simplemde/simplemde.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/remarkable/1.7.1/remarkable.min.js"></script>
 	<script>
 
 		var simplemde;
@@ -188,30 +193,32 @@
 
 		$(document).ready(function () {
 
+			// invoke the markdown editor in the textarea
+			new Editor (gebi("inputText"), gebi("preview"));
 			// textarea
-			simplemde = new SimpleMDE({ 
-				element: $("#inputText")[0],
-				autoDownloadFontAwesome: false,
-				autofocus: true,
-				spellChecker: true,
-				toolbar: [
-						"heading-3", "bold", "italic", "|", 
-						"ordered-list", "unordered-list", "quote", "table", "code", "|",
-						"link", "image", "|",
-						"side-by-side", "preview", "fullscreen"
-					],
-			});
+			// simplemde = new SimpleMDE({ 
+			// 	element: $("#inputText")[0],
+			// 	autoDownloadFontAwesome: false,
+			// 	autofocus: true,
+			// 	spellChecker: true,
+			// 	toolbar: [
+			// 			"heading-3", "bold", "italic", "|", 
+			// 			"ordered-list", "unordered-list", "quote", "table", "code", "|",
+			// 			"link", "image", "|",
+			// 			"side-by-side", "preview", "fullscreen"
+			// 		],
+			// });
 
-			//setTimeout(function() { simplemde.codemirror.refresh(); }, 0);
-			setTimeout(function() {
-				$( "div.CodeMirror-scroll" )[0].click();
-				$( "div.CodeMirror-scroll" ).trigger('click');
-				$( "#inputText" ).trigger('click');
-			}, 1000);
+			// //setTimeout(function() { simplemde.codemirror.refresh(); }, 0);
+			// setTimeout(function() {
+			// 	$( "div.CodeMirror-scroll" )[0].click();
+			// 	$( "div.CodeMirror-scroll" ).trigger('click');
+			// 	$( "#inputText" ).trigger('click');
+			// }, 1000);
 
-			$( "div.CodeMirror-scroll" )[0].click();
-			$( "div.CodeMirror-scroll" ).trigger('click');
-			$( "#inputText" ).trigger('click');
+			// $( "div.CodeMirror-scroll" )[0].click();
+			// $( "div.CodeMirror-scroll" ).trigger('click');
+			// $( "#inputText" ).trigger('click');
 
 			populateSelect ('#inputCat', 
 				'{{route("api-categories")}}',

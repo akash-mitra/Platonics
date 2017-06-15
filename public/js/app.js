@@ -1,3 +1,5 @@
+var gebi = function (id) { return document.getElementById(id); };
+
 /*
  |--------------------------------------------------------------------------
  | This function is used to validate a bootstrap based
@@ -11,14 +13,14 @@
  */
 function validate (e) 
 {
-	let fields = $(e).find('[data-validation="required"]'), error = false,
+	let fields = $(e).find('[data-validation="required"]'), is_valid = true,
 	msg = '<span class="help-block"><strong>This is a required field</strong></span>';
 
 	for (let i = 0; i < fields.length; i++)
 	{
 		// validation check
 		if (fields[i].value.length == 0) {
-			error = true;
+			is_valid = false;
 			let p = fields[i].parentElement;
 			p.className += ' has-error';
 			p.insertAdjacentHTML('beforeend', msg);
@@ -33,7 +35,7 @@ function validate (e)
 			});
 		} // if
 	} // for
-	return !error;
+	return is_valid;
 }
 
 
@@ -122,4 +124,23 @@ function getIconByUserType(type)
 		return '<i class="fa fa-scissors"></i>&nbsp';
 	else 
 		return '<i class="fa fa-dot-circle-o"></i>&nbsp';
+}
+
+
+/*
+ |--------------------------------------------------------------------------
+ |  This function activates the Markddown editor on any textarea
+ |--------------------------------------------------------------------------
+ */
+function Editor (input, preview) {
+	this.update = function () {
+		var md = new Remarkable({
+			html: true,         // Enable HTML tags in source
+			xhtmlOut: true,     // Use '/' to close single tags (<br />)
+			typographer: true,  // provides some common replacements
+		});
+          	preview.innerHTML = md.render(input.value);
+        };
+        input.editor = this;
+        this.update();
 }

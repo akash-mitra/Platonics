@@ -45,11 +45,11 @@
                         </form>
                     </li>
 
-                    @if(Auth::user()->type == 'Admin')
+                    @if(Auth::user()->type != 'Registered')
                         <li>
                             <a href="{{ route('admin')}}">
-                                <i class="fa fa-fw fa-dot-circle-o"></i>&nbsp;
-                                Admin Menu
+                                <i class="fa fa-fw fa-gear"></i>&nbsp;
+                                Control Panel
                             </a>
                         </li>
                     @endif

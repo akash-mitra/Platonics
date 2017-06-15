@@ -12,7 +12,7 @@
 		</div>
 		
 		
-		<a href="{{route('page-create')}}" class="btn btn-success pull-right m15">
+		<a href="{{route('page-create')}}" class="btn btn-success pull-right m15 {{ (Auth::user()->type === 'Registered'?'disabled':'') }}">
 			<i class="fa fa-plus-square-o"></i>&nbsp;
 			New Page
 		</a>
@@ -45,7 +45,7 @@
 							{{\Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $page->updated_at)->diffForHumans()}}
 						</td>
 						<td>
-							<a class="btn btn-sm btn-default" href="{{route('page-edit', $page->id)}}">
+							<a class="btn btn-sm btn-default {{ (Auth::user()->type === 'Registered'?'disabled':'') }}" href="{{route('page-edit', $page->id)}}">
 								<i class="fa fa-pencil-square-o"></i>&nbsp;
 								Edit
 							</a>

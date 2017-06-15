@@ -6,12 +6,6 @@
 			<h3>Menu</h3>
 		</div>
 
-		<!-- <h4>Category Management</h4>
-		<ul>
-			<li>Menu 1</li>
-			<li>Menu 2</li>
-			<li>Menu 3</li>
-		</ul> -->
 	</div>
 @endsection
 
@@ -32,26 +26,41 @@
 		<hr>
 		<table class="timple">
 			<tbody>
+				@if(! empty($user->name))
 				<tr>
 					<td><i class="fa fa-fw fa-user-o"></i>&nbsp;Name:</td>
 					<td>{{ $user->name }}</td>
-					<td>Public</td>
+					<td><i class="fa fa-eye"></i>&nbsp;</td>
 				</tr>
+				@endif
+				@if(! empty($user->email))
 				<tr>
 					<td><i class="fa fa-fw fa-envelope-o"></i>&nbsp;Email</td>
 					<td>{{ $user->email }}</td>
-					<td>Hidden</td>
+					<td><i class="fa fa-eye-slash"></i>&nbsp;</td>
 				</tr>
+				@endif
+				@if(! empty($user->type))
+				<tr>
+					<td><i class="fa fa-fw fa-envelope-o"></i>&nbsp;Type</td>
+					<td>{{ $user->type }}</td>
+					<td><i class="fa fa-eye-slash"></i>&nbsp;</td>
+				</tr>
+				@endif
+				@if(! empty($user->created_at))
 				<tr>
 					<td><i class="fa fa-fw fa-calendar-o"></i>&nbsp;Member Since:</td>
 					<td>{{ $user->created_at->toFormattedDateString() }}</td>
-					<td>Public</td>
+					<td><i class="fa fa-eye"></i>&nbsp;</td>
 				</tr>
+				@endif
+				@if(! empty($user->updated_at))
 				<tr>
 					<td><i class="fa fa-fw fa-clock-o"></i>&nbsp;Last updated:</td>
 					<td>{{ $user->updated_at->diffForHumans() }}</td>
-					<td>Public</td>
+					<td><i class="fa fa-eye-slash"></i>&nbsp;</td>
 				</tr>
+				@endif
 				
 			</tbody>
 		</table>
@@ -71,7 +80,7 @@
 							{{$loop->iteration}}
 						</td>
 						<td>
-							<a href="{{'/' . $page->slug . '/' . str_slug($page->id . ' ' . $page->title)}}">
+							<a href="{{'/' . (empty($page->slug)?'general':$page->slug) . '/' . str_slug($page->id . ' ' . $page->title)}}">
 								{{$page->title}}	
 							</a>
 						</td>

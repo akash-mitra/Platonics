@@ -7,7 +7,9 @@
 @section('main')
 	<div class="p30">
 		<div class="topline">
-			Home > Admin > Settings
+			<a href="/">Home</a> &gt;
+			<a href="{{route('admin')}}">Admin</a> &gt;
+			<a href="{{route('page-index')}}">Pages</a> &gt;
 		</div>
 		<br>
 		
@@ -74,10 +76,15 @@
 					    <textarea 
 					    	class="form-control custom-control" 
 					    	id="inputText" 
+					    	oninput="this.editor.update()" 
 					    	placeholder="Once up on a time there was a blogger..."
 					    	name="body"
-					    	style="height: 350px" 
+					    	style="height: 250px" 
 					    	data-validation='required'></textarea>
+					</div>
+					<label>Preview Pane</label>
+					<div id="preview">
+						
 					</div>
 			    	</div>
 			    </div><!-- compose panel -->
@@ -124,33 +131,21 @@
 
 
 @section('page.script')
-	<link rel="stylesheet" href="/css/simplemde/simplemde.css">
-	<script src="/js/simplemde/simplemde.min.js"></script>
+	<!-- <link rel="stylesheet" href="/css/simplemde/simplemde.css"> -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/remarkable/1.7.1/remarkable.min.js"></script>
 	<script>
-		var simplemde;
-
 		$('#btn-submit').click (function () {
-			//$("#inputText").val(simplemde.value());
-			//var html = simplemde.options.previewRender(value);
-			//console.log(html);
-			// if (validate('#frm-create')) 
-			// 	$('#frm-create').submit();
+			
+			if (validate('#frm-create')) {
+				console.log('submitting');
+				$('#frm-create').submit();
+			}
 		});
 
 		$(document).ready(function () {
-
-			// textarea
-			simplemde = new SimpleMDE({ 
-				element: $("#inputText")[0],
-				autoDownloadFontAwesome: false,
-				spellChecker: true,
-				toolbar: [
-						"heading-3", "bold", "italic", "|", 
-						"ordered-list", "unordered-list", "quote", "table", "code", "|",
-						"link", "image", "|",
-						"side-by-side", "preview", "fullscreen"
-					],
-			});
+			
+			// invoke the markdown editor in the textarea
+			new Editor (gebi("inputText"), gebi("preview"));
 
 			// make sure the category select list is prepopulated
 			populateSelect ('#inputCat', '{{route("api-categories")}}');

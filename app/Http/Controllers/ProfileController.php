@@ -22,12 +22,11 @@ class ProfileController extends Controller
 		// user wants to visit his/her own profile
 		if ($slug == null) $user = Auth::user();
 		else $user = User::whereSlug($slug)
-			->get($this->profileVisibility(Auth::user()->type))
+			->get(User::permittedAttributes())
 			->first();
 
-		if(empty($user)) 
-    			return response()->view('errors.404', [], 404);
-		
+		// if user does not exists, return
+		if(empty($user)) abort(404, 'Page does not exist');
 
 		// get all article pages written by this user				
 		$pages = $user->articles();
@@ -38,29 +37,17 @@ class ProfileController extends Controller
 
 	protected function setType (Request $request)
 	{
-		$type = $request->input('type');
-		$slug = $request->input('slug');
-
 		// only admins can change profile type
 		if (Auth::user()->type != 'Admin') 
 			return response('Unauthorised action', 403);
+		
+		$type = $request->input('type');
+		$slug = $request->input('slug');
 
 		// update the type
 		$user = User::whereSlug($slug)->first();
 		$user->setType ($type);
 
 		return response('done');
-	}
-
-
-
-
-	private function profileVisibility ($lookerType)
-	{
-		if ($lookerType == 'Registered') 
-			return ['id', 'name', 'avatar', 'created_at', 'updated_at'];
-		if ($lookerType == 'Admin') 
-			return ['id', 'name', 'avatar', 'email', 'created_at', 'updated_at', 'slug'];
-		return ['id', 'slug'];
 	}
 }

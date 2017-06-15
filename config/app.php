@@ -180,6 +180,8 @@ return [
         // login service providers
         Laravel\Socialite\SocialiteServiceProvider::class,
 
+        // flash messaging service provider
+        Laracasts\Flash\FlashServiceProvider::class,
     ],
 
     /*

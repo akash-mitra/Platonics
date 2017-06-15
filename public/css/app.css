@@ -182,6 +182,11 @@ blockquote {
     box-shadow: 8px 8px 20px #888;
     display: table;
 }
+
+#preview {
+	border: 1px dashed #eee;
+    	padding: 5px 10px;
+}
 	
 /*
  * Social Buttons for Bootstrap
