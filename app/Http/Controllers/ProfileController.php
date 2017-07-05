@@ -28,10 +28,13 @@ class ProfileController extends Controller
 		// if user does not exists, return
 		if(empty($user)) abort(404, 'Page does not exist');
 
-		// get all article pages written by this user				
+		// get all article pages and comments written by this user
 		$pages = $user->articles();
 		
-		return view('profile.index', ['user' => $user, 'pages' => $pages]);	
+		return view('profile.index', [
+			'user' => $user, 
+			'pages' => $pages,
+			]);	
 	}
 
 

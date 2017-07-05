@@ -52,3 +52,8 @@ $factory->define(App\Page::class, function (Faker\Generator $faker) {
         'publish' => '1',
     ];
 });
+
+
+$factory->define(App\Comment::class, function (Faker\Generator $faker) {
+    return ['body' => $faker->paragraph(1, true)];
+});

@@ -23,7 +23,7 @@ class AdminController extends Controller
 
 		    // if not allowed, then redirect
 		    flash('You do not have permission to this page')->warning();
-		    return redirect()->back();
+		    return redirect('/'); // redirecting back may create too many redirect loops
 		});
 	}
 

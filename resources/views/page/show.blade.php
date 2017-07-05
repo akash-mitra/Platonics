@@ -34,7 +34,10 @@
 	<div class="article-body">
 		{!! $page->markup !!}
 	</div>
+	
 	<div class="article-footer">
+		@include('partials.comment.show')
+		
 		<div class="row">
 			<div class="col-md-6">
 				<h3>We are a community</h3>
@@ -50,6 +53,10 @@
 			</div>
 		</div>
 	</div>
+	<!-- end of article footer -->
 </div>
+@endsection
 
+@section('page.script')
+	@include('partials.comment.scripts')
 @endsection

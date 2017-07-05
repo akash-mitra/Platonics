@@ -49,7 +49,7 @@
                         <li>
                             <a href="{{ route('admin')}}">
                                 <i class="fa fa-fw fa-gear"></i>&nbsp;
-                                Control Panel
+                                {{ Auth::user()->type }} Panel
                             </a>
                         </li>
                     @endif

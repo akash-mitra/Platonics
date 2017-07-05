@@ -1,3 +1,4 @@
+
 body {
 	background-color: #E9EBEB;
 	font-family: 'helvetica neue',helvetica,arial,'lucida grande',sans-serif;
@@ -186,6 +187,52 @@ blockquote {
 #preview {
 	border: 1px dashed #eee;
     	padding: 5px 10px;
+}
+
+.comment-strip {
+	margin: 0;
+    	border-bottom: 1px dashed #eee;
+    	padding: 15px 0 30px 0;
+}
+
+.comment-strip img {
+	margin-right: 10px;
+}
+
+.post-time {
+	font-size: 80%;
+	color: #777;
+	margin-right: 10px;
+}
+
+.highlighter {
+	animation-name: yellowpulse;
+	animation-duration: 700ms;
+	animation-delay: 0s;
+	animation-iteration-count: 4;
+	animation-direction: alternate;
+	animation-timing-function: ease-out;
+}
+
+.comment-text {
+	margin: 2px 0;
+    	padding: 10px;
+   	border-left: 3px solid floralwhite;
+    	font-style: italic;
+    	box-shadow: 5px 5px 10px #efefef;
+}
+
+.comment-time {
+	color: #777;
+	float: right;
+}
+
+.comment-ref {
+	text-decoration: none;
+}
+@keyframes yellowpulse {
+ 	from { background-color: #ffff99; }
+ 	to { background-color: none;}
 }
 	
 /*

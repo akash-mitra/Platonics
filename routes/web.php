@@ -34,7 +34,7 @@ Auth::routes();
 Route::get('/redirect/{provider}', 'Auth\RegisterController@redirectToProvider');
 Route::get('/auth/{provider}/callback', 'Auth\RegisterController@handleProviderCallback');
 Route::get('/profile', 'ProfileController@user')->name('profile');
-Route::get('/profile/user/{slug}', 'ProfileController@user')->name('user');
+Route::get('/profile/{slug}', 'ProfileController@user')->name('user');
 
 Route::post('/profile/user/change/type', 'ProfileController@setType')->name('user-change-type');
 Route::post('/profile/user/delete', 'ProfileController@delete')->name('delete-user');
@@ -87,6 +87,22 @@ Route::post('/admin/module/delete/{id}', 'ModuleController@destroy')->name('modu
 
 
 Route::get('/api/v1/get/categories', 'API\v1\ApiCategoryController@getCategories')->name('api-categories');
+
+
+
+/* 
+ |--------------------------------------------------------------------------
+ | Comments
+ |--------------------------------------------------------------------------
+ */
+
+Route::get('/users/{slug}/comments', 'CommentsController@commentsByUser')
+	->name('comments-by-user');
+Route::get('/pages/{id}/comments', 'CommentsController@commentsByPage')
+	->name('comments-on-page');
+Route::post('/comments/store', 'CommentsController@store')
+	->name('comments-store');
+
 
 Route::get('/{CategorySlug}', 'CategoryController@show')->name('category-view');
 Route::get('/{categorySlug}/{page?}', 'PageController@show')->name('page-view');

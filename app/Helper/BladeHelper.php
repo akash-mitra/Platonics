@@ -25,7 +25,13 @@ class BladeHelper {
 	// 	return ob_get_clean();
 	// }
 
+	// public static function siteMember ()
+	// {
+	// 	return 
+	// 	in_array(Auth::user()->type, ['Registered', 'Admin', 'Editor', 'Author']);
+	// }
 
+	
 
 	public static function loadModule ($name)
 	{

@@ -72,8 +72,20 @@ function populateSelect (e, url, p, defValue, exclusionList)
 }
 
 
+/*
+ |--------------------------------------------------------------------------
+ |  reference: https://stackoverflow.com/questions/12022614
+ |--------------------------------------------------------------------------
+ */
+function stripHTML(str) {
+  var strippedText = $("<div/>").html(str).text();
+  return strippedText;
+}
 
-
+function escapeHTML(str) {
+  var escapedText = $("<div/>").text(str).html();
+  return escapedText;
+}
 
 /*
  |--------------------------------------------------------------------------
@@ -82,16 +94,18 @@ function populateSelect (e, url, p, defValue, exclusionList)
  */
 function makeAjaxRequest (param)
 {
+	if (typeof param.data === 'undefined') param.data = {};
 	param.data['_token'] = $('meta[name="csrf-token"]').attr('content');
-	// console.log(param);
+	
 	$.ajax ({
 		method: param.method,
 		url: param.to,
 		data: param.data,
 		beforeSend: (typeof param.before === 'undefined'? waitWheel("Talking to the server...") : param.before),
 		success: (typeof param.success === 'undefined'? ajaxSuccess : param.success),
-		error: (typeof param.success === 'undefined'? ajaxError : param.error),
+		error: (typeof param.error === 'undefined'? ajaxError : param.error),
 	});
+	
 }
 
 function ajaxSuccess ()
@@ -144,3 +158,126 @@ function Editor (input, preview) {
         input.editor = this;
         this.update();
 }
+
+
+
+/*
+ |--------------------------------------------------------------------------
+ |  Handy functions to determine if an object is partially/fully visible
+ |--------------------------------------------------------------------------
+ */
+function isElementPartiallyInViewport (el)
+{
+    //special bonus for those using jQuery
+    if (typeof jQuery !== 'undefined' && el instanceof jQuery) el = el[0];
+    
+    var rect = el.getBoundingClientRect();
+    // DOMRect { x: 8, y: 8, width: 100, height: 100, top: 8, right: 108, bottom: 108, left: 8 }
+    var windowHeight = (window.innerHeight || document.documentElement.clientHeight);
+    var windowWidth = (window.innerWidth || document.documentElement.clientWidth);
+
+    // http://stackoverflow.com/questions/325933/determine-whether-two-date-ranges-overlap
+    var vertInView = (rect.top <= windowHeight) && ((rect.top + rect.height) >= 0);
+    var horInView = (rect.left <= windowWidth) && ((rect.left + rect.width) >= 0);
+
+    return (vertInView && horInView);
+}
+
+
+// http://stackoverflow.com/questions/123999/how-to-tell-if-a-dom-element-is-visible-in-the-current-viewport
+function isElementInViewport (el) 
+{
+    //special for jQuery
+    if (typeof jQuery !== 'undefined' && el instanceof jQuery) el = el[0];
+
+
+    var rect = el.getBoundingClientRect();
+    var windowHeight = (window.innerHeight || document.documentElement.clientHeight);
+    var windowWidth = (window.innerWidth || document.documentElement.clientWidth);
+
+    return (
+           (rect.left >= 0)
+        && (rect.top >= 0)
+        && ((rect.left + rect.width) <= windowWidth)
+        && ((rect.top + rect.height) <= windowHeight)
+    );
+
+}
+
+
+// function onVisibilityChange (el, callback, type) {
+//     var old_visible;
+//     return function () {
+//         var visible = (type == 'false'? isElementPartiallyInViewport(el) : isElementInViewport(el));
+//         if (visible != old_visible) {
+//             old_visible = visible;
+//             if (typeof callback == 'function') {
+//                 callback();
+//             }
+//         }
+//     }
+// }
+
+function runOnceInView (el, callback)
+{
+	//special for jQuery
+    	if (typeof jQuery !== 'undefined' && el instanceof jQuery) el = el[0];
+
+	var handler = function () {
+		if (isElementPartiallyInViewport(el) && isDuplicateCallback (el, callback) === false)
+			callback ();
+	}
+
+	if (window.addEventListener) {
+	    addEventListener('DOMContentLoaded', handler, false); 
+	    addEventListener('load', handler, false); 
+	    addEventListener('scroll', handler, false); 
+	    addEventListener('resize', handler, false); 
+	} else if (window.attachEvent)  {
+	    attachEvent('onDOMContentLoaded', handler); // IE9+ :(
+	    attachEvent('onload', handler);
+	    attachEvent('onscroll', handler);
+	    attachEvent('onresize', handler);
+	}
+}
+
+let triggerCallbackSet = [];
+function isDuplicateCallback (el, callback)
+{
+	// since the callback needs to be called 
+	// only once per element visibility, we 
+	// need to maintain a list of all calls
+	let registeredCallbacks = triggerCallbackSet[el];
+
+	if (typeof registeredCallbacks === 'undefined') {
+		// no callback has been registered against this element
+		// so, set the current callback against the element
+		triggerCallbackSet[el] = [callback];
+		return false;
+	}
+
+	// there is some callback registered against this element
+	if (registeredCallbacks.indexOf(callback) === -1) {
+		// but current callbak is not part of registered callbacks
+		// so, add the current callback to the list
+		triggerCallbackSet[el].push(callback);
+		return false;
+	}
+	
+	// current callback is part of the registered callbacks
+	// so, don't do anything more
+	return true;
+}
+
+
+// jQuery.fn.highlight = function (duration=2000) {
+//     $(this).each(function() {
+//         var el = $(this);
+//         el.before("<div/>")
+//         el.prev()
+//             .width(el.width())
+//             .height(el.height())
+//             .addClass("highlighter");
+//             // .fadeOut(duration);
+//     });
+// }

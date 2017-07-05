@@ -1,37 +1,10 @@
 <?php
 
 namespace Tests\Feature;
-use App\User;
-use App\Page;
-use App\Category;
-use Tests\TestCase;
-// use Illuminate\Foundation\Testing\WithoutMiddleware;
-// use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Tests\BlogTestDataSetup;
 
-class ProfileTest extends TestCase
-{
-	use DatabaseTransactions;
-   
-    	protected $user, $userWithArticles, $adminUser, $articles, $category;
-
-    	public function setUp ()
-    	{
-    		parent::setUp();
-    		
-    		// create a few users
-    		$this->user = factory(User::class)->create();
-    		$this->userWithArticles = factory(User::class)->create();
-    		$this->adminUser = factory(User::class)->create(["type" => "Admin"]);
-    		
-    		// create couple of articles by one user
-    		$this->category = factory(Category::class)->create(['parent_id' => null]);
-		$this->articles = factory(Page::class, 2)->create([
-			"user_id" => $this->userWithArticles->id,
-			"category_id" => $this->category->id,
-		]);
-    	}
-
+class ProfileTest extends BlogTestDataSetup
+{  
 
 	public function test_auth_user_can_access_own_profile_page()
 	{
@@ -42,15 +15,14 @@ class ProfileTest extends TestCase
 	}
 
 
-
 	public function test_auth_user_can_access_any_profile_page() 
 	{
 		// when user tries to visit the profile page 
-		// of another user (in this case userWithArticles)
+		// of another user 
 		$this->actingAs($this->user)
-			->get('/profile/user/' . $this->userWithArticles->slug)
+			->get(route('user', $this->author->slug))
 			->assertStatus(200)
-			->assertSee('Profile Page for ' . $this->userWithArticles->name);
+			->assertSee('Profile Page for ' . $this->author->name);
 	}
 
 
@@ -59,39 +31,67 @@ class ProfileTest extends TestCase
 		$this->get('/profile')
 			->assertStatus(302);
 
-		$this->get('/profile/user/' . $this->user->slug)
+		$this->get(route('user', $this->user->slug))
 			->assertStatus(302);
 	}
 
 
 	public function test_an_incorrect_slug_throws_error ()
 	{
-		$this->get('/profile/user/1234.1234.1234')
+		$this->get(route('user', '1234.1234.1234'))
 			->assertStatus(302);
 	}
 
 
-	public function test_only_admin_user_can_see_email ()
+	public function test_admin_and_editor_can_see_user_email ()
 	{
-		$someUserProfilePage = '/profile/user/' . $this->user->slug;
+		$someUserProfilePage = route('user', $this->user->slug);
 
-		// we will need to test 2 things...
-		// first - admin can see the email when s/he visits the profile page
-		$this->actingAs($this->adminUser)
+		$this->actingAs($this->admin)
 			->get($someUserProfilePage)
 			->assertSeeText($this->user->email);
 
-		// and second - non-admin can not see the email on the same page
-		$this->actingAs($this->userWithArticles)
+		$this->actingAs($this->editor)
+			->get($someUserProfilePage)
+			->assertSeeText($this->user->email);
+	}
+
+
+	public function test_author_can_not_see_user_email ()
+	{
+		$someUserProfilePage = route('user', $this->user->slug);
+		$this->actingAs($this->author)
 			->get($someUserProfilePage)
 			->assertDontSeeText($this->user->email);
+	}
+
+
+	public function test_registered_users_can_not_see_user_email ()
+	{
+		// assume the other user is author
+		$someUserProfilePage = route('user', $this->author->slug);
+		// try to view author email as a registered user
+		$this->actingAs($this->user)
+			->get($someUserProfilePage)
+			->assertDontSeeText($this->user->email);
+	}
+
+
+	public function test_user_can_see_own_email ()
+	{
+		// own profile
+		$someUserProfilePage = route('profile');
+
+		$this->actingAs($this->user)
+			->get($someUserProfilePage)
+			->assertSeeText($this->user->email);
 	}
 
 
 	public function test_that_articles_by_a_user_appear_in_profile_page ()
 	{
 		$this->actingAs($this->user)
-			->get('/profile/user/' . $this->userWithArticles->slug)
+			->get(route('user', $this->author->slug))
 			->assertSeeText($this->articles[0]->title)
 			->assertSeeText($this->articles[1]->title);
 	}

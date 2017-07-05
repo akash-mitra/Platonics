@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Page;
+use App\Comment;
 use App\LoginProvider;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -53,6 +54,12 @@ class User extends Authenticatable
     }
 
 
+    public function comments ()
+    {
+        return $this->hasMany(Comment::class);
+    }
+
+
     /**
      * This function provides a list of user articles with
      * article title, id, category slug and publish date.
@@ -98,16 +105,24 @@ class User extends Authenticatable
 
     public static function permittedAttributes ()
     {
-        $lookerType = Auth::user()->type;
-
-        if ($lookerType === 'Registered') // no email, no type, no last_updated
+        $authUser = Auth::user();
+        
+        if ($authUser->type === 'Registered') 
+        {
+            // no email, no type, no last_updated
             return ['id', 'name', 'avatar', 'created_at', 'slug'];
+        }
 
-        if ($lookerType === 'Author') // no email
+        if ($authUser->type === 'Author') 
+        {
+            // no email
             return ['id', 'name', 'avatar', 'type', 'created_at', 'updated_at', 'slug'];
+        }
 
-        if (in_array($lookerType, ['Admin', 'Editor'])) 
+        if (in_array($authUser->type, ['Admin', 'Editor'])) 
+        {
             return ['id', 'name', 'avatar', 'email', 'type', 'created_at', 'updated_at', 'slug'];
+        }
 
         return ['id', 'slug'];
     }

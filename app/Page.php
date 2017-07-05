@@ -2,8 +2,9 @@
 
 namespace App;
 
-use App\Category;
 use App\User;
+use App\Comment;
+use App\Category;
 use Illuminate\Database\Eloquent\Model;
 
 class Page extends Model
@@ -28,6 +29,11 @@ class Page extends Model
 		return $this->belongsTo(Category::class);
 	}
 
+	public function comments ()
+	{
+		return $this->hasMany(Comment::class);
+	}
+
 	public function getTommyAttribute()
 	{
 		return $this->id;
@@ -35,6 +41,9 @@ class Page extends Model
 
 	public function getUrlAttribute ()
 	{
-		return '/' . $this->category->slug . '/' . str_slug($this->id . ' ' . $this->title);
+		return '/' 
+		. (empty($this->category->slug)? 'general' : $this->category->slug)
+		. '/' 
+		. str_slug($this->id . ' ' . $this->title);
 	}
 }
