@@ -57,3 +57,8 @@ $factory->define(App\Page::class, function (Faker\Generator $faker) {
 $factory->define(App\Comment::class, function (Faker\Generator $faker) {
     return ['body' => $faker->paragraph(1, true)];
 });
+
+
+$factory->define(App\Configuration::class, function (Faker\Generator $faker) {
+    return ['key' => $faker->word(), 'value' => $faker->sentence()];
+});

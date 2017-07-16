@@ -1,13 +1,14 @@
 <hr>
 <div class="row">
 	<div class="col-md-12">
-		<h2>
+		<h5>
 			Comments
 			<br>
 			<small>
 				Share your opinion. Join the discussion.
 			</small>
-		</h2>
+		</h5>
+		<hr>
 		@if(Auth::check())
 			<div class="comment-strip">
 				<img align="left" src="{{Auth::user()->avatar}}">
@@ -23,10 +24,15 @@
 						    	name="text"></textarea>
 						</div>
 						<div id="comment-btn-span" style="display: none">
-							<a id="btn-comment" class="btn btn-success pull-right">
-								<i id="btn-icon" class="fa fa-comment-o fa-fw"></i>&nbsp;
-								Post 
-							</a>	
+							<button 
+								id="btn-comment" 
+								class="btn btn-success pull-right">
+									<i 
+										id="btn-icon" 
+										class="fa fa-comment-o fa-fw">
+									</i>&nbsp;
+									Post 
+							</button>	
 						</div>
 					</form>
 				</div>

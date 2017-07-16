@@ -5,12 +5,20 @@
 	@if(Auth()->check())
 		$('#btn-comment').click (function(){ 
 
+			
+
 			// let us save the comment in a global variable
 			// so that we can use it later to repopulate the
 			// textarea if comment saving fails this time.
 			// that way, user will not have to type it again
 			// if server fails to save.
 			lastComment = $('#inputComment').val();
+
+			// reject if comment is too short
+			if(lastComment.length <= 1) {
+				alert('Comment too short for posting');
+				return;
+			}
 
 			// create the saving related parameters
 			savingsParams.data = {
@@ -48,19 +56,6 @@
 			makeAjaxRequest(retrieveParams); 
 		});
 	});
-
-	// handy function to generate a single comment strip
-	function generateCommentStrip (userName, userProfile, userAvatar, comment, ago = null)
-	{
-		return '<div class="comment-strip">'
-			+ '<img align="left" src="' 
-			+ (userAvatar === null? '/img/no-dp.png': userAvatar) 
-			+ '"/><div style="overflow: hidden">' 
-			+ '<a href="' + userProfile + '"><b>' + userName + '</b></a>'
-			+ '<span class="post-time pull-right' 
-			+ (ago===null?' saving"><i class="fa fa-spinner fa-spin"></i>&nbsp;Saving...':'"><i class="fa fa-clock-o"></i>&nbsp;' + ago)
-			+ '</span><br />' + comment + '</div></div>';
-	}
 
 	function displayComments (comments, el) {
 		el = $(el);

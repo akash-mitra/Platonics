@@ -1,24 +1,20 @@
 @extends('layouts.app')
 
 @section('aside')
-	<div class="p30">
-		<h4>Related </h4>
-		<p>
-			This is some related article on this topic
-			<?php echo BladeHelper::loadModule("testdcdc");  ?>
-		</p>
-	</div>
+	<h4>Related </h4>
+	<p>
+		These are some related articles on this topic
+	</p>
 @endsection
 
 @section('main')
-<div class="p30">
-	<!-- <div class="topline">
-		Home > $category > Settings
-	</div> -->
+
+	@include('partials.breadcrumb', ['content' => $page])
+	
 	<h3>
 		{{$page->title}}
 	</h3>
-	
+
 	<div class="article-info">
 		<span class="small pull-left">
 			Written by <a href="{{$page->author->url}}">{{$page->author->name}}</a>
@@ -27,14 +23,14 @@
 			Last updated {{$page->updated_at->diffForHumans()}}
 		</span>
 	</div>
-	
+
 	<p class="lead">
 		{!! $page->intro !!}
 	</p>
 	<div class="article-body">
 		{!! $page->markup !!}
 	</div>
-	
+
 	<div class="article-footer">
 		@include('partials.comment.show')
 		
@@ -53,8 +49,8 @@
 			</div>
 		</div>
 	</div>
-	<!-- end of article footer -->
-</div>
+<!-- end of article footer -->
+
 @endsection
 
 @section('page.script')

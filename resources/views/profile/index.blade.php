@@ -1,37 +1,47 @@
 @extends('layouts.app')
 
-@section('aside')
-	<div class="p20">
-		<div class="topline">
-			<h3>Menu</h3>
-		</div>
-
-	</div>
-@endsection
-
 @section('main')
-	<div class="p20">
-		<div class="topline">
-			<a href="/">Home</a> > <a href="{{route('profile')}}">Profile</a>
-		</div>
+	<div class="topline">
+		<ol class="breadcrumb custom-breadcrumb">
+			<li class="breadcrumb-item">
+				<a href="/">Home</a>		
+			</li>
+			<li class="breadcrumb-item">
+				Profile
+			</li>
+		</ol>
+	</div>
 
-		<h3 style="line-height: 26px">
-			<img src="{{ $user->avatar }}" style="display: block; margin: 0 10px 0 0" align="left">
-			{{ $user->name }}	
-			<br>
-			<small style="margin-top: 0px">Profile Page for {{ $user->name }}</small>
-		</h3>
+	<h4 style="line-height: 26px">
+		<img 
+			src="{{ $user->avatar }}" 
+			style="display: block; margin: 0 10px 0 0" align="left"
+		/>
+		{{ $user->name }}	
+		<br>
+		<small style="margin-top: 0px">{{ $user->type }}</small>
+	</h4>
 
-		<ul class="nav nav-tabs">
-		  <li class="active"><a data-toggle="tab" href="#overview">Basic</a></li>
-		  <li><a data-toggle="tab" href="#articles">Articles</a></li>
-		  <li><a data-toggle="tab" href="#comments" onclick="getComments()">Comments</a></li>
-		</ul>
+	<p>&nbsp;</p>
 
-		<div class="tab-content">
-		  <div id="overview" class="tab-pane fade in active">
-		    	<br>
-			<table class="timple">
+	<ul class="nav nav-tabs">
+		<li class="nav-item">
+			<a class="nav-link active" data-toggle="tab" href="#overview">About</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link" data-toggle="tab" href="#articles">Articles</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link" data-toggle="tab" href="#comments" onclick="getComments()">	Comments
+			</a>
+		</li>
+	</ul>
+		
+	<br>
+
+	<div class="tab-content">
+		<div id="overview" class="tab-pane active">
+			<table class="table no-table-border">
 				<tbody>
 					@if(! empty($user->name))
 					<tr>
@@ -72,7 +82,8 @@
 				</tbody>
 			</table>
 			@if(Auth::user()->type === 'Admin')
-				<h4>Social Authentication Providers</h4>
+				<br>
+				<h5>Social Authentication Providers</h5>
 				<hr>
 				<table class="timple">
 					@foreach($user->providers as $social)
@@ -90,12 +101,12 @@
 					
 				</table>
 			@endif
-		  </div>
-		  <div id="articles" class="tab-pane fade">
-		    	<br>
+		</div>
+		<div id="articles" class="tab-pane">
+		    	
 			@if(count($pages)> 0)
 				<p>Below articles are contributed by {{ $user->name }}</p>
-				<table class="timple table">
+				<table class="table">
 					<thead>
 						<tr><th>#</th><th>Article</th><th>Published</th></tr>
 					</thead>
@@ -120,13 +131,14 @@
 					{{{ $user->name }}} has not contributed any article yet.
 				</p>
 			@endif
-		  </div>
-		  <div id="comments" class="tab-pane fade">
-		  </div>
 		</div>
-		<p>&nbsp;</p>
+		<div id="comments" class="tab-pane">
+			<!-- comments -->
+		</div>
 	</div>
-	
+
+	<p>&nbsp;</p>
+
 @endsection
 
 @section('page.script')
@@ -151,24 +163,32 @@
 			commentsRetrieved = true;
 		}
 
-		function displayComments (r, e)
+		function displayComments (comments, e)
 		{
-			if (typeof r === 'undefined' || r.length < 1) {
+			if (typeof comments === 'undefined' || comments.length < 1) {
 				$(e).html('<p>No comment retrieved</p>');
 				return;
 			}
 			var strips = '';
-			for (let i = 0, l = r.length; i < l; i++) {
-				var c = r[i];
-				strips += '<div class="comment-strip">'
-				  + '<span class="comment-ref">On <a href="'+c.page.url+'">' 
-				  + c.page.title + '</a></span>' 
-				  + '<p class="comment-text">' + c.text + '</p>' 
-				  + '<span class="comment-time">Commented '+c.when+'</span>'
-				  + '</div>';
+			for (let i = 0, l = comments.length; i < l; i++) {
+				var c = comments[i];
+				strips += '<div class="card"><div class="card-block">'
+				  + '<h4 class="card-title">' 
+				  + c.page.title 
+				  + '</h4>'
+    				  + '<p class="card-subtitle small mb-2 text-muted">' 
+    				  + c.page.intro 
+    				  + '</p>'
+    				  + generateCommentStrip(c.user.name, c.user.profile, c.user.avatar, c.text, c.when)
+    				  + '<p></p>'
+    				  + '<a href="'+c.page.url+'" class="card-link pull-right">'
+    				  + "Read Now" + '</a>'
+				  + '</div></div><br>' 
+				  + '';
 			}
+			
 			$(e).html(strips);
 		}
-		
+	
 	</script>
 @endsection

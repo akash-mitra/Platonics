@@ -93,10 +93,10 @@ class BladeHelper {
 		return $value . '</' . $treeTag . '>';
 	}
 
-
+	// ATTENTION : This only applies to Bootstrap version 3 or less
 	// This function works like buildHTMLListfromTree() but it adds the required Bootstrap 
 	// classes to generate bootstrap style on-click 2-level drop dropdown menu.
-	public static function buildBootStrapMenufromTree (array $items, $level = 0, $class = 'nav navbar-nav') 
+	public static function buildBootStrap3MenufromTree (array $items, $level = 0, $class = 'nav navbar-nav') 
 	{
 		$value = '<ul class="' . $class . '">';
 		foreach ($items as $item)
@@ -121,9 +121,27 @@ class BladeHelper {
 		return $value . '</ul>';
 	}
 
+
+	// ATTENTION : This only applies to Bootstrap version 4
+	// This function does not support bootstrap nested submenu dropdown
+	public static function buildBootStrap4MenufromTree (array $items, $level = 0, $class = 'navbar-nav mr-auto') 
+	{
+		$value = '<ul class="' . $class . '">';
+		foreach ($items as $item)
+		{
+			$value .= '<li class="nav-item">' 
+				. '<a class="nav-link" href="' . $item['url'] . '">'
+				. $item['name']
+				. '</a>'
+				. '</li>';
+		}
+		return $value . '</ul>';
+	}
+
 	// A helper class to generate menu
 	public static function buildSiteMenu (array $items)
 	{
-		return BladeHelper::buildBootStrapMenufromTree(BladeHelper::buildTree($items));
+		//TODO change the function based on bootstrap version in use
+		return BladeHelper::buildBootStrap4MenufromTree(BladeHelper::buildTree($items));
 	}
 }

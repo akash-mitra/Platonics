@@ -45,6 +45,7 @@ class Comment extends Model
 			'users.avatar', 
 			'users.type', 
 			'pages.title', 
+			'pages.intro', 
 			'pages.id', 
     			'categories.slug as category'
     		];

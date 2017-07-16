@@ -5,9 +5,9 @@ namespace App;
 use App\User;
 use App\Comment;
 use App\Category;
-use Illuminate\Database\Eloquent\Model;
+use App\Content;
 
-class Page extends Model
+class Page extends Content
 {
 	protected $fillable = [
 		'title', 'intro', 'category_id', 'markup', 'markdown', 'metakey', 'metadesc', 'publish'
@@ -24,10 +24,18 @@ class Page extends Model
 		return $this->belongsTo(User::class, 'user_id');
 	}
 
+
 	public function category ()
 	{
-		return $this->belongsTo(Category::class);
+		return $this->belongsTo(Category::class, 'category_id', 'id');
 	}
+
+
+	public function parent()
+	{
+		return $this->belongsTo(Category::class, 'category_id', 'id');
+	}
+	
 
 	public function comments ()
 	{

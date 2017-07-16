@@ -21,7 +21,7 @@ Route::get('/', function () {
  |--------------------------------------------------------------------------
  */
 Route::get('/pages', 'PageController@index')->name('page-index');
-Route::get('/categories', 'CategoryController@list')->name('category-list');
+Route::get('/categories', 'CategoryController@index')->name('category-index');
 
 
 
@@ -86,6 +86,22 @@ Route::get('/admin/module/edit/{id}', 'ModuleController@edit')->name('module-edi
 Route::post('/admin/module/delete/{id}', 'ModuleController@destroy')->name('module-delete');
 
 
+/* 
+ |--------------------------------------------------------------------------
+ | Site setup related routes
+ |--------------------------------------------------------------------------
+ */
+Route::get('/admin/config/storage', 'ConfigurationController@showStorage')->name('storage');
+Route::post('/admin/config/storage', 'ConfigurationController@saveStorage')->name('storage-store');
+Route::get('/admin/config/image', 'ConfigurationController@showImage')->name('image');
+Route::post('/admin/config/image', 'ConfigurationController@saveImage')->name('image-store');
+
+
+/* 
+ |--------------------------------------------------------------------------
+ | Specific site external APIs
+ |--------------------------------------------------------------------------
+ */
 Route::get('/api/v1/get/categories', 'API\v1\ApiCategoryController@getCategories')->name('api-categories');
 
 

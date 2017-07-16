@@ -16,25 +16,22 @@ class CategoryController extends Controller
     }
 
 
-    protected function list ()
+    protected function index ()
     {
     	$categories = Category::all();
-    	return view('category.list', compact('categories'));
+    	return view('category.index', compact('categories'));
     }
 
 
     protected function show ($categorySlug)
     {
         $category = Category::whereSlug($categorySlug)->firstOrFail();
-        $pages = $category->pages;
+        $pages = $category->pages ?? new App\Page();
         
-        if (count($pages) != 0)
-            return view ('category.show', [
-                'category' => $category, 
-                'pages' => $pages
-            ]);
-        else 
-            return view ('category.empty')->withCategory($category);
+        return view ('category.show', [
+            'category' => $category, 
+            'pages' => $pages
+        ]);
     }
 
 

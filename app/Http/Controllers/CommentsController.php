@@ -97,6 +97,7 @@ class CommentsController extends Controller
     			],
     			'page' => [
     				'title' => $this->noHTML($comment->title),
+                    'intro' => $this->noHTML($comment->intro),
     				'url' => '/' 
     					. (empty($comment->category)? 'general':$comment->category)
     					. '/' 

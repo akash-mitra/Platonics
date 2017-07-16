@@ -11,18 +11,18 @@ class ProfileTest extends BlogTestDataSetup
 		$this->actingAs($this->user)
 			->get('/profile')
 			->assertStatus(200)
-			->assertSee('Profile Page for ' . $this->user->name);
+			->assertSee($this->user->name);
 	}
 
 
 	public function test_auth_user_can_access_any_profile_page() 
 	{
 		// when user tries to visit the profile page 
-		// of another user 
+		// of another user, in this case an author
 		$this->actingAs($this->user)
 			->get(route('user', $this->author->slug))
 			->assertStatus(200)
-			->assertSee('Profile Page for ' . $this->author->name);
+			->assertSee($this->author->name);
 	}
 
 

@@ -3,7 +3,8 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -11,74 +12,64 @@
     <title>{{ config('app.name', 'Blog') }}</title>
 
     <!-- Styles -->
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+
     
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
 
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-    <!-- Scripts -->
     <script>
         window.Laravel = {!! json_encode([
             'csrfToken' => csrf_token(),
         ]) !!};
     </script>
+
 </head>
-<body>
-    <div id="app">
-        <nav class="navbar navbar-default navbar-static-top bg-white">
-            <div class="container">
-                <div class="navbar-header">
+<body>  
+  <!--- work site -->
+  <nav class="navbar navbar-toggleable-md navbar-light menu-border">
+    <button class="navbar-toggler navbar-toggler-right" 
+            type="button" 
+            data-toggle="collapse" 
+            data-target="#navbarSupportedContent" 
+            aria-controls="navbarSupportedContent" 
+            aria-expanded="false" 
+            aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <a class="navbar-brand" href="#">{{ config('app.name') }}</a>
 
-                    <!-- Collapsed Hamburger -->
-                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#app-navbar-collapse">
-                        <span class="sr-only">Toggle Navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-
-                    <!-- Branding Image -->
-                    <a class="navbar-brand" href="{{ url('/') }}">
-                        
-                        {{ config('app.name') }}
-                    </a>
-                </div>
-
-                <div class="collapse navbar-collapse" id="app-navbar-collapse">
-                    <!-- Left Side Of Navbar -->
-                    @include('partials.menu')
-
-                    <!-- Right Side Of Navbar -->
-                    @include('partials.userbar')
-                </div>
-            </div>
-        </nav>
-
-        <div class="container-fluid">
-            <div class="row gutterless equal-height-cols kill-top-margin">
-                <div class="col-lg-offset-1 col-lg-3 col-md-3 col-sm-3 col-xs-12 leftcol">
-                    <aside>
-                        @yield('aside')
-                    </aside>
-                </div>
-                <div class="col-lg-7 col-md-9 col-sm-9 col-xs-12 rightcol">
-                    
-                    @include('flash::message')
-
-                    <main>
-                        @yield('main')          
-                    </main>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-offset-1 coll-lg-10 footer">
-                    <footer>
-                        @yield('footer')
-                    </footer>
-                </div>
-            </div>
-        </div>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      @include('partials.menu')  
+      @include('partials.userbar')
     </div>
+  </nav>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-8 blog-main">
+        @include('flash::message')
+        <main>
+            @yield('main')          
+        </main>
+      </div>
+      <div class="col-sm-4 blog-sidebar">
+        <aside>
+            <form class="bd-search hidden-sm-down search-styling">
+              <input type="text" class="form-control" id="search-input" placeholder="Search..." autocomplete="off">
+            </form>
+            @yield('aside')
+        </aside>
+      </div><!-- /.blog-sidebar -->
+    </div><!-- /.row -->
+  </div><!-- /.container -->
+  <footer class="blog-footer">
+      @yield('footer')
+      &copy;{{ config('app.name', 'Blog') }}. Licensed under creative commons
+      <p>
+          <a href="#">Back to top</a>
+      </p>
+  </footer>
 
     @if (Auth::guest())
         @include('partials.loginbox2')
@@ -88,8 +79,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
 
     <!-- Bootstrap Script -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
 
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+    
     <!-- application script -->
     <script src="{{ asset('js/app.js') }}"></script>
 

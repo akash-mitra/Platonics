@@ -99,7 +99,8 @@ class User extends Authenticatable
 
     public function getUrlAttribute()
     {
-        return '/profile/user/' . $this->slug;
+        // return '/profile/user/' . $this->slug;
+        return route('user', $this->slug);
     }
 
 

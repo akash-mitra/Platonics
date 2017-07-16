@@ -131,13 +131,13 @@ function waitWheel (msg)
 function getIconByUserType(type)
 {
 	if (type == 'Registered') 
-		return '<i class="fa fa-user-o"></i>&nbsp';
+		return '<i class="fa fa-fw  fa-user-o"></i>&nbsp';
 	else if (type === 'Author')
-		return '<i class="fa fa-pencil"></i>&nbsp';
+		return '<i class="fa fa-fw fa-pencil"></i>&nbsp';
 	else if (type === 'Editor')
-		return '<i class="fa fa-scissors"></i>&nbsp';
+		return '<i class="fa fa-fw fa-scissors"></i>&nbsp';
 	else 
-		return '<i class="fa fa-dot-circle-o"></i>&nbsp';
+		return '<i class="fa fa-fw fa-dot-circle-o"></i>&nbsp';
 }
 
 
@@ -267,6 +267,19 @@ function isDuplicateCallback (el, callback)
 	// current callback is part of the registered callbacks
 	// so, don't do anything more
 	return true;
+}
+
+// handy function to generate a single comment strip
+function generateCommentStrip (userName, userProfile, userAvatar, comment, ago = null)
+{
+	return '<div class="comment-strip">'
+		+ '<img align="left" src="' 
+		+ (userAvatar === null? '/img/no-dp.png': userAvatar) 
+		+ '"/><div style="overflow: hidden">' 
+		+ '<a href="' + userProfile + '"><b>' + userName + '</b></a>'
+		+ '<span class="post-time pull-right' 
+		+ (ago===null?' saving"><i class="fa fa-spinner fa-spin"></i>&nbsp;Saving...':'"><i class="fa fa-clock-o"></i>&nbsp;' + ago)
+		+ '</span><br />' + comment + '</div></div>';
 }
 
 

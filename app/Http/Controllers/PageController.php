@@ -60,7 +60,7 @@ class PageController extends Controller
         
         
     	if ($page->publish == '1' 
-                && ($page->category_id == null || $page->category->slug === $categorySlug))
+                && ($page->category_id === null || $page->category->slug === $categorySlug))
     	   return view ('page.show', compact('page'));
 
         abort(404, 'Page Not Found');

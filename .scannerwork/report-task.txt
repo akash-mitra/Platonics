@@ -1,0 +1,7 @@
+organization=akash-mitra-github
+projectKey=bloggy
+serverUrl=https://sonarcloud.io
+serverVersion=6.5.0.26088
+dashboardUrl=https://sonarcloud.io/dashboard/index/bloggy
+ceTaskId=AV0TyaKFIFNNGQWIvSlB
+ceTaskUrl=https://sonarcloud.io/api/ce/task?id=AV0TyaKFIFNNGQWIvSlB
