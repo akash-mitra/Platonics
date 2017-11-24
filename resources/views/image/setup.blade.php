@@ -17,7 +17,7 @@
 	
 	<br>
 	
-	<form method="post" action="{{route('image-store')}}" id="frm-create">
+	<form method="post" action="{{route('image-config-store')}}" id="frm-create">
 		{{ csrf_field() }}
 		
 		<div class="form-group">

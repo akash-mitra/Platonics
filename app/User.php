@@ -104,6 +104,12 @@ class User extends Authenticatable
     }
 
 
+    public function assets()
+    {
+        return $this->hasMany(Image::class);
+    }
+
+
     public static function permittedAttributes ()
     {
         $authUser = Auth::user();

@@ -86,6 +86,16 @@ Route::get('/admin/module/edit/{id}', 'ModuleController@edit')->name('module-edi
 Route::post('/admin/module/delete/{id}', 'ModuleController@destroy')->name('module-delete');
 
 
+
+/* 
+ |--------------------------------------------------------------------------
+ | Image management related APIs
+ |--------------------------------------------------------------------------
+ */
+Route::post('/admin/images', 'ImageController@store')->name('image-store');
+
+
+
 /* 
  |--------------------------------------------------------------------------
  | Site setup related routes
@@ -94,7 +104,7 @@ Route::post('/admin/module/delete/{id}', 'ModuleController@destroy')->name('modu
 Route::get('/admin/config/storage', 'ConfigurationController@showStorage')->name('storage');
 Route::post('/admin/config/storage', 'ConfigurationController@saveStorage')->name('storage-store');
 Route::get('/admin/config/image', 'ConfigurationController@showImage')->name('image');
-Route::post('/admin/config/image', 'ConfigurationController@saveImage')->name('image-store');
+Route::post('/admin/config/image', 'ConfigurationController@saveImage')->name('image-config-store');
 
 
 /* 
@@ -119,9 +129,11 @@ Route::get('/pages/{id}/comments', 'CommentsController@commentsByPage')
 Route::post('/comments/store', 'CommentsController@store')
 	->name('comments-store');
 
+Route::get('/test', function () {
+	return 'test';
+});
 
 Route::get('/{CategorySlug}', 'CategoryController@show')->name('category-view');
 Route::get('/{categorySlug}/{page?}', 'PageController@show')->name('page-view');
-
 
 

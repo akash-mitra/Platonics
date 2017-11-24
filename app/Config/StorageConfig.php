@@ -5,7 +5,7 @@ use App\Configuration;
 
 class StorageConfig {
 
-	public $type, $location, $apiKey, $apiSecret, $user;
+	public $type, $region, $apiKey, $apiSecret, $user;
 
 	public function save()
 	{
@@ -20,6 +20,13 @@ class StorageConfig {
 	}
 
 
+	public function region($region)
+	{
+		$this->region = $region;
+		return $this;
+	}
+
+
 	public function apiKey($apiKey)
 	{
 		$this->apiKey = $apiKey;
@@ -30,11 +37,5 @@ class StorageConfig {
 	{
 		$this->apiSecret = $apiSecret;
 		return $this;
-	}	
-
-	public function location($location)
-	{
-		$this->location = $location;
-		return $this;
-	}	
+	}
 }

@@ -18,7 +18,7 @@
 	<!-- Nav tabs -->
 	<ul class="nav nav-tabs" role="tablist">
 		<li class="nav-item">
-			<a class="nav-link active" data-toggle="tab" href="#aws" role="tab">Amazon</a>
+			<a class="nav-link active" data-toggle="tab" href="#aws" role="tab"><i class="fa fa-amazon"></i>&nbsp;Amazon</a>
 		</li>
 	</ul>
 
@@ -46,6 +46,16 @@
 				    <label for="inputSecret">Secret</label>
 				    <input type="text" class="form-control" id="inputSecret" name="secret" placeholder="Paste your AWS API Secret" value="{{ $storage->apiSecret }}">
 				</div>
+
+				<div class="form-group">
+				    <label for="inputRegion">Region</label>
+				    <input type="text" class="form-control" id="inputRegion" name="region" placeholder="AWS Region (us-east-1)" value="{{ $storage->region }}">
+				</div>
+
+				<p class="small">
+					<i class="fa fa-info"></i>&nbsp;
+					You need to mention the region where your AWS S3 bucket is hosted. Full list of <a href="http://docs.aws.amazon.com/general/latest/gr/rande.html" target="_blank">AWS Regions</a> are available here.
+				</p>
 
 				<input type="hidden" name="type" value="aws">
 

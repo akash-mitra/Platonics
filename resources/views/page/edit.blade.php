@@ -1,7 +1,11 @@
 @extends('layouts.app')
 
+@section('page.css')
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.1.1/min/dropzone.min.css" integrity="sha256-e47xOkXs1JXFbjjpoRr1/LhVcqSzRmGmPqsrUQeVs+g=" crossorigin="anonymous" />
+@endsection
+
 @section('aside')
-	@include('partials.admin.menu')
+	@include('partials.page.writerPanel')
 @endsection
 
 @section('main')
@@ -25,6 +29,8 @@
 	<form method="POST" action="{{route('page-delete', $page->id)}}" id="frm-delete">
 		{{csrf_field()}}
 	</form>
+
+	@include('partials.image.modal')
 	
 @endsection
 
@@ -32,6 +38,7 @@
 @section('page.script')
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/remarkable/1.7.1/remarkable.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.1.1/min/dropzone.min.js" integrity="sha256-0dCrNKhVyiX4bBpScyU5PT/iZpxzlxjn2oyaR7GQutE=" crossorigin="anonymous"></script>
 	<script>
 
 		$('#btn-close').click (function () {
@@ -74,4 +81,6 @@
 		});
 
 	</script>
+
+	@include('partials.image.modal-script')
 @endsection

@@ -35,6 +35,7 @@ class ConfigurationController extends Controller
 		$storage->type($req->input('type'))
 			->apiKey($req->input('key'))
 			->apiSecret($req->input('secret'))
+			->region($req->input('region'))
 			->save();
 
 		flash('Storage Configuration saved successfully')->success();

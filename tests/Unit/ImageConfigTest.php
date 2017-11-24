@@ -8,9 +8,9 @@ class ImageConfigTest extends BlogTestDataSetup
 
 	public function test_non_admin_users_can_not_config_image () {
 		$this->can_not_access_a_url(route('image'), $this->editor);
-		$this->can_not_access_a_url(route('image-store'), $this->editor);
+		$this->can_not_access_a_url(route('image-config-store'), $this->editor);
 		$this->can_not_access_a_url(route('image'), $this->user);
-		$this->can_not_access_a_url(route('image-store'), $this->user);
+		$this->can_not_access_a_url(route('image-config-store'), $this->user);
 	}
 
 
@@ -21,7 +21,7 @@ class ImageConfigTest extends BlogTestDataSetup
 
 		// check storage info is saved properly
 		$this->actingAs($this->admin)
-			->post(route('image-store'), ["storageProvider" => $storageProvider, "baseLocation" => $baseLocation])
+			->post(route('image-config-store'), ["storageProvider" => $storageProvider, "baseLocation" => $baseLocation])
 			->assertRedirect(route('image'));
 
 		// and can be retrived later
