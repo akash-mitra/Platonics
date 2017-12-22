@@ -12,8 +12,8 @@
 		</li>
 
 		<li class="menu-item">
-			<a class="menu-entry" href="{{ route('image') }}">
-				<i class="fa fa-file-image-o fa-fw"></i>&nbsp;Image 
+			<a class="menu-entry" href="{{ route('cdn') }}">
+				<i class="fa fa-clone fa-fw"></i>&nbsp;Content Delivery 
 			</a>
 		</li>
 	</ul>
@@ -34,6 +34,13 @@
 		<li class="menu-item">
 			<a href="{{route('category-index')}}">
 				<i class="fa fa-paperclip fa-fw"></i>&nbsp;Categories
+			</a>
+		</li>
+
+
+		<li class="menu-item">
+			<a href="{{route('media-index')}}">
+				<i class="fa fa-picture-o fa-fw"></i>&nbsp;Media
 			</a>
 		</li>
 

@@ -5,8 +5,9 @@ namespace App\Http\Controllers;
 use App\Page;
 use App\Category;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class PageController extends Controller
 {
@@ -24,30 +25,39 @@ class PageController extends Controller
         // show        |  Y     | Y      | Y      | Y
         // -------------------------------------------------
 
+        // only admin can delete an article
         $this->middleware('admin')->only('destroy');
 
-        $this->middleware(function ($request, $next) {
-
-            if (Auth::user() 
-                && in_array (Auth::user()->type, array('Author', 'Editor', 'Admin'))) 
+        // Author, Editor and Admin can access page editor or save page
+        $this->middleware(function ($request, $next) 
+        {
+            if (Auth::user() && in_array (Auth::user()->type, array('Author', 'Editor', 'Admin'))) 
             {
                 return $next($request);
             }
 
-            // if not allowed, then redirect
             flash ('You do not have permission to perform this action')->warning();
-            return redirect()->back();
+            return redirect()->route('page-index');
 
-        })->only(['create', 'store', 'edit', 'save']);
+        })->only(['editor', 'save']);
     }
 
 
+
+    /**
+     * Returns a page containing the list of all articles
+     */
     protected function index ()
     {
     	$pages = $this->list();
     	return view ('page.index', compact('pages'));
     }
 
+
+
+    /**
+     * Returns a single article page 
+     */
     protected function show ($categorySlug, $pageSlug = null)
     {
     	// The Id is determined by cutting the slug from the
@@ -67,73 +77,70 @@ class PageController extends Controller
     }
 
 
-    protected function create ()
+
+    /**
+     * Opens up a blank page editor if id is not provided.
+     * If Id is provided, opens up a page editor with the page contents.
+     */
+    protected function editor ($id = null)
     {
-        if(! $this->hasPermission ('create')) return redirect()->back();
-    	return view ('page.create');
-    }
+        $page = $this->getPageObject ($id);
 
-    protected function store (Request $request)
-    {      
+        if (!$this->hasPermission('edit', $page)) {
+            return redirect()->route('page-index');
+        }
 
-        if(! $this->hasPermission ('store')) return redirect()->back();
-
-        $markdown = $request->input('body');
-        $markup   = $this->_getHTML($markdown);
-    	$doc = new Page ([
-    		'title'       => $request->input('head'),
-    		'intro'       => $request->input('summary'),
-            'category_id' => $request->input('cat'),
-    		'markup'      => $markup,
-            'markdown'    => $markdown,
-    		'metakey'     => $request->input('keys'),
-    		'metadesc'    => $request->input('desc'),
-            'publish'     => $request->has('publish') ? 1 : 0
-    	]);
-
-    	$page = Auth::user()->pages()->save($doc);
-    	
-        flash('Page saved successfully')->success();
-    	return redirect()->route('page-edit', $page->id);
+        return view('page.editor', compact('page'));
     }
 
 
-    protected function edit ($id)
-    {
-        $page = Page::findOrFail($id);
 
-        if(! $this->hasPermission ('edit', $page)) return redirect()->back();
-
-        return view ('page.edit', compact('page'));
-    }
-
-
+    /**
+     * Saves a the contents of the page to the database.
+     * If the page does not already exists, then create 
+     * new page. If the page exists, then update the page.
+     */
     protected function save (Request $request)
     {
-        $id = $request->input('id');
-        $page = Page::findOrFail($id);
-        
-        if(! $this->hasPermission ('save', $page)) return redirect()->back();
+        $page = $this->getPageObject ($request->input('id'));
 
-        $page->title         = $request->input('head');
-        $page->intro         = $request->input('summary');
-        $page->category_id   = $request->input('cat');
-        $page->markdown      = $request->input('body'); 
-        $page->markup        = $this->_getHTML($request->input('body'));
-        $page->metakey       = $request->input('keys');
-        $page->metadesc      = $request->input('desc');
-        $page->publish       = $request->has('publish') ? 1 : 0;
+        if (! $this->hasPermission('save', $page)) {
+            return redirect()->route('page-index');
+        }
 
-        $page->save();
-        
-        flash('Page saved successfully')->success();
-        return redirect()->route('page-edit', $id);
+        $page->fill($request->input());
+    	
+        try {
+            $page = Auth::user()->pages()->save($page);
+            return response()->json($page->id, 200);
+        }
+        catch (HttpException $e) {
+            return response()->json(["message" => $e->getMessage()], $e->getStatusCode());
+        }
     }
 
 
+
+    /**
+     * A handy function to get a new or existing page object
+     */
+    private function getPageObject ($id = null)
+    {
+        if (empty($id)) {
+            return new Page();
+        } else {
+            return Page::findOrFail ($id);
+        }
+    }
+    
+
+
+    /**
+     * Deletes the page from the database
+     */
     protected function destroy ($id)
     {
-        if(! $this->hasPermission ('delete'))  return redirect()->back();
+        if(! $this->hasPermission ('delete'))  return redirect()->route('page-index');
 
         $page = Page::findOrFail($id);
         $page->delete();
@@ -145,31 +152,35 @@ class PageController extends Controller
 
 
 
+
+    /**
+     * Checks whether the user accessing the page has permission
+     * to perform the intended operation, e.g., edit or delete
+     */
     private function hasPermission ($action, $resource = null)
     {
-            $type = Auth::user()->type;
+            $userType = Auth::user()->type;
 
             // admin should be able to do anything
-            if ($type == 'Admin') {
+            if ($userType == 'Admin') {
                 return true;
             }
             
             // editor is like admin, but does not have delete rights
-            if($type == 'Editor' && $action != 'delete') {
+            if ($userType == 'Editor' && $action != 'delete') {
                 return true;
             }
 
-            // authors are like editors, but when it comes to 
-            // edit or update, they can do so only in their
-            // own articles.
-            if($type == 'Author') 
+            // authors are like editors, but they can only change
+            // their own documents or create new documents
+            if ($userType == 'Author' && in_array($action, ['edit', 'save'])) 
             {
-                // creation is fine, after all that's what authors do
-                if(in_array($action, array('create', 'store')))
+                // access editor or save route to create new page is fine
+                if(empty($resource->id))
                     return true;
 
-                // but update is only restricted to own contents
-                if (in_array($action, array('edit', 'save')) && !empty($resource) && $resource->author->id === Auth::user()->id) 
+                // access editor to save own page is fine
+                if (! empty($resource->id) && $resource->author->id === Auth::user()->id) 
                     return true;
             }
 
@@ -179,38 +190,33 @@ class PageController extends Controller
     }
 
 
+
     /*
      * This is a helper function to query only the attributes
      * required in this view. This helps in avoiding selection
      * of large text columns and clog up memory
-     */
+     */ 
     private function list ()
     {
-        return DB::select('select 
-                a.id, 
-                a.title, 
-                a.created_at, 
-                a.updated_at, 
-                u.name author, 
-                case 
-                    when c.name is null then "uncategorized" 
-                    else c.name
-                end category
-            from pages a 
-            left outer join users u on a.user_id = u.id 
-            left outer join categories c on a.category_id = c.id
-            order by a.updated_at desc');
+
+        return DB::table('pages')
+                ->leftJoin('users', 'pages.user_id', 'users.id')
+                ->leftJoin('categories', 'pages.category_id', 'categories.id')
+                ->select(DB::raw('pages.id, pages.title, pages.created_at, pages.updated_at, users.name as author, case when categories.name is null then "uncategorized" else categories.name end as category'))
+                ->paginate(20);
     }
 
 
-    private function _getHTML ($markdown) 
-    {
-        /* 
-         * We will convert the markdown to html
-         * markup and store both the markup and the
-         * markdown versions in the database for future.
-         */
-        $parser   = new \Parsedown();
-        return $parser->text($markdown);
-    }
+
+    // /
+    // private function _getHTML ($markdown) 
+    // {
+    //     /* 
+    //      * We will convert the markdown to html
+    //      * markup and store both the markup and the
+    //      * markdown versions in the database for future.
+    //      */
+    //     $parser   = new \Parsedown();
+    //     return $parser->text($markdown);
+    // }
 }

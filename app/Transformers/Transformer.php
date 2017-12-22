@@ -9,11 +9,11 @@ class Transformer {
 
 	public function transform (Collection $items, array $field_mapper)
 	{	
-		$arr = $items->toArray();
+		$itemsArray = $items->toArray();
 		$transformedCollection = [];
-		foreach ($arr as $e) {
+		foreach ($itemsArray as $item) {
 			$transformed = [];
-			foreach( $e as $origKey => $value ) {
+			foreach ($item as $origKey => $value ) {
 				$newKey = $field_mapper[$origKey] ?? null;
 				
 				if (! empty($newKey)) $transformed[$newKey] = $value;

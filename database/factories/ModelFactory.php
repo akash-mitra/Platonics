@@ -47,7 +47,6 @@ $factory->define(App\Page::class, function (Faker\Generator $faker) {
     return [
         'title' => $faker->sentence,
         'intro' => $faker->paragraph,
-        'markdown' => $para1 . "\n### " . $head1 . "\n" . $para2 . "\n### " . $head2 . "\n". $para3,
         'markup' => '<p>' . $para1 . '</p><h3>' . $head1 . '</h3><p>' . $para2 . '</p><h3>'. $head2 . '</h3><p>'. $para3 . '</p>',
         'publish' => '1',
     ];

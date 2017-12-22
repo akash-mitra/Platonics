@@ -6,18 +6,34 @@ use App\Configuration;
 
 use Tests\BlogTestDataSetup;
 
-class ConfigurationTest extends BlogTestDataSetup
+class ConfigurationTest //extends BlogTestDataSetup
 {
 
-	public function test_if_configuration_can_be_stored_and_retrieved () {
+	protected $key;
+	protected $value;
 
-		$key = bin2hex(random_bytes(20));
-		$value = bin2hex(random_bytes(20));
+	public function setUp ()
+	{
+		$this->key = bin2hex(random_bytes(20));
+		$this->value = bin2hex(random_bytes(20));
+	}
 
-		Configuration::persist($key, $value);
-		$newValue = Configuration::retrieveValue($key);
 
-		$this->assertEquals($value, $newValue);
+
+	public function test_if_configuration_can_be_stored_and_retrieved () 
+	{
+		Configuration::persist ($this->key, $this->value);
+		$newValue = Configuration::retrieveValue ($this->key);
+
+		$this->assertEquals ($this->value, $newValue);
+	}
+
+
+
+	public function test_if_a_configuration_can_be_deleted ()
+	{
+		Configuration::remove ($this->key);
+		$this->assertEquals (null, Configuration::retrieveValue($this->key));
 	}
 
 }

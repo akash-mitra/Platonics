@@ -23,13 +23,13 @@ a:hover {
 	text-decoration: none;
 }
 
-.container {
-  max-width: 65rem;
-}
+/* .container {
+  max-width: 65rem; //What the fuck is this?
+} */
 
 .blog-sidebar {
 	background-color: transparent;
-	padding-left: 3rem;
+	/* padding-left: 3rem; */
 }
 
 .blog-footer {
@@ -230,6 +230,12 @@ blockquote {
     padding-bottom: 99999px;
 }*/
 
+.editor-header {
+	/* border-bottom: 1px solid #ccc; */
+	font-weight: 500;
+	color: #ccc;
+}
+
 .solaris {
 	background-color: #263238;
 	color: #80CBC4;
@@ -250,6 +256,23 @@ blockquote {
 	margin-bottom: 20px;
 }
 
+
+.media-info {
+	font-size: 10px; 
+	display: block; 
+	text-transform: capitalize;
+}
+
+.media-thumbnail {
+	height: 10vh;
+	box-shadow: 1px 1px 5px #ccc;
+	cursor: pointer;
+}
+
+.media-thumbnail-selected {
+	border: 5px solid cornflowerblue;
+	box-shadow: 0 0 0 #fff;
+}
 
 #loadingDiv{
     position: fixed;

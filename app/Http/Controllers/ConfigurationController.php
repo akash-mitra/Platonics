@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Configuration;
-use App\Config\ImageConfig;
+use App\Config\CdnConfig;
 use App\Config\StorageConfig;
 
 class ConfigurationController extends Controller
@@ -16,7 +16,7 @@ class ConfigurationController extends Controller
 	}
 
 
-    	protected function showStorage ()
+    protected function showStorage ()
 	{
 		$storage = Configuration::retrieveObjectByKey('storage', StorageConfig::class);
 		return view('storage.setup')->withStorage($storage);
@@ -31,39 +31,57 @@ class ConfigurationController extends Controller
 		// create a new storage of given type
 		$storage = new StorageConfig();
 
-		// set the relevant params
-		$storage->type($req->input('type'))
-			->apiKey($req->input('key'))
-			->apiSecret($req->input('secret'))
-			->region($req->input('region'))
-			->save();
 
-		flash('Storage Configuration saved successfully')->success();
+		// IMPORTANT
+		// if all the storage parameters come as blank, we should remove the storage config
+		if (empty($req->input('key')) 
+			&& empty($req->input('secret')) 
+			&& empty($req->input('region')) 
+			&& empty($req->input('bucket'))) {
+			
+				$storage->delete();
+				flash('Storage Configuration Deleted Successfully')->success();
+		}
+		else 
+		{
+			// set the relevant params
+			$storage->type($req->input('type'))
+				->apiKey($req->input('key'))
+				->apiSecret($req->input('secret'))
+				->region($req->input('region'))
+				->bucket($req->input('bucket'))
+				->save();
+
+			flash('Storage Configuration Saved Successfully')->success();
+		}
+
 		return redirect()->to(route('storage'));
 	}
 
 
-	protected function showImage ()
+	protected function showCdn ()
 	{
-		$image = Configuration::retrieveObjectByKey('image', ImageConfig::class);
-		return view('image.setup')->withImage($image);;
+		$cdn = Configuration::retrieveObjectByKey('cdn', CDNConfig::class);
+		return view('cdn.setup')->withCdn($cdn);;
 	}
 
 
-	protected function saveImage (Request $req) 
+	protected function saveCdn (Request $req) 
 	{
 		// validation
 		// TODO
 		
 		// create a new storage of given type
-		$image = new ImageConfig();
+		$cdn = new CDNConfig();
 
 		// set the relevant params
-		$image->storageProvider($req->input('storageProvider'))
-			->baseLocation ($req->input('baseLocation'))
+		$cdn->css($req->input('css-cdn'))
+			->js($req->input('js-cdn'))
+			->media($req->input('media-cdn'))
 			->save();
 
-		flash('Image Configuration saved successfully')->success();
-		return redirect()->to(route('image'));
+		flash('CDN Configuration saved successfully')->success();
+
+		return redirect()->to(route('cdn'));
 	}
 }

@@ -8,7 +8,7 @@ use App\Transformers\Transformer;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class ApiCategoryController extends Controller
+class APICategoryController extends Controller
 {
 
 	protected $field_mapper = [

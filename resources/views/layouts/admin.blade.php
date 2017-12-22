@@ -3,7 +3,8 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -16,17 +17,19 @@
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
 
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-    
-    <!-- Scripts -->
+
+    @yield('page.css')
+
     <script>
         window.Laravel = {!! json_encode([
             'csrfToken' => csrf_token(),
         ]) !!};
     </script>
+
 </head>
-<body>
-    <div id="app">
-        <nav class="navbar navbar-expand-lg navbar-light menu-border">
+<body>  
+  <!--- work site -->
+  <nav class="navbar navbar-expand-lg navbar-light menu-border">
     
     <a class="navbar-brand" href="#">{{ config('app.name') }}</a>
     
@@ -47,23 +50,35 @@
     </div>
   </nav>
 
-        <div class="container-fluid">
-            <div class="row gutterless kill-top-margin">
-                <div class="col-md-12">
-                    <main>
-                        @yield('main')          
-                    </main>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-offset-1 coll-lg-10 footer">
-                    <footer>
-                        @yield('footer')
-                    </footer>
-                </div>
-            </div>
+  <div class="container">
+    <div class="row">
+      
+        <div class="col-lg-3 blog-sidebar">
+            <aside>
+                <!-- <form class="bd-search hidden-sm-down search-styling">
+                    <input type="text" class="form-control" id="search-input" placeholder="Search..." autocomplete="off">
+                </form> -->
+                <br>
+                @yield('aside')
+            </aside>
+        </div><!-- /.blog-sidebar -->
+    
+        <div class="col-lg-9 blog-main">
+            @include('flash::message')
+            <main>
+                @yield('main')          
+            </main>
         </div>
-    </div>
+      
+    </div><!-- /.row -->
+  </div><!-- /.container -->
+  <footer class="blog-footer">
+      @yield('footer')
+      &copy;{{ config('app.name', 'Blog') }}. Licensed under creative commons
+      <p>
+          <a href="#">Back to top</a>
+      </p>
+  </footer>
 
     @if (Auth::guest())
         @include('partials.loginbox2')

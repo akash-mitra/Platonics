@@ -65,10 +65,8 @@ Route::patch('/admin/category/save', 'CategoryController@save')->name('category-
  | Blogging related routes that only admin can access
  |--------------------------------------------------------------------------
  */
-Route::get('/admin/page/create', 'PageController@create')->name('page-create');
-Route::post('/admin/page/store', 'PageController@store')->name('page-store');
-Route::get('/admin/page/edit/{id}', 'PageController@edit')->name('page-edit');
-Route::patch('/admin/page/save', 'PageController@save')->name('page-save');
+Route::get('/admin/page/editor/{id?}', 'PageController@editor')->name('page-editor');
+Route::post('/admin/page/save', 'PageController@save')->name('page-save');
 Route::post('/admin/page/delete/{id}', 'PageController@destroy')->name('page-delete');
 
 
@@ -89,10 +87,11 @@ Route::post('/admin/module/delete/{id}', 'ModuleController@destroy')->name('modu
 
 /* 
  |--------------------------------------------------------------------------
- | Image management related APIs
+ | Media management related APIs
  |--------------------------------------------------------------------------
  */
-Route::post('/admin/images', 'ImageController@store')->name('image-store');
+Route::get('/admin/media', 'MediaController@index')->name('media-index');
+Route::post('/admin/media', 'MediaController@store')->name('media-store');
 
 
 
@@ -103,16 +102,8 @@ Route::post('/admin/images', 'ImageController@store')->name('image-store');
  */
 Route::get('/admin/config/storage', 'ConfigurationController@showStorage')->name('storage');
 Route::post('/admin/config/storage', 'ConfigurationController@saveStorage')->name('storage-store');
-Route::get('/admin/config/image', 'ConfigurationController@showImage')->name('image');
-Route::post('/admin/config/image', 'ConfigurationController@saveImage')->name('image-config-store');
-
-
-/* 
- |--------------------------------------------------------------------------
- | Specific site external APIs
- |--------------------------------------------------------------------------
- */
-Route::get('/api/v1/get/categories', 'API\v1\ApiCategoryController@getCategories')->name('api-categories');
+Route::get('/admin/config/cdn', 'ConfigurationController@showCdn')->name('cdn');
+Route::post('/admin/config/cdn', 'ConfigurationController@saveCdn')->name('cdn-config-store');
 
 
 
@@ -137,3 +128,11 @@ Route::get('/{CategorySlug}', 'CategoryController@show')->name('category-view');
 Route::get('/{categorySlug}/{page?}', 'PageController@show')->name('page-view');
 
 
+
+/* 
+ |--------------------------------------------------------------------------
+ | APIs
+ |--------------------------------------------------------------------------
+ */
+Route::get('/api/v1/get/categories', 'API\v1\APICategoryController@getCategories')->name('api-categories');
+Route::get('/api/v1/get/media', 'API\v1\APIMediaController@getMedia')->name('api-media');

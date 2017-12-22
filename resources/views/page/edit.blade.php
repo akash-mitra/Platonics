@@ -1,7 +1,12 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
 @section('page.css')
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.1.1/min/dropzone.min.css" integrity="sha256-e47xOkXs1JXFbjjpoRr1/LhVcqSzRmGmPqsrUQeVs+g=" crossorigin="anonymous" />
+
+	<!-- Include stylesheet -->
+	<link href="https://cdn.quilljs.com/1.3.4/quill.snow.css" rel="stylesheet">
+
+	@include ('partials.media.dropzone-css')
+
 @endsection
 
 @section('aside')
@@ -30,15 +35,25 @@
 		{{csrf_field()}}
 	</form>
 
-	@include('partials.image.modal')
+	@include('partials.media.modal', ["withGallery" => true])
 	
 @endsection
 
 
 @section('page.script')
 
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/remarkable/1.7.1/remarkable.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.1.1/min/dropzone.min.js" integrity="sha256-0dCrNKhVyiX4bBpScyU5PT/iZpxzlxjn2oyaR7GQutE=" crossorigin="anonymous"></script>
+	<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/remarkable/1.7.1/remarkable.min.js"></script> -->
+
+	<!-- Include the Quill library -->
+	<script src="https://cdn.quilljs.com/1.3.4/quill.js"></script>
+	
+	<!-- Initialize Quill editor -->
+	<script>
+		var quill = new Quill('#editor123', {
+			theme: 'snow'
+		});
+	</script>
+	
 	<script>
 
 		$('#btn-close').click (function () {
@@ -58,7 +73,7 @@
 
 		$(document).ready(function () {
 
-			new Editor (gebi("inputText"), gebi("preview"));
+			//new Editor (gebi("inputText"), gebi("preview"));
 
 			populateSelect ('#inputCat', 
 				'{{route("api-categories")}}',
@@ -82,5 +97,5 @@
 
 	</script>
 
-	@include('partials.image.modal-script')
+	@include('partials.media.dropzone-js')
 @endsection

@@ -12,11 +12,12 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class BlogTestDataSetup extends TestCase
 {
-    	use DatabaseTransactions;
+    use DatabaseTransactions;
    
-    	protected $user, $admin, $author;
+    protected $user, $admin, $author;
 	protected $category;
 	protected $page, $page1, $articles;
+
 
 	public function setUp ()
 	{
@@ -47,6 +48,7 @@ class BlogTestDataSetup extends TestCase
 			'user_id' => $this->user->id,
 			'page_id' => $this->articles[0]->id,
 		]);
+
 	}
 
 	protected function can_access_a_url_and_assert_see ($url, $user = null, $content)

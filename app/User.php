@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Page;
+use App\Media;
 use App\Comment;
 use App\LoginProvider;
 use Illuminate\Support\Facades\DB;
@@ -106,7 +107,7 @@ class User extends Authenticatable
 
     public function assets()
     {
-        return $this->hasMany(Image::class);
+        return $this->hasMany(Media::class);
     }
 
 

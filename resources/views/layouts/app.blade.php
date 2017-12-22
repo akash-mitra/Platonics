@@ -12,8 +12,7 @@
     <title>{{ config('app.name', 'Blog') }}</title>
 
     <!-- Styles -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
-
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
     
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
 
@@ -30,8 +29,11 @@
 </head>
 <body>  
   <!--- work site -->
-  <nav class="navbar navbar-toggleable-md navbar-light menu-border">
-    <button class="navbar-toggler navbar-toggler-right" 
+  <nav class="navbar navbar-expand-lg navbar-light menu-border">
+    
+    <a class="navbar-brand" href="#">{{ config('app.name') }}</a>
+
+    <button class="navbar-toggler" 
             type="button" 
             data-toggle="collapse" 
             data-target="#navbarSupportedContent" 
@@ -40,7 +42,7 @@
             aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
-    <a class="navbar-brand" href="#">{{ config('app.name') }}</a>
+    
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       @include('partials.menu')  
@@ -50,13 +52,13 @@
 
   <div class="container">
     <div class="row">
-      <div class="col-sm-8 blog-main">
+      <div class="col-sm-9 blog-main">
         @include('flash::message')
         <main>
             @yield('main')          
         </main>
       </div>
-      <div class="col-sm-4 blog-sidebar">
+      <div class="col-sm-3 blog-sidebar">
         <aside>
             <form class="bd-search hidden-sm-down search-styling">
               <input type="text" class="form-control" id="search-input" placeholder="Search..." autocomplete="off">
@@ -79,13 +81,16 @@
     @endif
 
     <!-- JQUERY-->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
-
-    <!-- Bootstrap Script -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
-
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+    <script
+        src="https://code.jquery.com/jquery-3.2.1.min.js"
+        integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+        crossorigin="anonymous">
+    </script>
     
+    <!-- Bootstrap -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+
     <!-- application script -->
     <script src="{{ asset('js/app.js') }}"></script>
 

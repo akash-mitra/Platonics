@@ -15,19 +15,22 @@ class StorageConfigTest extends BlogTestDataSetup
 
 	public function test_if_storage_config_can_be_configured ()
 	{
-		$key = bin2hex(random_bytes(20));
-		$secret = bin2hex(random_bytes(20));
-
 		// check storage info is saved properly
 		$this->actingAs($this->admin)
-			->post(route('storage-store'), ["key" => $key, "secret" => $secret])
+			->post(route('storage-store'), [
+				"type"   => "s3",
+				"key"    => env('AWS_TEST_KEY'), 
+				"secret" => env('AWS_TEST_SECRET'),
+				"region" => env('AWS_TEST_REGION'),
+				"bucket" => env('AWS_TEST_BUCKET'),
+				
+			])
 			->assertRedirect(route('storage'));
 
 		// and can be retrived later
 		$this->actingAs($this->admin)
 			->get(route('storage'))
-			->assertSee($key)
-			->assertSee($secret);
+			->assertSee(env('AWS_TEST_KEY'));
 	}
 
 }

@@ -51,24 +51,24 @@ function populateSelect (e, url, p, defValue, exclusionList)
 {
 	if (typeof p === 'undefined') p = {"key": "record", "value": "label"};
 	if (typeof exclusionList === 'undefined') exclusionList = [];
-	$.get(url, function (data) {
-		let l = data.length;
-		if (l != 0) 
-		{
-			let fragment = document.createDocumentFragment();
-    			for (i = 0; i < l; i++) {
-    				if (exclusionList.indexOf(data[i][p.key]) !== -1) 
-    					{ continue; }
+	$.ajax (url, {
+		success: function (data) {
+			let l = data.length;
+			if (l != 0) {
+				let fragment = document.createDocumentFragment();
+				for (i = 0; i < l; i++) {
+					if (exclusionList.indexOf(data[i][p.key]) !== -1) { continue; }
 
-        			let opt = document.createElement('option');
-        			opt.innerHTML = data[i][p.value];
-        			opt.value = data[i][p.key];
-        			if (data[i][p.key] == defValue) opt.selected = true;
-        			fragment.appendChild(opt);
-    			}
-    			document.querySelector(e).appendChild(fragment);
-    		}
-    	});
+					let opt = document.createElement('option');
+					opt.innerHTML = data[i][p.value];
+					opt.value = data[i][p.key];
+					if (data[i][p.key] == defValue) opt.selected = true;
+					fragment.appendChild(opt);
+				}
+				document.querySelector(e).appendChild(fragment);
+			}
+		}
+	});
 }
 
 
@@ -108,17 +108,17 @@ function makeAjaxRequest (param)
 	
 }
 
-function ajaxSuccess ()
+function ajaxSuccess (data)
 {
 	$('#loadingDiv').remove();
-	//console.log('1');	
+	console.log(data);	
 }
 
-function ajaxError ()
+function ajaxError (data)
 {
-	let msg = '<div class="alert alert-danger"><strong>Error!</strong> Error occurred!</div>'
+	let msg = '<div class="alert alert-danger"><strong>Error!</strong>' + data.responseText + ' </div>'
 	$('#loadingDivMsg').html (msg);
-	//console.log('2');
+	console.log(data);
 }
 
 function waitWheel (msg)
@@ -146,18 +146,18 @@ function getIconByUserType(type)
  |  This function activates the Markddown editor on any textarea
  |--------------------------------------------------------------------------
  */
-function Editor (input, preview) {
-	this.update = function () {
-		var md = new Remarkable({
-			html: true,         // Enable HTML tags in source
-			xhtmlOut: true,     // Use '/' to close single tags (<br />)
-			typographer: true,  // provides some common replacements
-		});
-          	preview.innerHTML = md.render(input.value);
-        };
-        input.editor = this;
-        this.update();
-}
+// function Editor (input, preview) {
+// 	this.update = function () {
+// 		var md = new Remarkable({
+// 			html: true,         // Enable HTML tags in source
+// 			xhtmlOut: true,     // Use '/' to close single tags (<br />)
+// 			typographer: true,  // provides some common replacements
+// 		});
+//           	preview.innerHTML = md.render(input.value);
+//         };
+//         input.editor = this;
+//         this.update();
+// }
 
 
 
@@ -268,6 +268,37 @@ function isDuplicateCallback (el, callback)
 	// so, don't do anything more
 	return true;
 }
+
+
+
+/*
+ |--------------------------------------------------------------------------
+ |  Function that adds text into a textarea at the user's cursor position.
+ |  Taken from https://stackoverflow.com/questions/11076975/
+ |--------------------------------------------------------------------------
+ */
+function insertAtCursor(myField, myValue) {
+	//IE support
+	if (document.selection) {
+		myField.focus();
+		sel = document.selection.createRange();
+		sel.text = myValue;
+	}
+	//MOZILLA and others
+	else if (myField.selectionStart || myField.selectionStart == '0') {
+		var startPos = myField.selectionStart;
+		var endPos = myField.selectionEnd;
+		myField.value = myField.value.substring(0, startPos)
+			+ myValue
+			+ myField.value.substring(endPos, myField.value.length);
+		myField.selectionStart = startPos + myValue.length;
+		myField.selectionEnd = startPos + myValue.length;
+	} else {
+		myField.value += myValue;
+	}
+}
+
+
 
 // handy function to generate a single comment strip
 function generateCommentStrip (userName, userProfile, userAvatar, comment, ago = null)
