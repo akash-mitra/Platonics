@@ -325,3 +325,4 @@ function generateCommentStrip (userName, userProfile, userAvatar, comment, ago =
 //             // .fadeOut(duration);
 //     });
 // }
+

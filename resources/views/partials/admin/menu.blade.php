@@ -1,5 +1,7 @@
 <div class="p30">
 
+
+@if(Auth::guest() != true && Auth::user()->type === 'Admin')
 	<div class="topline">
 		<h5>Setup</h5>
 	</div>
@@ -17,7 +19,7 @@
 			</a>
 		</li>
 	</ul>
-
+@endif
 
 	<div class="topline">
 		<h5>Contents</h5>
@@ -38,17 +40,21 @@
 		</li>
 
 
+		@if(Auth::guest() != true && in_array(Auth::user()->type, ['Admin', 'Editor', 'Author']))
 		<li class="menu-item">
 			<a href="{{route('media-index')}}">
 				<i class="fa fa-picture-o fa-fw"></i>&nbsp;Media
 			</a>
 		</li>
+		@endif
 
+		@if(Auth::guest() != true && in_array(Auth::user()->type, ['Admin', 'Editor', 'Author']))
 		<li class="menu-item">
 			<a href="{{route('module-list')}}">
 				<i class="fa fa-bars fa-fw"></i>&nbsp;Modules
 			</a>
 		</li>
+		@endif
 
 		<li class="menu-item">
 			<a href="#">
@@ -57,6 +63,8 @@
 		</li>
 	</ul>
 
+
+@if(Auth::guest() != true && Auth::user()->type === 'Admin')
 	<div class="topline">
 		<h5>Manage Users</h5>
 	</div>
@@ -68,6 +76,8 @@
 			</a>
 		</li>
 	</ul>
+
+@endif
 
 	<!-- <div class="topline">
 		<h3>Manage Layouts</h3>

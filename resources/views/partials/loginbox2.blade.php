@@ -1,12 +1,16 @@
 <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel">
-  <div class="modal-dialog" role="document">
+  <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
 
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        
         <h3 class="modal-title" id="loginModalLabel" style="text-align: center">
-            We like it fast!
+            We like it faster!
         </h3>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+
       </div>
 
       <div class="modal-body row">
@@ -33,7 +37,7 @@
                 </p>
 
             </div>
-        </div><!-- end of col-md-8 -->
+        </div><!-- end of col-md-6 -->
         <div class="col-sm-6">
             <div class="right-login">
                 <h3 style="font-size: 20px; margin: 5px auto 20px">
@@ -51,10 +55,10 @@
       </div><!-- end of modal-body -->
         
       <div class="modal-footer footer-login">
-        <small>
+        <p>
             <i class="fa fa-lock"></i>&nbsp;
             By signing up you indicate that you have read and agree to the <a href="terms">Terms of Service</a> and <a href="privacy">Privacy Policy</a>.
-        </small>
+        </p>
       </div>
 
 

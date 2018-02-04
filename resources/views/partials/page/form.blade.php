@@ -16,12 +16,12 @@
 		<a href="#" class="btn btn-link pull-right" id="btnClose">Close</a>
 	</div>
 </div>
-<h2 id="pageTitle">{!! $page->title !!}</h2>
+<h2 id="pageTitle" class="editable">{!! $page->title !!}</h2>
 
 <h5 class="editor-header" style="margin-top:25px">Summary</h5>
-<div id="pageSummary" class="lead">{!! $page->intro !!}</div>
+<div id="pageSummary" class="lead editable">{!! $page->intro !!}</div>
 
-<h5 class="editor-header" style="margin-top:25px">Full Text</h5>
+<h5 class="editor-header" class="editable" style="margin-top:25px">Full Text</h5>
 <div id="pageBody">
 	{!! $page->markup !!}
 </div>

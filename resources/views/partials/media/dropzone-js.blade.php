@@ -21,6 +21,7 @@ Dropzone.options.dropzoneUploader = {
 		// gobal variables
 		let gAddButton = false;
 		let isGalleryPopulated = false;
+		let imageClickHandler = function () {};
 
 		/*
 		 * Populates the gallery
@@ -100,12 +101,19 @@ Dropzone.options.dropzoneUploader = {
 			}
 		}
 
-
 	
-		
-		var insertSelectedImage = function () {
-			insertAtCursor (document.getElementById('inputText'), selectedImage.attr('src'));
+
+		/**
+		 * This function can be called from the external 
+		 * places to set the handler function that will
+		 * be called when "Use This" image button is clicked
+		 */
+		function setImageClickHandler (handler)
+		{
+			imageClickHandler = handler;
 		}
+		
+
 
 		/*
 		 * Attach the gallery invocation function with the Gallery link of the nav
@@ -124,10 +132,10 @@ Dropzone.options.dropzoneUploader = {
 
 			// remove previous selections, etc. when closing the modal
 			$('#mediaModalUpload').on('hidden.bs.modal', _cleanUpGallerySelections)
-
-			$('.modal-footer').on ('click', '#use-this', insertSelectedImage)
-
 			$('#nav-upload-tab').click (_cleanUpGallerySelections)
+
+
+			$('.modal-footer').on ('click', '#use-this', imageClickHandler)
 		})
 
 

@@ -8,10 +8,12 @@
 	
 	@include('partials.admin.breadcrumb')
 	
-	<a href="{{route('page-editor')}}" class="btn btn-success pull-right m15 {{ (Auth::user()->type === 'Registered'?'disabled':'') }}">
-		<i class="fa fa-plus"></i>&nbsp;
-		New
-	</a>
+	@if(Auth::guest() != true && in_array(Auth::user()->type, ['Admin', 'Editor', 'Author']))
+		<a href="{{route('page-editor')}}" class="btn btn-success pull-right">
+			<i class="fa fa-plus"></i>&nbsp;
+			New
+		</a>
+	@endif
 
 	<h3>Pages</h3>
 	
@@ -20,7 +22,10 @@
 	<table class="table table-sm">
 		<thead>
 			<tr>
-				<th>#</th><th>Title</th><th>Category</th><th>Author</th><th>Published</th><th>Edit</th>
+				<th>#</th><th>Title</th><th>Category</th><th>Author</th><th>Published</th>
+				@if(Auth::guest() != true && in_array(Auth::user()->type, ['Admin', 'Editor', 'Author']))
+					<th>Edit</th>
+				@endif
 			</tr>
 		</thead>
 		<tbody>
@@ -35,11 +40,14 @@
 					<td>{{empty($page->category)?'N/A':$page->category}}</td>
 					<td>{{$page->author}}</td>
 					<td>{{\Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $page->created_at)->format('d-M-y')}}</td>
-					<td>
-						<a class="btn btn-sm btn-default {{ (Auth::user()->type === 'Registered'?'disabled':'') }}" href="{{route('page-editor', $page->id)}}">
-							<i class="fa fa-pencil-square-o"></i>&nbsp;
-						</a>
-					</td>
+
+					@if(Auth::guest() != true && in_array(Auth::user()->type, ['Admin', 'Editor', 'Author']))
+						<td>
+							<a class="btn btn-sm btn-default {{ (Auth::guest() != true && Auth::user()->type === 'Registered'?'disabled':'') }}" href="{{route('page-editor', $page->id)}}">
+								<i class="fa fa-pencil-square-o"></i>&nbsp;
+							</a>
+						</td>
+					@endif
 				</tr>
 			@endforeach
 		</tbody>

@@ -8,10 +8,12 @@
 
 	@include('partials.admin.breadcrumb')
 
-	<a href="{{route('category-create')}}" class="btn btn-success pull-right m15 {{ (Auth::user()->type === 'Admin'?'':'disabled') }}">
-		<i class="fa fa-plus"></i>&nbsp;
-		New 
-	</a>
+	@if(Auth::guest() != true && in_array(Auth::user()->type, ['Admin', 'Editor', 'Author']))
+		<a href="{{route('category-create')}}" class="btn btn-success pull-right">
+			<i class="fa fa-plus"></i>&nbsp;
+			New 
+		</a>
+	@endif
 
 	<h3>Category</h3>
 	
@@ -20,7 +22,10 @@
 	<table class="table table-sm">
 		<thead>
 			<tr>
-				<th>Category</th><th>Parent Category</th><th>Last Updated</th><th>Edit</th>
+				<th>Category</th><th>Parent Category</th><th>Last Updated</th>
+				@if(Auth::guest() != true && in_array(Auth::user()->type, ['Admin', 'Editor', 'Author']))
+					<th>Edit</th>
+				@endif
 			</tr>
 		</thead>
 		<tbody>
@@ -42,11 +47,13 @@
 					<td>
 						{{ $category->updated_at->diffForHumans()}}
 					</td>
-					<td>
-						<a class="btn btn-sm btn-default {{ (Auth::user()->type === 'Admin'?'':'disabled') }}" href="{{route('category-edit', $category->id)}}">
-							<i class="fa fa-pencil-square-o"></i>
-						</a>
-					</td>
+					@if(Auth::guest() != true && in_array(Auth::user()->type, ['Admin', 'Editor', 'Author']))
+						<td>
+							<a class="btn btn-sm btn-default" href="{{route('category-edit', $category->id)}}">
+								<i class="fa fa-pencil-square-o"></i>
+							</a>
+						</td>
+					@endif
 				</tr>
 			@endforeach
 		</tbody>

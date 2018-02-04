@@ -124,10 +124,6 @@ Route::get('/test', function () {
 	return 'test';
 });
 
-Route::get('/{CategorySlug}', 'CategoryController@show')->name('category-view');
-Route::get('/{categorySlug}/{page?}', 'PageController@show')->name('page-view');
-
-
 
 /* 
  |--------------------------------------------------------------------------
@@ -136,3 +132,9 @@ Route::get('/{categorySlug}/{page?}', 'PageController@show')->name('page-view');
  */
 Route::get('/api/v1/get/categories', 'API\v1\APICategoryController@getCategories')->name('api-categories');
 Route::get('/api/v1/get/media', 'API\v1\APIMediaController@getMedia')->name('api-media');
+
+
+
+
+Route::get('/{CategorySlug}', 'CategoryController@show')->name('category-view');
+Route::get('/{categorySlug}/{page?}', 'PageController@show')->name('page-view');

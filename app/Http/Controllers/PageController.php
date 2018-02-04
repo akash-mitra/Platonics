@@ -64,14 +64,13 @@ class PageController extends Controller
     	// beginning to the first occurance of "-" sign.
     	// Because sometimes "-" might not appear in  
     	// the slug, we append extra "-" with it.
-    	$id = substr($pageSlug, 0, strpos($pageSlug . '-', '-'));
+        $id = substr($pageSlug, 0, strpos($pageSlug . '-', '-'));
 
-    	$page = Page::findOrFail($id);
+        $page = Page::findOrFail($id);
         
-        
-    	if ($page->publish == '1' 
-                && ($page->category_id === null || $page->category->slug === $categorySlug))
-    	   return view ('page.show', compact('page'));
+    	if ($page->category_id === null || $page->category->slug === $categorySlug) {
+           return view ('page.show', compact('page'));
+        }
 
         abort(404, 'Page Not Found');
     }
@@ -205,18 +204,4 @@ class PageController extends Controller
                 ->select(DB::raw('pages.id, pages.title, pages.created_at, pages.updated_at, users.name as author, case when categories.name is null then "uncategorized" else categories.name end as category'))
                 ->paginate(20);
     }
-
-
-
-    // /
-    // private function _getHTML ($markdown) 
-    // {
-    //     /* 
-    //      * We will convert the markdown to html
-    //      * markup and store both the markup and the
-    //      * markdown versions in the database for future.
-    //      */
-    //     $parser   = new \Parsedown();
-    //     return $parser->text($markdown);
-    // }
 }
