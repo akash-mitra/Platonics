@@ -190,7 +190,7 @@ class PageController extends Controller
 
 
 
-    /*
+    /**
      * This is a helper function to query only the attributes
      * required in this view. This helps in avoiding selection
      * of large text columns and clog up memory
@@ -202,6 +202,8 @@ class PageController extends Controller
                 ->leftJoin('users', 'pages.user_id', 'users.id')
                 ->leftJoin('categories', 'pages.category_id', 'categories.id')
                 ->select(DB::raw('pages.id, pages.title, pages.created_at, pages.updated_at, users.name as author, case when categories.name is null then "uncategorized" else categories.name end as category'))
-                ->paginate(20);
+                ->get();
+                // paginatin will be handled in frontend for smaller (less than 5000 entries) lists
+                //->paginate(20);
     }
 }

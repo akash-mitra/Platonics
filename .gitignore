@@ -9,3 +9,4 @@ Homestead.yaml
 .env
 cacat.sh
 .DS_Store
+*.php--to-delete

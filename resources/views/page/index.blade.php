@@ -1,5 +1,40 @@
 @extends('layouts.admin')
 
+@section('page.css')
+
+<link href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" rel="stylesheet">
+<style>
+	#tabList_filter {
+		float: left;
+		text-align: left;
+		width: 100%;
+		margin-left: -10px;
+
+	}
+
+	#tabList_filter label {
+		width: 100% !important;
+	}
+
+	#tabList_filter input {
+		width: 100% !important;
+		display: block;
+		padding: .375rem .75rem;
+		font-size: 1rem;
+		line-height: 1.5;
+		color: #495057;
+		background-color: #fff;
+		background-image: none;
+		background-clip: padding-box;
+		border: 1px solid #ced4da;
+		border-radius: .25rem;
+		transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+	}
+
+
+</style>
+@endsection
+
 @section('aside')
 	@include('partials.admin.menu')
 @endsection
@@ -9,17 +44,17 @@
 	@include('partials.admin.breadcrumb')
 	
 	@if(Auth::guest() != true && in_array(Auth::user()->type, ['Admin', 'Editor', 'Author']))
-		<a href="{{route('page-editor')}}" class="btn btn-success pull-right">
+		<a href="{{route('page-editor')}}" class="btn btn-light pull-right">
 			<i class="fa fa-plus"></i>&nbsp;
-			New
+			Create Page
 		</a>
 	@endif
 
 	<h3>Pages</h3>
 	
-	<p>Total {{ $pages->total() }} Pages available (Showing {{ $pages->perPage() }} per page). </p>
+	<p></p>
 	
-	<table class="table table-sm">
+	<table class="table table-sm" id="tabList">
 		<thead>
 			<tr>
 				<th>#</th><th>Title</th><th>Category</th><th>Author</th><th>Published</th>
@@ -53,8 +88,27 @@
 		</tbody>
 	</table>	
 	
-	<nav class="d-flex justify-content-center">
-        {{ $pages->links('vendor.pagination.bootstrap-4') }}
-    </nav>
+	<!-- <nav class="d-flex justify-content-center">
+         $pages->links('vendor.pagination.bootstrap-4') 
+	</nav> -->
+	<p>&nbsp;</p>
 	
+@endsection
+
+@section('page.script')
+
+<script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+<script>
+	$(document).ready(function() { 
+		$('#tabList').DataTable({
+			"dom": "ftip",
+			"lengthChange": false,
+			"language": {
+				"search": "_INPUT_",
+				"searchPlaceholder": "Type article, category or author names to search..."
+			}
+		}) 
+	})
+</script>
+
 @endsection
