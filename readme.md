@@ -1,5 +1,6 @@
 <p align="center">
-	<h1>Platonics <small>Powerful Blogging done right</small></h1>
+	<h1>Platonics </h1>
+	<small>Powerful Blogging done right</small>
 </p>
 
 <blockquote>Modern day blogging platform that lets you take advantage of the power and flexibility of underlying Laravel  framework</blockquote>
