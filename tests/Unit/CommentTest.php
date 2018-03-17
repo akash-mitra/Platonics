@@ -7,7 +7,7 @@ class CommentTest extends BlogTestDataSetup
 {
 	public function test_non_auth_user_can_see_page_comments()
 	{
-		$this->user_can_see_page_comments($this->articles[0]);
+		$this->user_can_see_page_comments($this->page1);
 
 		// $expectedFragment = ["text" => $this->noHTML($this->comment->body)];
 		// $actualResponse   = $r->decodeResponseJson()[0];
@@ -15,21 +15,25 @@ class CommentTest extends BlogTestDataSetup
 	}
 
 	public function test_auth_user_can_see_page_comments() {
-		$this->user_can_see_page_comments($this->articles[0], $this->user);
+		$this->user_can_see_page_comments($this->page1, $this->user);
 	}
 
 	public function test_non_auth_user_dont_see_post_button () {
-		$this->get($this->articles[0]->url)
+		$this->get($this->page1->url)
 			->assertDontSee('Post');
 	}
 
-	// public function test_non_auth_user_can_not_post_comment() {
+	public function test_non_auth_user_can_not_post_comment() {
 
-	// }
+		$this->post(route('comments-store'), ["text" => "sample text", "pageid" => 1])
+				->assertRedirect('/login');
+	}
 
-	// public function test_auth_user_can_post_comment (){
-
-	// }
+	public function test_auth_user_can_post_comment (){
+		$this->actingAs($this->user)
+			->post(route('comments-store'), ["text" => "sample text", "pageid" => $this->page4->id])
+			->assertStatus(200);
+	}
 
 	public function test_auth_user_can_see_specific_user_comments () 
 	{
@@ -45,9 +49,9 @@ class CommentTest extends BlogTestDataSetup
 	// }
 
 
-	private function user_can_see_page_comments ($page, $viewer = null) {
+		private function user_can_see_page_comments ($page, $viewer = null) {
     		if (! $viewer) return $this->check_comments_by_page($page);
-		else return $this->actingAs($viewer)->check_comments_by_page($page);
+			else return $this->actingAs($viewer)->check_comments_by_page($page);
     	}
 
     	private function user_can_see_user_comments ($user, $viewer = null) {
@@ -75,7 +79,7 @@ class CommentTest extends BlogTestDataSetup
 		     		'page' => ['title', 'url'],
 		     	]])
 		     	->assertJson([[
-		     		"text" => $this->noHTML($this->comment->body)
+		     		"text" => $this->noHTML($this->comment1->body)
 		     	]]);
     	}
 }

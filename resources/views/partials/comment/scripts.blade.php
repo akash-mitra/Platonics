@@ -1,11 +1,31 @@
 <script>
 	let lastComment = '';
 
+	// handy function to generate a single comment strip
+	function generateCommentStrip (userName, userProfile, userAvatar, comment, ago = null)
+	{
+		return '<div class="comment-strip my-2 py-2 border-top">'
+				+ '<img class="pp-r pp-sm mr-3" alt="Profile Pic" align="left" src="' 
+					+ (userAvatar === null? '/img/no-dp.png': userAvatar) 
+				+ '"/>'
+				+ '<div style="overflow: hidden">' 
+						+ '<div class="text-muted w-100">'
+							+ '<a href="' + userProfile + '"><b>' + userName + '</b></a>'
+							+ '<span class="post-time float-right' 
+								+ (ago===null?' saving">Saving...':'">' + ago)
+							+ '</span>'
+						+ '</div>'
+						+ '<div class="w-100">'
+							+ '' 
+							+ comment 
+						+ '</div>'
+				+ '</div>'
+			+'</div>';
+	}
+
 	// This is triggered when comment save button is clicked
 	@if(Auth()->check())
 		$('#btn-comment').click (function(){ 
-
-			
 
 			// let us save the comment in a global variable
 			// so that we can use it later to repopulate the
@@ -109,10 +129,14 @@
 		method: 'get',
 		to: "{{route('comments-on-page', $page->id)}}",
 		before: function () {
-		$('#comments-block').html('<div class="text-center"><i class="fa fa-refresh fa-spin fa-3x fa-fw"></i></div>');	
+		$('#comments-heading').html('Fetching article comments...');	
 		},
-		success: function (r) {displayComments (r, '#comments-block');},
+		success: function (r) {
+			displayComments (r, '#comments-block');
+			$('#comments-heading').html('<b>Comments</b>');
+		},
 		error: function () {
+			$('#comments-heading').html('Failed to load comments from server');
 			alert('Error retrieving comments of this page');},
 	}
 		

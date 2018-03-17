@@ -121,21 +121,17 @@ class BladeHelper {
 		return $value . '</ul>';
 	}
 
-
+		
 	// ATTENTION : This only applies to Bootstrap version 4
 	// This function does not support bootstrap nested submenu dropdown
-	public static function buildBootStrap4MenufromTree (array $items, $level = 0, $class = 'navbar-nav mr-auto') 
+	public static function buildBootStrap4MenufromTree (array $items, $level = 0, $class = 'nav d-flex justify-content-between') 
 	{
-		$value = '<ul class="' . $class . '">';
+		$value = '<nav class="' . $class . '">';
 		foreach ($items as $item)
 		{
-			$value .= '<li class="nav-item">' 
-				. '<a class="nav-link" href="' . $item['url'] . '">'
-				. $item['name']
-				. '</a>'
-				. '</li>';
+			$value .= '<a class="p-2 text-muted" href="' . $item['url'] . '">' . $item['name'] . '</a>';
 		}
-		return $value . '</ul>';
+		return $value . '</nav>';
 	}
 
 	// A helper class to generate menu

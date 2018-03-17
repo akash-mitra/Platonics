@@ -6,4 +6,8 @@
 	<li class="breadcrumb-item">
 		<a href="{{route('admin')}}">Admin</a>
 	</li>
+
+	@if(isset($leafPage))
+		<li class="breadcrumb-item">{{ $leafPage }}</li>
+	@endif
 </ol>

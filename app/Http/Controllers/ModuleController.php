@@ -5,8 +5,14 @@ namespace App\Http\Controllers;
 use App\Module;
 use Illuminate\Http\Request;
 
-class ModuleController extends Controller
+class ModuleController extends BaseController
 {
+
+    public function __construct()
+    {
+        $this->middleware('admin');
+        parent::__construct();
+    }
     /**
      * Display a listing of the resource.
      *

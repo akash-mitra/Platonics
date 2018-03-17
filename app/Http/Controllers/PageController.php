@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
-class PageController extends Controller
+class PageController extends BaseController
 {
     public function __construct()
     {
@@ -40,6 +40,8 @@ class PageController extends Controller
             return redirect()->route('page-index');
 
         })->only(['editor', 'save']);
+
+        parent::__construct();
     }
 
 
@@ -69,7 +71,7 @@ class PageController extends Controller
         $page = Page::findOrFail($id);
         
     	if ($page->category_id === null || $page->category->slug === $categorySlug) {
-           return view ('page.show', compact('page'));
+           return view ('page.show', ['page' => $page]);
         }
 
         abort(404, 'Page Not Found');
@@ -115,6 +117,11 @@ class PageController extends Controller
         }
         catch (HttpException $e) {
             return response()->json(["message" => $e->getMessage()], $e->getStatusCode());
+        } 
+        catch (\Exception $e) {
+            // if there is something still not caught above within HttpException
+            // e.g. Internal Server Errors, I want to catch them here.
+            return response()->json(["message" => "Error"], 500);
         }
     }
 

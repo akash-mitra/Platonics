@@ -10,7 +10,7 @@ use App\Content;
 class Page extends Content
 {
 	protected $fillable = [
-		'title', 'intro', 'category_id', 'markup', 'markdown', 'metakey', 'metadesc', 'publish'
+		'title', 'intro', 'category_id', 'markup', 'markdown', 'metakey', 'metadesc', 'publish', 'featured'
 	];
 
 	// this ensure accessor property is included in the Page object
@@ -34,6 +34,12 @@ class Page extends Content
 	public function parent()
 	{
 		return $this->belongsTo(Category::class, 'category_id', 'id');
+	}
+
+
+	public function scopeFeatured ($query)
+	{
+		return $query->whereNotNull('featured');
 	}
 	
 

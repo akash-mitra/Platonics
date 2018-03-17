@@ -13,7 +13,7 @@ class CommentsController extends Controller
     public function __construct()
     {
     	// only posting of comments require logging in
-    	return $this->middleware('auth')->only('store');
+    	$this->middleware('auth')->only('store');
     }
 
 
@@ -47,8 +47,8 @@ class CommentsController extends Controller
     public function store(Request $request)
     {
 
-    	$text = $request->input('text');
-    	$user = Auth::user()->id;
+        $user = Auth::user()->id;
+        $text = $request->input('text');
     	$page = $request->input('pageid');
 
     	// if mandatory information for a comment

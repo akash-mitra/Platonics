@@ -6,48 +6,99 @@ use App\User;
 use App\Page;
 use App\Comment;
 use App\Category;
-
 use Tests\TestCase;
+use App\Configuration;
+use App\SpecialPage;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class BlogTestDataSetup extends TestCase
 {
     use DatabaseTransactions;
    
-    protected $user, $admin, $author;
-	protected $category;
-	protected $page, $page1, $articles;
+    protected $user, $author, $author1, $editor, $admin;
+	protected $category, $category2, $category3;
+	protected $page1, $page2, $page3;
+	protected $comment1;
 
 
 	public function setUp ()
 	{
+	
 		parent::setUp();
 		
-		// create a few users
+		// create basic configuration / metadata
+		$configs = factory(Configuration::class)->create();
+
+		// create 1 general, 2 authors, 1 editor and 1 admin type users
 		$this->user = factory(User::class)->create();
 		$this->author = factory(User::class)->create(["type" => "Author"]);
 		$this->author1 = factory(User::class)->create(["type" => "Author"]);
 		$this->editor = factory(User::class)->create(["type" => "Editor"]);
 		$this->admin = factory(User::class)->create(["type" => "Admin"]);
-		
-		// create couple of articles by one user
-		$this->category = factory(Category::class)->create(['parent_id' => null]);
-		$this->articles = factory(Page::class, 2)->create([
-			"user_id" => $this->author->id,
-			"category_id" => $this->category->id,
-		]);
 
-		$this->page = $this->articles[0];
+		// create 3 categories as per below hierarchy
+		//                 |
+		//      |---------------------|
+		//   category             category2
+		//   |
+		// category3
+		//
+		$this->category = factory(Category::class)->create(['parent_id' => null]);
+		$this->category2 = factory(Category::class)->create(['parent_id' => null]);
+		// and one subcategory under first parent category
+		$this->category3 = factory(Category::class)->create(['parent_id' => $this->category->id]);
+
+		
+		// create a few pages in them
+		// page1 ---> in category by author1
+		// page2 ---> is uncategorized by author1
+		// page3 ---> in category3 by author 2
+		// page4 ---> in category3 by editor
+
 		$this->page1 = factory(Page::class)->create([
-			"category_id" => $this->category->id, 
+			"category_id" => $this->category->id,
+			"user_id" => $this->author->id
+		]);
+		$this->page2 = factory(Page::class)->create([
+			"category_id" => null,
+			"user_id" => $this->author->id
+		]);
+		$this->page3 = factory(Page::class)->create([
+			"category_id" => $this->category3->id,
 			"user_id" => $this->author1->id
 		]);
+		$this->page4 = factory(Page::class)->create([
+			"category_id" => $this->category3->id,
+			"user_id" => $this->editor->id
+		]);
+
+		
+		
+		// create couple of articles by one user
+		
+		// $this->articles = factory(Page::class, 2)->create([
+		// 	"user_id" => $this->author->id,
+		// 	"category_id" => $this->category->id,
+		// ]);
+
+		// $this->page = $this->articles[0];
+		// $this->page1 = factory(Page::class)->create([
+		// 	"category_id" => $this->category->id, 
+		// 	"user_id" => $this->author1->id
+		// ]);
+
+
+
 
 		// create a few comments on the article
-		$this->comment = factory(Comment::class)->create([
+		$this->comment1 = factory(Comment::class)->create([
 			'user_id' => $this->user->id,
-			'page_id' => $this->articles[0]->id,
+			'page_id' => $this->page1->id,
 		]);
+
+
+		// special page
+		$sp = factory(SpecialPage::class)->create();
 
 	}
 

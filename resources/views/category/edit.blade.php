@@ -4,22 +4,33 @@
 	@include('partials.admin.menu')
 @endsection
 
-@section('main')
+@section('header')
+	@include('partials.category.breadcrumb')
+@endsection
 
-	<div class="topline">
-		@include('partials.category.breadcrumb')
+@section('main')
+	
+	<div class="row">
+		<div class="col-md-12">
+			@include('partials.admin.header', [
+				'headerText' => 'Edit Category'
+			])		
+		</div>
 	</div>
 	
-	@include('partials.admin.header', [
-		'headerText' => 'Edit Category'
-	])
-	
-	<p>&nbsp;</p>
-	  
-	<form method="post" action="{{route('category-save')}}" id="frm-edit">
-	  	{{ method_field('patch') }}
-	  	@include('partials.category.form')
-	</form>
+
+	<div class="row mb-5">
+		<div class="col-md-12">
+			<div class="card">
+				<div class="card-body">
+					<form method="post" action="{{route('category-save')}}" id="frm-edit">
+						{{ method_field('patch') }}
+						@include('partials.category.form')
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
 	
 @endsection
 

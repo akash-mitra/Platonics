@@ -92,7 +92,7 @@ class ProfileTest extends BlogTestDataSetup
 	{
 		$this->actingAs($this->user)
 			->get(route('user', $this->author->slug))
-			->assertSeeText($this->articles[0]->title)
-			->assertSeeText($this->articles[1]->title);
+			->assertSeeText($this->page1->title)
+			->assertSeeText($this->page2->title);
 	}
 }

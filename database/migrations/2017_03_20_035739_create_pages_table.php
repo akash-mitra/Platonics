@@ -23,6 +23,7 @@ class CreatePagesTable extends Migration
             $table->text('metakey')->nullable();
             $table->text('metadesc')->nullable();
             $table->char('publish', 1);
+            $table->char('featured', 1)->nullable();
             $table->timestamps();
         });
     }

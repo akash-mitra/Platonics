@@ -1,8 +1,9 @@
 <?php
 
 use App\Page;
-use App\Category;
 use App\User;
+use App\Category;
+use App\Configuration;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -23,6 +24,9 @@ class DatabaseSeeder extends Seeder
         // create a few users
         $userIds = factory(User::class, $noOfUsers)->create()->pluck('id')->all();
 
+		// create minimum configuration entries
+		$configs = factory(Configuration::class)->create();
+		
         // create a few parent level categories
         $parentCategories = factory(Category::class, $noOfParentCategories)->create()->pluck('id')->all();
 

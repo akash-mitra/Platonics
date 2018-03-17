@@ -7,12 +7,13 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 
-class ProfileController extends Controller
+class ProfileController extends BaseController
 {
 
 	public function __construct()
 	{
 		$this->middleware('auth');
+		parent::__construct();
 	}
 
 
@@ -20,10 +21,17 @@ class ProfileController extends Controller
 	{
 		// $slug will be null if an anuthenticated
 		// user wants to visit his/her own profile
-		if ($slug == null) $user = Auth::user();
-		else $user = User::whereSlug($slug)
-			->get(User::permittedAttributes())
-			->first();
+		if ($slug == null) 
+		{
+			$user = Auth::user()->load('comments');
+		}
+		else 
+		{
+			$user = User::whereSlug($slug)
+					->with('comments')
+					->get(User::permittedAttributes())
+					->first();
+		}
 
 		// if user does not exists, return
 		if(empty($user)) abort(404, 'Page does not exist');

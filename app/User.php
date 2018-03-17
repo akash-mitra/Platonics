@@ -48,6 +48,15 @@ class User extends Authenticatable
     }
 
 
+    /**
+     * Current logic simply returns any of the available providers
+     */
+    public function defaultProvider ()
+    {
+        return $this->providers[0];
+    }
+
+
 
     public function pages ()
     {
@@ -74,7 +83,7 @@ class User extends Authenticatable
         $articles = DB::table('pages')
                     ->leftjoin('categories', 'pages.category_id', 'categories.id')
                     ->where('user_id', $this->id)
-                    ->select('pages.id','pages.title', 'pages.created_at', 'categories.slug')
+                    ->select('pages.id','pages.title', 'pages.intro', 'pages.created_at', 'categories.slug', 'categories.name')
                     ->get();
         return $articles;
     }

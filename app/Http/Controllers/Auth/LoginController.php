@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\Auth;
 
+
+use App\Configuration;
+use Illuminate\Support\Facades\View;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
@@ -35,5 +38,9 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest', ['except' => 'logout']);
+
+        $meta = json_decode(Configuration::where('key', 'blog')->first()->value, true);
+
+        View::share('meta', $meta);
     }
 }

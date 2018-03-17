@@ -10,10 +10,9 @@ use Illuminate\Support\Facades\Redis;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::get('/', 'HomepageController@get')->name('homepage');
 
-Route::get('/', function () { 
-	return view('homepage.default'); 
-})->name('homepage');
+
 
 /* 
  |--------------------------------------------------------------------------
@@ -30,7 +29,15 @@ Route::get('/categories', 'CategoryController@index')->name('category-index');
  | User authentication and profile related routes 
  |--------------------------------------------------------------------------
  */
-Auth::routes();
+
+// disabling the default login routes as we will only use social login
+// Auth::routes();
+
+// only relevant login routes are selected below.
+$this->get('login', 'Auth\LoginController@showLoginForm')->name('login');
+$this->post('logout', 'Auth\LoginController@logout')->name('logout');
+
+
 Route::get('/redirect/{provider}', 'Auth\RegisterController@redirectToProvider');
 Route::get('/auth/{provider}/callback', 'Auth\RegisterController@handleProviderCallback');
 Route::get('/profile', 'ProfileController@user')->name('profile');
@@ -48,8 +55,34 @@ Route::post('/profile/user/delete', 'ProfileController@delete')->name('delete-us
  */
 Route::get('/admin', 'AdminController@show')->name('admin');
 Route::get('/admin/users', 'AdminController@users')->name('admin-users');
-Route::get('/admin/designer/show', 'AdminController@designer')->name('admin-designer');
+Route::get('/admin/comments', 'AdminController@comments')->name('admin-comments');
+Route::get('/admin/comments/delete/{id}', 'AdminController@deleteComment')->name('comment-delete');
+Route::get('/admin/design', 'AdminController@design')->name('admin-design');
+Route::post('/admin/layout/change', 'ConfigurationController@changeLayout')->name('change-layout');
+Route::post('/admin/blog/general', 'ConfigurationController@saveBlog')->name('save-blog');
+Route::post('/admin/blog/color', 'ConfigurationController@saveColor')->name('save-color');
 
+
+/* Special Page related routes */
+Route::get('/admin/special-pages', 'SpecialPageController@index')->name('special-page-index');
+
+Route::get('/contact-us', 'SpecialPageController@showContact')->name('show-contact');
+Route::get('/admin/special-pages/contact', 'SpecialPageController@editContact')->name('special-pages-contact');
+Route::post('/admin/special-pages/contact', 'SpecialPageController@saveContact')->name('special-pages-contact-save');
+
+Route::get('/about-us', 'SpecialPageController@showAbout')->name('show-about');
+Route::get('/admin/special-pages/about', 'SpecialPageController@editAbout')->name('special-pages-about');
+Route::post('/admin/special-pages/about', 'SpecialPageController@saveAbout')->name('special-pages-about-save');
+
+Route::get('/privacy-policy', 'SpecialPageController@showPrivacy')->name('show-privacy');
+Route::get('/admin/special-pages/privacy', 'SpecialPageController@editPrivacy')->name('special-pages-privacy');
+Route::post('/admin/special-pages/privacy', 'SpecialPageController@savePrivacy')->name('special-pages-privacy-save');
+
+Route::get('/terms-of-use', 'SpecialPageController@showTerms')->name('show-terms');
+Route::get('/admin/special-pages/terms', 'SpecialPageController@editTerms')->name('special-pages-terms');
+Route::post('/admin/special-pages/terms', 'SpecialPageController@saveTerms')->name('special-pages-terms-save');
+
+Route::get('/sitemap/{ext?}', 'SpecialPageController@showSiteMap')->name('show-sitemap');
 /* 
  |--------------------------------------------------------------------------
  | Category related routes that only admin can access
@@ -75,7 +108,7 @@ Route::post('/admin/page/delete/{id}', 'PageController@destroy')->name('page-del
  | Blogging related routes that only admin can access
  |--------------------------------------------------------------------------
  */
-Route::get('/admin/modules', 'ModuleController@index')->name('module-list');
+Route::get('/admin/modules', 'ModuleController@index')->name('module-index');
 Route::get('/admin/module/create', 'ModuleController@create')->name('module-create');
 Route::post('/admin/module/store', 'ModuleController@store')->name('module-store');
 Route::patch('/admin/module/save', 'ModuleController@update')->name('module-update');
@@ -100,29 +133,24 @@ Route::post('/admin/media', 'MediaController@store')->name('media-store');
  | Site setup related routes
  |--------------------------------------------------------------------------
  */
-Route::get('/admin/config/storage', 'ConfigurationController@showStorage')->name('storage');
-Route::post('/admin/config/storage', 'ConfigurationController@saveStorage')->name('storage-store');
+//Route::get('/admin/config/storage', 'ConfigurationController@showStorage')->name('storage');
+//Route::post('/admin/config/storage', 'ConfigurationController@saveStorage')->name('storage-store');
 Route::get('/admin/config/cdn', 'ConfigurationController@showCdn')->name('cdn');
 Route::post('/admin/config/cdn', 'ConfigurationController@saveCdn')->name('cdn-config-store');
 
-
+/* new api */
+Route::get('/admin/config/{config}', 'ConfigurationController@getConfig')->name('get-config');
+Route::post('/admin/config/{config}', 'ConfigurationController@setConfig')->name('set-config');
 
 /* 
  |--------------------------------------------------------------------------
  | Comments
  |--------------------------------------------------------------------------
  */
+Route::get('/users/{slug}/comments', 'CommentsController@commentsByUser')->name('comments-by-user');
+Route::get('/pages/{id}/comments', 'CommentsController@commentsByPage')->name('comments-on-page');
+Route::post('/comments/store', 'CommentsController@store')->name('comments-store');
 
-Route::get('/users/{slug}/comments', 'CommentsController@commentsByUser')
-	->name('comments-by-user');
-Route::get('/pages/{id}/comments', 'CommentsController@commentsByPage')
-	->name('comments-on-page');
-Route::post('/comments/store', 'CommentsController@store')
-	->name('comments-store');
-
-Route::get('/test', function () {
-	return 'test';
-});
 
 
 /* 
@@ -132,8 +160,6 @@ Route::get('/test', function () {
  */
 Route::get('/api/v1/get/categories', 'API\v1\APICategoryController@getCategories')->name('api-categories');
 Route::get('/api/v1/get/media', 'API\v1\APIMediaController@getMedia')->name('api-media');
-
-
 
 
 Route::get('/{CategorySlug}', 'CategoryController@show')->name('category-view');

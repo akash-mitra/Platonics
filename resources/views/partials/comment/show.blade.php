@@ -1,43 +1,29 @@
-<hr>
+
 <div class="row">
 	<div class="col-md-12">
-		<h5>
-			Comments
-			<br>
-			<small>
-				Share your opinion. Join the discussion.
-			</small>
-		</h5>
-		<hr>
+
+		<div id="comments-heading" class="border-bottom my-3">
+			<b>Comments</b>
+		</div>
+
 		@if(Auth::check())
-			<div class="comment-strip">
-				<img align="left" src="{{Auth::user()->avatar}}">
-				<div style="overflow: hidden">
-					<form id="comment-form">
-						<input type="hidden" id="pageid" value="{{$page->id}}">
-						<div class="form-group">
-						    <div id="comment-message"></div>
-						    <textarea 
-						    	class="form-control custom-control" 
-						    	id="inputComment" 
-						    	placeholder="What is your view?"
-						    	name="text"></textarea>
-						</div>
-						<div id="comment-btn-span" style="display: none">
-							<button 
-								id="btn-comment" 
-								class="btn btn-success pull-right">
-									<i 
-										id="btn-icon" 
-										class="fa fa-comment-o fa-fw">
-									</i>&nbsp;
-									Post 
-							</button>	
-						</div>
-					</form>
-				</div>
+		<div class="comment-strip">
+			<img align="left" src="{{Auth::user()->avatar}}" alt="Profile Picture" class="pp-r pp-md mr-3">
+			<div style="overflow: hidden">
+				<form id="comment-form">
+					<input type="hidden" id="pageid" value="{{$page->id}}">
+					<div class="form-group">
+						<div id="comment-message"></div>
+						<textarea id="inputComment" name="text" class="form-control custom-control" placeholder="What is your view?"></textarea>
+					</div>
+					<div id="comment-btn-span" style="display: none">
+						<button type="button" id="btn-comment" class="btn btn-secondary float-right">
+							Post Comment
+						</button>	
+					</div>
+				</form>
 			</div>
-			
+		</div>
 		@else 
 			<p>
 				You need to 

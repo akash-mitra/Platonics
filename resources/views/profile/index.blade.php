@@ -1,145 +1,103 @@
 @extends('layouts.app')
 
-@section('main')
-	<div class="topline">
-		<ol class="breadcrumb custom-breadcrumb">
-			<li class="breadcrumb-item">
-				<a href="/">Home</a>		
-			</li>
-			<li class="breadcrumb-item">
-				Profile
-			</li>
-		</ol>
-	</div>
+@section('head')
+	<div class="border">
 
-	<h4 style="line-height: 26px">
-		<img 
-			src="{{ $user->avatar }}" 
-			style="display: block; margin: 0 10px 0 0" align="left"
-		/>
-		{{ $user->name }}	
-		<br>
-		<small style="margin-top: 0px">{{ $user->type }}</small>
-	</h4>
+		<div style="height: 5em; background-color:#222f40">
 
-	<p>&nbsp;</p>
-
-	<ul class="nav nav-tabs">
-		<li class="nav-item">
-			<a class="nav-link active" data-toggle="tab" href="#overview">About</a>
-		</li>
-		<li class="nav-item">
-			<a class="nav-link" data-toggle="tab" href="#articles">Articles</a>
-		</li>
-		<li class="nav-item">
-			<a class="nav-link" data-toggle="tab" href="#comments" onclick="getComments()">	Comments
-			</a>
-		</li>
-	</ul>
-		
-	<br>
-
-	<div class="tab-content">
-		<div id="overview" class="tab-pane active">
-			<table class="table no-table-border">
-				<tbody>
-					@if(! empty($user->name))
-					<tr>
-						<td><i class="fa fa-fw fa-user-o"></i>&nbsp;Name:</td>
-						<td>{{{ $user->name }}}</td>
-						<td><i class="fa fa-eye"></i>&nbsp;</td>
-					</tr>
-					@endif
-					@if(! empty($user->email))
-					<tr>
-						<td><i class="fa fa-fw fa-envelope-o"></i>&nbsp;Email</td>
-						<td>{{{ $user->email }}}</td>
-						<td><i class="fa fa-eye-slash"></i>&nbsp;</td>
-					</tr>
-					@endif
-					@if(! empty($user->type))
-					<tr>
-						<td><i class="fa fa-fw fa-envelope-o"></i>&nbsp;Type</td>
-						<td>{{ $user->type }}</td>
-						<td><i class="fa fa-eye-slash"></i>&nbsp;</td>
-					</tr>
-					@endif
-					@if(! empty($user->created_at))
-					<tr>
-						<td><i class="fa fa-fw fa-calendar-o"></i>&nbsp;Member Since:</td>
-						<td>{{ $user->created_at->toFormattedDateString() }}</td>
-						<td><i class="fa fa-eye"></i>&nbsp;</td>
-					</tr>
-					@endif
-					@if(! empty($user->updated_at))
-					<tr>
-						<td><i class="fa fa-fw fa-clock-o"></i>&nbsp;Last updated:</td>
-						<td>{{ $user->updated_at->diffForHumans() }}</td>
-						<td><i class="fa fa-eye-slash"></i>&nbsp;</td>
-					</tr>
-					@endif
-					
-				</tbody>
-			</table>
-			@if(Auth::user()->type === 'Admin')
-				<br>
-				<h5>Social Authentication Providers</h5>
-				<hr>
-				<table class="timple">
-					@foreach($user->providers as $social)
-						<tr>
-							<td>
-								<i class="fa fa-fw fa-arrow-circle-o-right"></i>&nbsp;
-								{{$social->provider}} User id:
-							</td>
-							<td>
-								{{ $social->provider_user_id }}
-							</td>
-							<td>Hidden</td>
-						</tr>
-					@endforeach
-					
-				</table>
-			@endif
 		</div>
-		<div id="articles" class="tab-pane">
-		    	
-			@if(count($pages)> 0)
-				<p>Below articles are contributed by {{ $user->name }}</p>
-				<table class="table">
-					<thead>
-						<tr><th>#</th><th>Article</th><th>Published</th></tr>
-					</thead>
-					@foreach($pages as $page)
-						<tr>
-							<td>
-								{{$loop->iteration}}
-							</td>
-							<td>
-								<a href="{{'/' . (empty($page->slug)?'general':$page->slug) . '/' . str_slug($page->id . ' ' . $page->title)}}">
-									{{{$page->title}}}	
-								</a>
-							</td>
-							<td>
-								{{ Carbon\Carbon::parse($page->created_at)->format('d-M-Y')}}
-							</td>
-						</tr>
-					@endforeach
-				</table>
-			@else
-				<p>
-					{{{ $user->name }}} has not contributed any article yet.
-				</p>
-			@endif
-		</div>
-		<div id="comments" class="tab-pane">
-			<!-- comments -->
+
+		<div style="background-color:#e7edf3" class="p-4">
+			<div class="border d-flex w-100 bg-white">
+				<div class="bg-white w-100 p-4" style="margin-top: -50px">
+					<img src="{{ $user->avatar }}" alt="Profile Pic" align="left" class="border mr-3">
+						<strong>{{ $user->name }}</strong>
+					<br>
+					<span class="badge badge-info">{{ $user->type }}</span>
+					<div class="float-right small text-muted">
+						
+					</div>
+				</div>
+			</div>
+
+			<div style="background-color: #f4f5f6; color: #3b4b5b" class="col-12">
+				<div class="row">
+					<div class="col-6 border-right p-3">
+						<strong>ARTICLES</strong>
+						<p class="text-muted small">
+							<b>{{ count($pages) }}</b> articles written
+						</p>
+					</div>
+					<div class="col-6 borqder p-3">
+						<strong>COMMENTS</strong>
+						<p class="text-muted small">
+							<b>{{ count($user->comments) }}</b> comments
+						</p>
+					</div>
+				</div>	
+			</div>
+
+			<div style="background-color: #fefefe" class="col-12 text-muted p-3 clearfix border-top border-bottom small box-shadow">
+				<span class="float-left">
+					Joined {{ $user->created_at->diffForHumans() }}
+				</span>
+				<span class="float-right">
+					{{ $user->email }}
+				</span>
+			</div>
+
+			<div class="col-12 py-3 boqrder-bottom">
+				<strong>Articles by {{ $user->name }}</strong>
+			</div>
+
+			<div class="bg-white border">
+				<ul class="list-group list-group-flush">
+				@foreach($pages as $page)
+					<li class="list-group-item">
+						<div class="d-flex w-100 justify-content-between small text-muted">
+							<span>{{ $page->name }} &gt;</span>
+							<span> {{ \Carbon\Carbon::parse($page->created_at)->diffForHumans() }}</span>
+						</div>
+						<h5>{{ $page->title }}</h5>
+						<p>
+							{{ $page->intro }}
+						</p>
+						
+					</li>
+				@endforeach
+				</ul>
+			</div>
+
+
+			<div class="col-12 py-3 boqrder-bottom">
+				<strong>Comments made by {{ $user->name }}</strong>
+			</div>
+
+			<div class="bg-white border">
+				<ul class="list-group list-group-flush">
+				@foreach($user->comments as $comment)
+					<li class="list-group-item">
+						<div class="d-flex w-100 justify-content-between small text-muted">
+							
+							<span> {{ $comment->created_at->diffForHumans() }}</span>
+						</div>
+						<h5>{{ $comment->page->title }}</h5>
+						<p>
+							{{ $comment->body }}
+						</p>
+						
+					</li>
+					
+				@endforeach
+				</ul>
+			</div>
+
+
 		</div>
 	</div>
-
-	<p>&nbsp;</p>
-
+	
 @endsection
+
 
 @section('page.script')
 	<script>

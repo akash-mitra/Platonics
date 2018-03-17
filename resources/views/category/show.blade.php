@@ -1,56 +1,89 @@
 @extends('layouts.app')
 
-@section('aside')
-	@include('partials.category.menu')
+
+@section('title')
+	{{$category->name}}
 @endsection
 
-@section('main')
+@section('meta')
+	{{ count($pages) }} article(s) available under this category
+@endsection
 
-	@include('partials.breadcrumb', ['content' => $category])
+@section('lead')
+	{{ $category->description }}
+@endsection
 
-	<h3>{{$category->name}}</h3>
-	<p>
-		{{ $category->description }}
-	</p>
-	<hr>
-
+@section('body')
+	
 	@if($category->hasSubCategories())
-		<h4>Sub-categories</h4>
-		<p>
-			This category also contains following sub-categories
-		</p>
-		<ol>
-			@foreach($category->subcategories as $c)
-				<li><a href="{{ $c->getUrlAttribute() }}">{{ $c->name }}</a></li>
-			@endforeach
-		</ol>
-		<hr>
-	@endif
-	@foreach($pages as $page)
-		@if($loop->index % 2 === 0)
-			<div class="row">
-		@endif
-		<div class="col-md-6">
-			<h4>
-				<a href="{{route('page-view', [
-					'categorySlug' => $category->slug,
-					'page' => str_slug($page->id . ' ' . $page->title, '-'),
-				])}}">{{$page->title}}</a>
-			</h4>
+		<div id="category-subcategory" class="p-3 bg-light">
+			<h4>Sub-categories</h4>
 			<p>
-				{{$page->intro}}
+				This category also contains following sub-categories
 			</p>
+			
+			@foreach($category->subcategories as $c)
+				<div class="card mb-3">
+					<div class="card-body">
+						<h5 class="card-title">{{ $c->name }}</h5>
+						<p class="card-text">{{$c->description}}</p>
+						<a class="card-link" href="{{ $c->getUrlAttribute() }}">Read More</a>
+					</div>
+				</div>
+			@endforeach
+			
 		</div>
-		@if($loop->index % 2 === 1)
-			</div>
-		@endif
-	@endforeach
-
-	@if(count($pages) === 0)
-		<p>
-			<i class="fa fa-times"></i>&nbsp;No content available in this category
-		</p>
 	@endif
 
-	<p>&nbsp;</p>
+
+	<div id="category-page" class="my-1">
+		<!-- <h4 class="border-bottom pb-1">Pages</h4> -->
+
+		@foreach($pages as $page)
+			@if($loop->index % 2 === 0)
+				@php $rowOpen=1 @endphp
+				<div class="row py-1">
+			@endif
+					<div class="col-md-6">
+						<h4>
+							<a href="{{route('page-view', [
+								'categorySlug' => $category->slug,
+								'page' => str_slug($page->id . ' ' . $page->title, '-'),
+							])}}">{{$page->title}}</a>
+						</h4>
+						<p>
+							{{$page->intro}}
+						</p>
+					</div>
+			@if($loop->index % 2 === 1)
+				@php $rowOpen=0 @endphp
+				</div>
+			@endif
+		@endforeach
+
+		@if(isset($rowOpen) && $rowOpen==1)
+				</div>
+		@endif
+
+		
+
+		@if(count($pages) === 0)
+			<p class="border border-info rounded my-3 p-3">
+				<i class="fa fa-times"></i>&nbsp;No article page available in this category.
+			</p>
+		@endif
+
+	</div>
+
+@endsection
+
+
+
+	<!--  -->
+<!-- end of article footer -->
+
+
+
+@section('page.script')
+	
 @endsection

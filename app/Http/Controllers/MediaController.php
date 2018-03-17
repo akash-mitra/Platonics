@@ -7,11 +7,12 @@ use App\Configuration;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
-class MediaController extends Controller
+class MediaController extends BaseController
 {
 	public function __construct () 
 	{
 		$this->middleware('auth');
+		parent::__construct();
 	}
 
 

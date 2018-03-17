@@ -1,27 +1,37 @@
 @extends('layouts.admin')
 
 @section('page.css')
-    
     @include ('partials.media.dropzone-css')
 	
 	<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/medium-editor@latest/dist/css/medium-editor.min.css" type="text/css" media="screen" charset="utf-8">
 	<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/medium-editor@5.23.0/dist/css/themes/beagle.min.css" type="text/css" media="screen">
 	<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/medium-editor-tables@0.6.1/dist/css/medium-editor-tables.min.css" type="text/css" media="screen">
 
+	<style>
+		.unselectable {
+			-webkit-touch-callout: none;
+			-webkit-user-select: none;
+			-khtml-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			user-select: none;
+		}
+	</style>
 @endsection
 
 @section('aside')
-	@include('partials.page.writerPanel')
+	
+	@include('partials.page.sidemenu')
+
+@endsection
+
+@section('header')
+	@include('partials.page.breadcrumb')
 @endsection
 
 @section('main')
 	
-	<div>
-		@include('partials.page.breadcrumb')
-	</div>
-	
 	@include('partials.page.form')
-
 
 	@include('partials.media.modal', ["withGallery" => true])
 
@@ -32,7 +42,7 @@
 	
 	<script src="//cdn.jsdelivr.net/npm/medium-editor@latest/dist/js/medium-editor.min.js"></script>
 	<script src="//cdn.jsdelivr.net/npm/medium-editor-tables@0.6.1/dist/js/medium-editor-tables.min.js"></script>
-
+	
 	<script>
 
 		/**
@@ -75,34 +85,15 @@
 			location.href= "{{route('page-index')}}";
 		});
 
-
-		// // Validates and if validated submits the form to create new page
-		// $('#btn-submit').click (function () {
-		// 	if (validate('#frm-create')) {
-		// 		$('#frm-create').submit();
-		// 	}
-		// });
-
 		var pageId = "{{ $page->id }}";
 
-
-		/**
-		 * Creates a new form that can be submitted to save the texts
-		 */
-		var submitForm = function (url, data)
-		{
-			// create a form
-			var form = document.createElement ("form");
-			form.setAttribute ('method', "post");
-			form.setAttribute ('action', url);
-		}
-
-		
 		/**
 		 * Actually submits the form with the data taken from content editables
 		 */
 		var saveContents = function () {
-
+			
+			var btn = $(this);
+			
 			var data = {
 				category_id: $('#inputCat').val(),
 				title: $('#pageTitle').text(),      // we do not want to capture any HTML, only text
@@ -111,31 +102,46 @@
 				id: pageId
 			}
 
-			console.log(data);
+			// console.log(data);
 
 			makeAjaxRequest ({
 				method: "post",
 				data: data,
 				to: "{{route('page-save')}}",
+				before: function () {
+					btn.addClass('disabled').html('<i class="batch-icon batch-icon-compose-alt-3"></i>&nbsp;Saving...');
+				},
 				success: function (data) {
 					if (typeof (data) !== 'undefined' && ! isNaN(data) && parseInt(data) > 0) {
+						btn.removeClass('disabled').html('<i class="batch-icon batch-icon-compose-alt-3"></i>&nbsp;Save');;
 						pageId = parseInt(data);
-						ajaxSuccess (data);
 					}
 					else {
-						ajaxError({"responseText": "Could not obtain id from the returned data [" + data + "]"})
+						showError("Could not obtain id from the returned data [" + data + "]")
 					}
+				},
+				error: function (data) {
+					showError("Something went wrong. Failed to save.")
 				}
 			})
 		}
 
+		enableTools = function () {
+			console.log('yes')
+			$('#btn-add-image').removeClass('disabled');
+		}
+
+		disableTools = function () {
+			console.log('no')
+			$('#btn-add-image').addClass('disabled');
+		}
 
 
 		$(document).ready(function () {	
 			//make sure the category select list is prepopulated
 			populateSelect ('#inputCat', '{{route("api-categories")}}', {"key": "record", "value":"label"}, '{{$page->category_id}}');
 
-			//add one additional record for blank category "--"
+			// add one additional record for blank category "--"
 			$('#inputCat').append($('<option>', {
 			    value: '',
 				text: 'Uncategorized',
@@ -144,7 +150,18 @@
 				@endif
 			}))
 
+			// associate the event handlers
 			$('#btnSave').click (saveContents)
+
+			// remove the initial disabled class from the add media button
+			$('#pageBody').focus (function () {
+				$('#btn-add-image').removeClass('disabled');
+			})
+			
+			$('#btn-add-image').click (function (){
+				if (! $(this).hasClass('disabled')) { $('#mediaModalUpload').modal() }
+			})
+			
 		})
 
 	</script>
@@ -165,9 +182,7 @@
 			if (window.getSelection) { // all browsers except IE < 9
 				
 				sel = window.getSelection();	
-
 				if (document.getElementById(elementId).contains (sel.anchorNode) === false) return -1;
-
 				range = sel.getRangeAt(0);
 				range.deleteContents();
 				range.insertNode(imageNode);
@@ -200,4 +215,6 @@
 		setImageClickHandler (insertSelectedImage)
 
 	</script>
+
+	
 @endsection

@@ -58,6 +58,27 @@ $factory->define(App\Comment::class, function (Faker\Generator $faker) {
 });
 
 
-$factory->define(App\Configuration::class, function (Faker\Generator $faker) {
-    return ['key' => $faker->word(), 'value' => $faker->sentence()];
+$factory->define(App\SpecialPage::class, function () {
+    return [
+        'name' => 'about me',
+        'type' => 'about',
+        'markup' => 'a:1:{s:7:"content";s:34:"<p>Email: akash@batash.com<br></p>";}'
+    ];
+});
+
+$factory->define(App\Configuration::class, function () {
+    $configs = [
+        "bg-color-primary"=> "#FFFFFF", 
+        "enable-terms" => "1", 
+        "enable-privacy" => "1", 
+        "layout" => "right", 
+        "blogName" => "BDO Birpara Madarihat", 
+        "blogDesc" => "1", 
+        "enable-about" => "0", 
+        "left-modules" => ["about", "popular"]
+    ];
+    return [
+        'key' => 'blog', 
+        'value' => serialize($configs)
+    ];
 });

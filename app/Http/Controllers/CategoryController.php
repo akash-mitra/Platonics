@@ -7,12 +7,13 @@ use App\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class CategoryController extends Controller
+class CategoryController extends BaseController
 {
 
     public function __construct()
     {
         $this->middleware('auth')->except(['show', 'index']);
+        parent::__construct();
     }
 
 
@@ -27,6 +28,9 @@ class CategoryController extends Controller
     {
         $category = Category::whereSlug($categorySlug)->firstOrFail();
         $pages = $category->pages ?? new App\Page();
+
+        //$meta = json_decode(Configuration::where('key', 'blog')->first()->value, true);
+        //View::share('meta', $meta);
         
         return view ('category.show', [
             'category' => $category, 
@@ -42,6 +46,10 @@ class CategoryController extends Controller
     }
 
 
+
+    /**
+     * Creates a new category.
+     */
     protected function store (Request $request)
     {
         if(! $this->hasPermission ('store')) return redirect()->back();
@@ -56,10 +64,14 @@ class CategoryController extends Controller
     	$doc->save();
     	
         flash('New category ' . $doc->name . ' created successfully')->success();
-    	return redirect()->route('category-list');		
+    	return redirect()->route('category-index');		
     }
 
 
+
+    /**
+     * Shows an edit form to edit a given category
+     */
     protected function edit ($id)
     {
         if(! $this->hasPermission ('edit')) return redirect()->back();
@@ -70,6 +82,10 @@ class CategoryController extends Controller
     }
 
 
+
+    /**
+     * Saves changes to existing category
+     */
     protected function save (Request $request)
     {
 

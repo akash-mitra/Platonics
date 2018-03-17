@@ -4,25 +4,34 @@
 	@include('partials.admin.menu')
 @endsection
 
+@section('header')
+	@include('partials.category.breadcrumb')
+@endsection
+
 @section('main')
 
-	<div class="topline">
-		@include('partials.category.breadcrumb')
+	<div class="row">
+		<div class="col-md-12">
+			@include('partials.admin.header', [
+				'headerText' => 'Create New Category'
+			])
+		</div>
+	</div>
+
+	<div class="row mb-5">
+		<div class="col-md-12">
+			<div class="card">
+				<div class="card-body">
+					<form method="post" action="{{route('category-store')}}" id="frm-create">
+						@include('partials.category.form', [
+							'category' => new App\Category
+						])
+					</form>
+				</div>
+			</div>
+		</div>
 	</div>
 	
-	@include('partials.admin.header', [
-		'headerText' => 'Create New Category'
-	])
-	
-	<p>&nbsp;</p>
-
-	<form method="post" action="{{route('category-save')}}" id="frm-edit">
-	  	@include('partials.category.form', [
-	  		'category' => new App\Category
-	  	])
-	</form>
-	
-
 @endsection
 
 
