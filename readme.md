@@ -1,5 +1,5 @@
 <p align="center">
-	<h1>Bloggy</h1>
+	<h1>Platonics <small>Powerful Blogging done right</small></h1>
 </p>
 
 <blockquote>Modern day blogging platform that lets you take advantage of the power and flexibility of underlying Laravel  framework</blockquote>
@@ -15,7 +15,7 @@ Bloggy is a simple and minimalist content management platform for Blogging. It i
 - Perform **User Management** in admin screen
 - Full featured AJAX based **Commenting System** that's pleasing to eyes and yet accessible to search bots
 - Forum 
-- 
+- Adsense Integration
 
 Bloggy is simple, yet powerful, providing tools needed for all of your content based blogging requirements. 
 
