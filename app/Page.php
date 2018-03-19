@@ -10,7 +10,7 @@ use App\Content;
 class Page extends Content
 {
 	protected $fillable = [
-		'title', 'intro', 'category_id', 'markup', 'markdown', 'metakey', 'metadesc', 'publish', 'featured'
+		'title', 'intro', 'category_id', 'markup', 'metakey', 'metadesc', 'publish', 'featured'
 	];
 
 	// this ensure accessor property is included in the Page object
