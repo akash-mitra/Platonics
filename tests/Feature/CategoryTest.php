@@ -22,11 +22,8 @@ class CategoryTest extends BlogTestDataSetup
 
 	public function test_if_a_category_model_can_retrieve_all_pages_in_it()
 	{
-		// given I have a category (1) and 2 pages (1 and 2) in it
-		// when I retrieve the pages of this category 
 		$pages = $this->category3->pages;
 	
-		// then I can retrieve exactly 2 pages
 		$this->assertCount(2, $pages);
 	}
 
@@ -40,9 +37,15 @@ class CategoryTest extends BlogTestDataSetup
 
 		// when we vist the homepage
 		$this->get('/')
-			// ->assertSuccessful()
-		// then we see the categories are appearing in the page (as part of menu)
 			->assertSee($name1)
 			->assertSee($name2);
+	}
+
+
+	public function test_categories_api_list_returns_all_categories()
+	{
+		$this->get(route('api-categories'))
+			->assertJsonStructure(["*" => ["record", "parent_record", "label"]])
+			->assertSuccessful();
 	}
 }

@@ -36,13 +36,15 @@ class BlogTestDataSetup extends TestCase
 		$this->editor = factory(User::class)->create(["type" => "Editor"]);
 		$this->admin = factory(User::class)->create(["type" => "Admin"]);
 
-		// create 3 categories as per below hierarchy
-		//                 |
-		//      |---------------------|
-		//   category             category2
-		//   |
-		// category3
-		//
+		/*-----------------------------------------------------------------------------------------
+		| create 3 categories as per below hierarchy
+		|                 |
+		|      |---------------------|
+		|   category             category2
+		|   |
+		| category3
+		|----------------------------------------------------------------------------------------*/
+
 		$this->category = factory(Category::class)->create(['parent_id' => null]);
 		$this->category2 = factory(Category::class)->create(['parent_id' => null]);
 		// and one subcategory under first parent category
@@ -50,11 +52,6 @@ class BlogTestDataSetup extends TestCase
 
 		
 		// create a few pages in them
-		// page1 ---> in category by author1
-		// page2 ---> is uncategorized by author1
-		// page3 ---> in category3 by author 2
-		// page4 ---> in category3 by editor
-
 		$this->page1 = factory(Page::class)->create([
 			"category_id" => $this->category->id,
 			"user_id" => $this->author->id
@@ -71,24 +68,6 @@ class BlogTestDataSetup extends TestCase
 			"category_id" => $this->category3->id,
 			"user_id" => $this->editor->id
 		]);
-
-		
-		
-		// create couple of articles by one user
-		
-		// $this->articles = factory(Page::class, 2)->create([
-		// 	"user_id" => $this->author->id,
-		// 	"category_id" => $this->category->id,
-		// ]);
-
-		// $this->page = $this->articles[0];
-		// $this->page1 = factory(Page::class)->create([
-		// 	"category_id" => $this->category->id, 
-		// 	"user_id" => $this->author1->id
-		// ]);
-
-
-
 
 		// create a few comments on the article
 		$this->comment1 = factory(Comment::class)->create([
