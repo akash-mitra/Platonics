@@ -363,6 +363,117 @@ img.avatar-lg {
  	from { background-color: #ffff99; }
  	to { background-color: none;}
 }
+
+/*
+ * Activates "radio-switch" class.
+ * Following CSS is used to change normal input type checkbox to
+ * stylised radio buttons. There must be a label *after* input.
+ * 
+ */
+ input[type=checkbox].radio-switch {
+        height: 0;
+        width: 0;
+        visibility: hidden;
+    }
+
+    input.radio-switch + label {
+        cursor: pointer;
+        text-indent: -9999px;
+        width: 50px;
+        height: 25px;
+        background: grey;
+        display: block;
+        border-radius: 25px;
+		position: relative;
+    }
+
+    input.radio-switch + label:after {
+        content: '';
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        width: 22px;
+        height: 21px;
+        background: #fff;
+        border-radius: 10px;
+        transition: 0.3s;
+    }
+
+    input.radio-switch:checked + label {
+        background: #bada55;
+    }
+
+    input.radio-switch:checked + label:after {
+        left: calc(100% - 3px);
+        -webkit-transform: translateX(-100%);
+        -ms-transform: translateX(-100%);
+        transform: translateX(-100%);
+    }
+
+    input.radio-switch + label:active:after {
+        width: 20px;
+    }
+
+/*
+ * Following CSS is used to create placeholder content loading effect
+ */
+
+ .placeholder-item {
+		padding: 12px;
+		margin: 0 auto;
+		max-width: 1000px;
+	}
+	@-webkit-keyframes placeHolderShimmer{
+		0%{
+			background-position: -800px 0
+		}
+		100%{
+			background-position: 800px 0
+		}
+	}
+	@keyframes placeHolderShimmer{
+		0%{
+			background-position: -800px 0
+		}
+		100%{
+			background-position: 800px 0
+		}
+	}
+
+	.animated-background {
+		-webkit-animation-duration: 2s;
+		animation-duration: 2s;
+		-webkit-animation-fill-mode: forwards;
+		animation-fill-mode: forwards;
+		-webkit-animation-iteration-count: infinite;
+		animation-iteration-count: infinite;
+		-webkit-animation-name: placeHolderShimmer;
+		animation-name: placeHolderShimmer;
+		-webkit-animation-timing-function: linear;
+		animation-timing-function: linear;
+		background: #f6f7f8;
+		background: -webkit-gradient(linear, left top, right top, color-stop(8%, #eeeeee), color-stop(18%, #dddddd), color-stop(33%, #eeeeee));
+		background: -webkit-linear-gradient(left, #eeeeee 8%, #dddddd 18%, #eeeeee 33%);
+		background: linear-gradient(to right, #eeeeee 8%, #dddddd 18%, #eeeeee 33%);
+		-webkit-background-size: 800px 104px;
+		background-size: 800px 104px;
+		
+		position: relative;
+	}
+
+
+	.background-masker {
+		background: transparent;
+		border: 10px solid white;
+	}
+
+	.background-masker.bm-lighter {
+		background: rgba(255, 255, 255, 0.5);
+	}
+
+	.background-masker.bm-lightest {
+		background: rgba(255, 255, 255, 0.75);
+	}
 	
 /*
  * Social Buttons for Bootstrap

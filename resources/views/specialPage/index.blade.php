@@ -4,55 +4,6 @@
 	@include('partials.admin.menu', ["special" => true])
 @endsection
 
-@section('page.css')
-<style>
-    input[type=checkbox]{
-        height: 0;
-        width: 0;
-        visibility: hidden;
-    }
-
-    label {
-        cursor: pointer;
-        text-indent: -9999px;
-        width: 50px;
-        height: 25px;
-        background: grey;
-        display: block;
-        border-radius: 25px;
-        position: relative;
-    }
-
-    label:after {
-        content: '';
-        position: absolute;
-        top: 2px;
-        left: 2px;
-        width: 22px;
-        height: 21px;
-        background: #fff;
-        border-radius: 10px;
-        transition: 0.3s;
-    }
-
-    input:checked + label {
-        background: #bada55;
-    }
-
-    input:checked + label:after {
-        left: calc(100% - 3px);
-        -webkit-transform: translateX(-100%);
-        -ms-transform: translateX(-100%);
-        transform: translateX(-100%);
-    }
-
-    label:active:after {
-        width: 20px;
-    }
-</style>
-
-@endsection
-
 @section('header')
 	@include('partials.admin.breadcrumb', ['leafPage' => 'Special Pages'])
 @endsection
@@ -78,7 +29,7 @@
                         <h5 class="card-title">About</h5>
                     </div>
                     <div class="col-6">
-                        <input class="float-right" type="checkbox" id="enable-about" @if(!empty($meta['enable-about'])) checked @endif /><label for="enable-about">Enable</label>
+                        <input class="radio-switch float-right" type="checkbox" id="enable-about" @if(!empty($meta['enable-about'])) checked @endif /><label for="enable-about">Enable</label>
                     </div>
                 </div>
                 <p class="card-text">Write something about you. Let people know about the person(s) behind this beautiful blog.</p>
@@ -95,7 +46,7 @@
                         <h5 class="card-title">Contact</h5>
                     </div>
                     <div class="col-6">
-                        <input class="float-right" type="checkbox" id="enable-contact" @if(!empty($meta['enable-contact'])) checked @endif /><label for="enable-contact">Enable</label>
+                        <input class="radio-switch float-right" type="checkbox" id="enable-contact" @if(!empty($meta['enable-contact'])) checked @endif /><label for="enable-contact">Enable</label>
                     </div>
                 </div>
                 <p class="card-text">Create or Edit contact page for your blog so that your visitors can reach out to you.</p>
@@ -113,7 +64,7 @@
                         <h5 class="card-title">Privacy</h5>
                     </div>
                     <div class="col-6">
-                        <input class="float-right" type="checkbox" id="enable-privacy" @if(!empty($meta['enable-privacy'])) checked @endif /><label for="enable-privacy">Enable</label>
+                        <input class="radio-switch float-right" type="checkbox" id="enable-privacy" @if(!empty($meta['enable-privacy'])) checked @endif /><label for="enable-privacy">Enable</label>
                     </div>
                 </div>
                 <p class="card-text">Let your visitors know just how protected their personal information is when they visit your site. Remain compliant with FTC, COPPA and other legislators.</p>
@@ -130,7 +81,7 @@
                         <h5 class="card-title">Terms</h5>
                     </div>
                     <div class="col-6">
-                        <input class="float-right" type="checkbox" id="enable-terms" @if(!empty($meta['enable-terms'])) checked @endif /><label for="enable-terms">Enable</label>    
+                        <input class="radio-switch float-right" type="checkbox" id="enable-terms" @if(!empty($meta['enable-terms'])) checked @endif /><label for="enable-terms">Enable</label>    
                     </div>
                 </div>
                 <p class="card-text">Enable Terms of Use to prevent abuse of your contents and limit liability.</p>
