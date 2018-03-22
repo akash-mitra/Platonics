@@ -48,16 +48,16 @@ class PermissionTest extends BlogTestDataSetup
 		// given I have an author, she can open a page
 		// owned by her for editing and see the page markdowns
 		$this->can_access_a_url_and_assert_see (
-				route('page-editor', $this->page->id), 
+				route('page-editor', $this->page1->id), 
 				$this->author,
-				$this->page->markup
+				$this->page1->markup
 			);
 	}
 
 	public function test_author_can_not_edit_others_pages ()
 	{
-		// author trying to open 'page1' (whereas 'page' was owned by him)
-		$this->can_not_access_a_url(route('page-editor', $this->page1->id), $this->author);
+		// author trying to open 'page3' (whereas only 'page1' and 'page2' are owned by him)
+		$this->can_not_access_a_url(route('page-editor', $this->page3->id), $this->author);
 	}
 
 
@@ -65,9 +65,9 @@ class PermissionTest extends BlogTestDataSetup
 	{
 		// given I have an editor, she can open any page for edit
 		$this->can_access_a_url_and_assert_see ( 
-				route('page-editor', $this->page->id), 
+				route('page-editor', $this->page1->id), 
 				$this->editor,
-				$this->page->markup
+				$this->page1->markup
 			);
 	}
 
