@@ -22,7 +22,16 @@ class PageController extends BaseController
         
         if ($page->category_id === null || $page->category->slug === $categorySlug) 
         {
-           return view ('page.show', ['page' => $page]);
+           return view ('page.show', [
+                    'page' => $page, 
+                    'pageMeta' => [
+                            'type'        => 'article',
+                            'page_id'     => $id,
+                            'category_id' => $page->category_id,
+                            'created_at'  => $page->created_at,
+                            'updated_at'  => $page->updated_at
+                    ]
+                ]);
         }
 
         abort(404, 'Page Not Found');

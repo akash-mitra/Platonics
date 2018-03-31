@@ -40,8 +40,15 @@ class ProfileController extends BaseController
 		$pages = $user->articles();
 		
 		return view('profile.index', [
-			'user' => $user, 
-			'pages' => $pages,
+				'user' => $user, 
+				'pages' => $pages,
+				'pageMeta' => [
+					'type' => 'profile',
+					'page_id' => null,
+					'category_id' => null,
+					'created_at' => $user->created_at,
+					'updated_at' => $user->updated_at
+				]
 			]);	
 	}
 
