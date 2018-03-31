@@ -23,13 +23,10 @@ class HomepageController extends BaseController
                     ->select ('id', 'category_id', 'title', 'intro', 'created_at', 'updated_at')
                     ->take (3)
                     ->get ();
-
-        $about = SpecialPage::where('type', 'about')->first();
         
         return view('homepage.default', [
             "featured" => $featured,
-            "latest" => $latest,
-            "about" => unserialize($about->markup)
+            "latest" => $latest
         ]); 
     }
 
