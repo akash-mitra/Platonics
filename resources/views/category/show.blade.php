@@ -76,14 +76,3 @@
 	</div>
 
 @endsection
-
-
-
-	<!--  -->
-<!-- end of article footer -->
-
-
-
-@section('page.script')
-	
-@endsection
