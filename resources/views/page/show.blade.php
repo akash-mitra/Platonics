@@ -22,17 +22,3 @@
 	{!! $page->markup !!}
 @endsection
 
-@section('comments')
-	@include('partials.comment.show')
-@endsection
-
-
-
-	<!--  -->
-<!-- end of article footer -->
-
-
-
-@section('page.script')
-	@include('partials.comment.scripts')
-@endsection

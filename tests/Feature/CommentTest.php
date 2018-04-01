@@ -1,6 +1,7 @@
 <?php
 
 namespace Tests\Feature;
+
 use Tests\BlogTestDataSetup;
 
 class CommentTest extends BlogTestDataSetup
@@ -8,10 +9,6 @@ class CommentTest extends BlogTestDataSetup
 	public function test_non_auth_user_can_see_page_comments()
 	{
 		$this->user_can_see_page_comments($this->page1);
-
-		// $expectedFragment = ["text" => $this->noHTML($this->comment->body)];
-		// $actualResponse   = $r->decodeResponseJson()[0];
-		// $this->assertArraySubset($expectedFragment, $actualResponse);
 	}
 
 	public function test_auth_user_can_see_page_comments() {
@@ -61,7 +58,7 @@ class CommentTest extends BlogTestDataSetup
 
 
     	private function check_comments_by_page ($page) {
-    		return $this->check_comments(route('comments-on-page', $page->id));
+    		return $this->check_comments(route('comments-on-page') . '?url=' .  $page->url);
     	}
 
     	private function check_comments_by_user ($user) {

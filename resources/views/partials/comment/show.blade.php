@@ -11,7 +11,7 @@
 			<img align="left" src="{{Auth::user()->avatar}}" alt="Profile Picture" class="pp-r pp-md mr-3">
 			<div style="overflow: hidden">
 				<form id="comment-form">
-					<input type="hidden" id="pageid" value="{{$page->id}}">
+					<input type="hidden" id="pageid" value="{{$page_id}}">
 					<div class="form-group">
 						<div id="comment-message"></div>
 						<textarea id="inputComment" name="text" class="form-control custom-control" placeholder="What is your view?"></textarea>

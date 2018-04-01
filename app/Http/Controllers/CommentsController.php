@@ -30,6 +30,8 @@ class CommentsController extends Controller
 
 
     /**
+     * DEPRECATED - use comments() function instead.
+     * 
      * This function returns JSON for all the comments made
      * on a particular page/article identified by $id
      */
@@ -41,6 +43,34 @@ class CommentsController extends Controller
     }
 
 
+
+
+    /**
+     * 
+     * This function returns comments in JSON 
+     * format based on a particular page URL
+     */
+    public function comments (Request $request)
+    {
+        $url = $request->input('url');
+        
+        if (empty($url)) 
+        {
+            return response()->json([
+                "status" => "failure",
+                "message" => "URL not available"
+            ], 404);
+        }
+        
+        $id = $this->getPageIdFromURL ($url);
+
+        $comments = Comment::onPage($id)->get();
+        
+        return $this->jsonifyResponse($comments);
+    }
+
+
+    
     /**
      * Stores the comment to database
      */
@@ -112,6 +142,16 @@ class CommentsController extends Controller
     {
         // return htmlentities($input, ENT_QUOTES | ENT_HTML5, $encoding);
         return htmlentities($input, ENT_QUOTES, $encoding);
+    }
+
+
+    private function getPageIdFromURL ($url)
+    {
+        $pageSlug = strrchr($url, '/');
+
+        $id = substr($pageSlug, 1, strpos($pageSlug . '-', '-') - 1);
+
+        return $id;
     }
 
     // end of class

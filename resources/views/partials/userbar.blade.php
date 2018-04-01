@@ -11,11 +11,11 @@
             <li class="nav-item dropdown">
 
                 <a class="text-muted nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">    
-                    <img src="{{ Auth::user()->avatar }}" class="pp-r pp-sm" alt="User's Photo">
+                    <img id="user-profile-pic" src="{{ Auth::user()->avatar }}" class="pp-r pp-sm" alt="User's Photo">
                 </a>
 
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                    <a class="dropdown-item" href="{{ route('profile')}}">
+                    <a id="user-profile-url" class="dropdown-item" href="{{ route('profile')}}">
                             
                             Profile
                     </a>

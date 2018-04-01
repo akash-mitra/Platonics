@@ -127,7 +127,7 @@
 
 	let retrieveParams = {
 		method: 'get',
-		to: "{{route('comments-on-page', $page->id)}}",
+		to: "{{route('comments-on-page', $page_id)}}",
 		before: function () {
 		$('#comments-heading').html('Fetching article comments...');	
 		},
