@@ -1,3 +1,4 @@
+
 <nav id="sidebar" class="px-0 bg-dark bg-gradient sidebar">
 	<ul class="nav nav-pills flex-column">
 		<li class="logo-nav-item">
@@ -37,7 +38,9 @@
 				<i class="batch-icon  batch-icon-image"></i>Media
 			</a>
 		</li>
+		@endif
 	
+		@if(Auth::guest() != true && Auth::user()->type === 'Admin')
 		<li class="nav-item">
 			<a class="nav-link {{ isset($module) ? 'active' : '' }}" href="{{route('module-index')}}">
 				<i class="batch-icon  batch-icon-image"></i>Modules

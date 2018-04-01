@@ -1,5 +1,117 @@
 var gebi = function (id) { return document.getElementById(id); };
 
+
+
+/**
+ * Creates a new table with the JSON data and populates the same
+ * in the "location".
+ * 
+ * url			(String) Required
+ * 				The JSON endpoint. By default 'GET' requests are made.
+ * 				Precede the url with "post:" if post requests are required.
+ * 
+ * element	 	(String) Required
+ * 				The id or class of DOM element where the new table to be 
+ * 				populated. Ids must start with '#' whereas classes should
+ * 				start with '.'
+ * 
+ * columns		(Array | Object) Optional
+ * 				The attributes that need to be populated in the table. If 
+ * 				left blank, or non-array or non-object data is passed then
+ * 				all the attributes present in the JSON response
+ * 				will be populated in table columns.
+ * 				If object is provided, then attribute names must match with 
+ * 				the columns names and attribute value must be true or a function.
+ * 				If a function is provided, then the function will be applied on the column data
+ * 
+ * options		(Object) Optional
+ * 				Following options can be specified.
+ * 				- inputData
+ * 				  Data (in any) needed to be sent to the server with the request
+ * 				- dataAttribute
+ * 				  The data attribute to be searched within the received response.
+ * 				  If this parameter is omitted, the entire response is considered
+ * 				  as the data for the table.
+ * 
+ */
+var populateTableWithJSONData = function (url, element, columns, options) {
+	var holder, param = {};
+
+	var _transformValue = function (row, key) {
+		if (columns !== null && typeof columns[key] != 'function') return row[key];
+		else return columns[key](row[key], row); // call the function name present in columns[key]
+	}
+
+	if (url.substring(0, 5).toUpperCase() === "POST:") {
+		param.method = 'post';
+		param.to = url.substring(5);
+	}
+	else {
+		param.methos = 'get';
+		param.to = url
+	}
+
+	param.inputData = (typeof options.inputData === 'undefined') ? {} : options.inputData;
+	param.before = function () {
+		enablePlaceHolder(element);
+	}
+	param.success = function (data) {
+		var rows = (typeof options.dataAttribute === 'undefined') ? data : data[options.dataAttribute],
+			l = rows.length,
+			keys = (l > 0) ? Object.keys(rows[0]) : null,
+			table = '', thead = '', tbody = '';
+
+		if (columns && columns.constructor === Array) {
+			keys = keys.filter(function (e) {
+				return ((columns.indexOf(e) >= 0) ? e : null);
+			})
+		}
+		else if (columns !== null && typeof columns === 'object') {
+			keys = [];
+			for (var attribute in columns) {
+				if (columns.hasOwnProperty(attribute)) {
+					if (typeof columns[attribute] === 'boolean') {
+						if (columns[attribute] != false)
+							keys.push(attribute)
+					}
+					else {
+						keys.push(attribute)
+					}
+				}
+			}
+		}
+
+		for (var i = 0; i < keys.length; i++) // create the table header
+			thead += '<th>' + keys[i].toUpperCase() + '</th>';
+		thead = '<thead><tr>' + thead + '</tr></thead>';
+
+		for (var i = 0; i < l; i++) // create the table body
+		{
+			tbody += '<tr>';
+			for (var j = 0; j < keys.length; j++)
+				//tbody += '<td>' + _transformValue (rows[i][keys[j]], keys[j], rows[i]) + '</td>';
+				tbody += '<td>' + _transformValue(rows[i], keys[j]) + '</td>';
+			tbody += '</tr>';
+		}
+		tbody = '<tbody>' + tbody + '</tbody>';
+		table = '<table class="' + options.class + '">' + thead + tbody + '</table>';
+
+		$(element).html(table);
+	}
+	makeAjaxRequest(param);
+}
+
+
+var enablePlaceHolder = function (element) {
+	$(element).html('<div class="timeline-wrapper"><div class="placeholder-item"><div class="animated-background"><div class="row"><div class="background-masker col-4 p-3"></div><div class="background-masker col-4 p-3"></div><div class="background-masker col-4 p-3"></div></div><div class="row"><div class="background-masker col-12 py-2"></div></div><div class="row"><div class="background-masker bm-lighter col-12 py-2"></div></div><div class="row"><div class="background-masker bm-lightest col-12 py-2"></div></div></div></div></div>');
+}
+
+
+var isTruthy  = function (e) {
+	if (typeof e !== 'undefined' && e != null && e != '0' && e != ' ' && e) return true;
+	return false;
+}
+
 /*
  |--------------------------------------------------------------------------
  | This function is used to validate a bootstrap based
@@ -97,6 +209,8 @@ function makeAjaxRequest (param)
 	if (typeof param.data === 'undefined') param.data = {};
 	param.data['_token'] = $('meta[name="csrf-token"]').attr('content');
 	
+	if (typeof param.method === 'undefined') param.method = 'GET';
+	
 	$.ajax ({
 		method: param.method,
 		url: param.to,
@@ -127,6 +241,9 @@ function waitWheel (msg)
 	$("body").append(content);
 }
 
+function ucfirst (string) {
+	return string.charAt(0).toUpperCase() + string.slice(1);
+}
 
 function getIconByUserType(type)
 {

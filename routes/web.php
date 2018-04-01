@@ -103,13 +103,12 @@ Route::post('/admin/page/delete/{id}', 'AdminController@destroyPage')->name('pag
  | Blogging related routes that only admin can access
  |--------------------------------------------------------------------------
  */
-Route::get('/admin/modules', 'ModuleController@index')->name('module-index');
-Route::get('/admin/module/create', 'ModuleController@create')->name('module-create');
-Route::post('/admin/module/store', 'ModuleController@store')->name('module-store');
-Route::patch('/admin/module/save', 'ModuleController@update')->name('module-update');
-Route::get('/admin/module/{id}', 'ModuleController@show')->name('module-show');
-Route::get('/admin/module/edit/{id}', 'ModuleController@edit')->name('module-edit');
-Route::post('/admin/module/delete/{id}', 'ModuleController@destroy')->name('module-delete');
+Route::get('/admin/modules',        'ModuleController@home')->name('module-home');
+Route::post('/admin/modules',       'ModuleController@index')->name('module-index');
+Route::get('/admin/module/{type}/{id?}',   'ModuleController@showOrCreate')->name('module-show');
+Route::patch('/admin/module/save',  'ModuleController@updateOrCreate')->name('module-update');
+Route::post('/admin/module/delete', 'ModuleController@destroy')->name('module-delete');
+Route::post('/admin/module/visibility', 'ModuleController@saveModuleMeta')->name('module-visibility');
 
 
 /* 
@@ -139,7 +138,7 @@ Route::post('/admin/config/{config}', 'ConfigurationController@setConfig')->name
  |--------------------------------------------------------------------------
  */
 Route::get('/users/{slug}/comments', 'CommentsController@commentsByUser')->name('comments-by-user');
-Route::get('/pages/{id}/comments', 'CommentsController@commentsByPage')->name('comments-on-page');
+
 Route::post('/comments/store', 'CommentsController@store')->name('comments-store');
 
 
@@ -150,7 +149,12 @@ Route::post('/comments/store', 'CommentsController@store')->name('comments-store
  */
 Route::get('/api/v1/get/categories', 'API\v1\APICategoryController@getCategories')->name('api-categories');
 Route::get('/api/v1/get/media', 'API\v1\APIMediaController@getMedia')->name('api-media');
+Route::get('/api/v1/comments', 'CommentsController@comments')->name('comments-on-page');
 
+
+Route::get('/test/meta', function () {
+    return unserialize(App\Configuration::where('key', 'blog')->first()->value);
+});
 
 
 /* 

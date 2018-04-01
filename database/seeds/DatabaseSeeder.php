@@ -19,13 +19,13 @@ class DatabaseSeeder extends Seeder
     	$noOfUsers = 10;
     	$noOfCategories = 7;
     	$noOfParentCategories = 2;
-    	$maxPagePerCategory = 10;
+		$maxPagePerCategory = 10;
+		
+		// create minimum configuration entries
+		$configs = factory(Configuration::class)->create();
 
         // create a few users
         $userIds = factory(User::class, $noOfUsers)->create()->pluck('id')->all();
-
-		// create minimum configuration entries
-		$configs = factory(Configuration::class)->create();
 		
         // create a few parent level categories
         $parentCategories = factory(Category::class, $noOfParentCategories)->create()->pluck('id')->all();

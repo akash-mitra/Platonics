@@ -13,6 +13,7 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 $factory->define(App\User::class, function (Faker\Generator $faker) {
+
     static $password;
 
     return [
@@ -72,13 +73,24 @@ $factory->define(App\Configuration::class, function () {
         "enable-terms" => "1", 
         "enable-privacy" => "1", 
         "layout" => "right", 
-        "blogName" => "BDO Birpara Madarihat", 
-        "blogDesc" => "1", 
-        "enable-about" => "0", 
-        "left-modules" => ["about", "popular"]
+        "blogName" => "Platonics", 
+        "blogDesc" => "Blog for the perfectionists.",
+        "positions" => ["hidden", "banner", "left", "right", "top", "bottom"],
+        "scripts" => []
     ];
     return [
         'key' => 'blog', 
         'value' => serialize($configs)
+    ];
+});
+
+
+$factory->define(App\Module::class, function (Faker\Generator $faker) {
+
+    $content = 'Some <b>HTML</b> Texts';
+    $config  = ["content" => $content];
+    return [
+        'name' => $faker->sentence,
+        'config' => serialize($config)
     ];
 });

@@ -56,6 +56,7 @@
 
     </head>
     <body class="bg-color-primary">
+        
         <div class="container">
             <header class="blog-header py-3">
                 <div class="row flex-nowrap justify-content-between align-items-center">
@@ -67,9 +68,18 @@
                     </div>
                 </div>
             </header>
-            <div class="nav-scroller py-1 mb-5 border-bottom">
+            <div class="nav-scroller py-1 mb-q5 border-bottom">
                 @include('partials.menu')
             </div>
+
+            <div class="top-banner my-3">
+                @if(isset($meta["banner"]))
+                    @foreach($meta["banner"] as $key => $module)
+                        {!! App\RenderModule::getModuleHTML($key, $module, $pageMeta) !!}
+                    @endforeach
+                @endif
+            </div>
+            
         </div>
         <main role="main" class="container">
             <div class="row">
@@ -93,6 +103,14 @@
                         </div>
                     @endif
 
+                    <div class="top-page">
+                        @if(isset($meta["top"]))
+                            @foreach($meta["top"] as $key => $module)
+                                {!! App\RenderModule::getModuleHTML($key, $module, $pageMeta) !!}
+                            @endforeach
+                        @endif
+                    </div>
+
                     <div class="blog-post">
                         <h2 class="blog-post-title">
                             @yield('title')
@@ -108,7 +126,14 @@
                     </div>
                     <!-- /.blog-post -->
                 
-                    @yield('comments')
+                    <div class="bottom-page">
+                        @if(isset($meta["bottom"]))
+                            @foreach($meta["bottom"] as $key => $module)
+                                {!! App\RenderModule::getModuleHTML($key, $module, $pageMeta) !!}
+                            @endforeach
+                        @endif
+                    </div>
+                    
 
                 </div><!-- /.blog-main -->
 
@@ -125,7 +150,6 @@
         
       
         <footer class="blog-footer bg-dark text-white">
-            
             <p>
                 <a class="px-2 text-muted" href="/sitemap">Sitemap</a>
                 @if($meta['enable-privacy'] === '1')
@@ -150,6 +174,9 @@
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
         <script src="{{ asset('js/app.js') }}"></script>
+
+        {!! App\RenderModule::getModuleScripts() !!}
+        
         @yield('page.script')
 
     </body>
