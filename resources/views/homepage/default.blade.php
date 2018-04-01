@@ -136,15 +136,13 @@
         </div>
 
 
-        @if(isset($meta['enable-about']) && $meta['enable-about'] === '1')
+        @if(isset($meta["bottom-modules"]))
         <div class="container">
             <div class="row">
-                <div class="col-12 p-3">    
-                    <h4 class="font-italic">About</h4>
-                    
-                    {!! $about['content'] !!}
-                </div>
-            </div> 
+            @foreach($meta["bottom-modules"] as $module)
+                {!! App\RenderModule::getModuleHTML($module) !!}
+            @endforeach
+            </div>
         </div>
         @endif
       
