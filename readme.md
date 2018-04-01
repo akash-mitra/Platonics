@@ -7,18 +7,18 @@
 
 ## About Platonics
 
-Platonics is a simple and minimalist content management platform for Blogging. It is built using Laravel. It comes pact with all the must-haves of modern day's blogging features, so that you don't need to waste time searching or building essential functions anymore.
+Platonics is a simple and minimalist content management platform for Blogging. It is built using Laravel. It comes pact with all the must-haves of modern days' blogging features, so that you don't need to waste time searching or buying additional plugins anymore.
 
 - Create and Manage Blog articles and related metadata information.
 - Organize Blog posts in **Categories**. Auto create menu items from categories.
 - Get out of box **Social Authentication** system using Auth Providers (Google / Facebook / Twitter etc.)
-- Create simple **Profile Pages** for the users
+- Create elegant **Profile Pages** for the users
 - Perform **User Management** in admin screen
 - Full featured AJAX based **Commenting System** that's pleasing to eyes and yet accessible to search bots
-- Forum 
+- Modular designs with flexible module placings 
 - Adsense Integration
 
-Platonics is simple, yet powerful, providing tools needed for all of your content based blogging requirements. 
+Platonics is simple, yet powerful. It comes with all the essential tools preloaded for running a serious blog.
 
 ## Why Platonics
 
@@ -33,8 +33,7 @@ Thank you for considering contributing to Platonics framework!
 If you discover a security vulnerability within Platonics, please send an e-mail to Akash Mitra at akashmitra@gmail.com. All security vulnerabilities will be promptly addressed.
 
 ## Credit
-This Platonics platform is built on top of @laravel framework by Taylor Otwell (@taylorotwell)
+Platonics platform is built on top of @laravel framework by Taylor Otwell (@taylorotwell)
 
 ## License
-
-The Platonics framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
+The Platonics framework is a open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
