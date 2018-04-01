@@ -4,6 +4,7 @@ namespace Tests;
 
 use App\User;
 use App\Page;
+use App\Module;
 use App\Comment;
 use App\Category;
 use Tests\TestCase;
@@ -14,11 +15,13 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 class BlogTestDataSetup extends TestCase
 {
     use DatabaseTransactions;
-   
+
+	protected $meta;
     protected $user, $author, $author1, $editor, $admin;
 	protected $category, $category2, $category3;
 	protected $page1, $page2, $page3;
 	protected $comment1;
+	protected $customModule, $customModule2;
 
 
 	public function setUp ()
@@ -27,7 +30,8 @@ class BlogTestDataSetup extends TestCase
 		parent::setUp();
 		
 		// create basic configuration / metadata
-		$configs = factory(Configuration::class)->create();
+		$configurations = factory(Configuration::class)->create();
+		$this->meta = unserialize($configurations->value);
 
 		// create 1 general, 2 authors, 1 editor and 1 admin type users
 		$this->user = factory(User::class)->create();
@@ -43,6 +47,12 @@ class BlogTestDataSetup extends TestCase
 		|   category             category2
 		|   |
 		| category3
+		|
+		| category   -> page1, 
+		| category2  -> No page
+		| category3  -> page3, page4
+		| 
+		| page2 is not connected to any category
 		|----------------------------------------------------------------------------------------*/
 
 		$this->category = factory(Category::class)->create(['parent_id' => null]);
@@ -56,14 +66,17 @@ class BlogTestDataSetup extends TestCase
 			"category_id" => $this->category->id,
 			"user_id" => $this->author->id
 		]);
+
 		$this->page2 = factory(Page::class)->create([
 			"category_id" => null,
 			"user_id" => $this->author->id
 		]);
+
 		$this->page3 = factory(Page::class)->create([
 			"category_id" => $this->category3->id,
 			"user_id" => $this->author1->id
 		]);
+
 		$this->page4 = factory(Page::class)->create([
 			"category_id" => $this->category3->id,
 			"user_id" => $this->editor->id
@@ -79,8 +92,16 @@ class BlogTestDataSetup extends TestCase
 		// special page
 		$sp = factory(SpecialPage::class)->create();
 
+
+		// dummy custom module
+		$this->customModule = factory(Module::class)->create(['type' => 'custom']);
+
+		$this->customModule2 = factory(Module::class)->create(['type' => 'custom']);
+
 	}
 
+
+	
 	protected function can_access_a_url_and_assert_see ($url, $user = null, $content)
 	{
 		if($user) return $this->actingAs($user)->can_access_a_url($url, $content);
