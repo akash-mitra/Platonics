@@ -27,7 +27,7 @@ class AdminConsoleTest extends BlogTestDataSetup
      * ADMIN > Pages : Related Test Cases
      * ------------------------------------------------------------------ */
 
-    public function test_that_admin_can_open_pages ()
+    public function test_that_admin_can_open_pages()
     {
         $this->actingAs($this->admin)
             ->get(route('page-index'))
@@ -56,7 +56,7 @@ class AdminConsoleTest extends BlogTestDataSetup
             ->assertStatus(302);
     }
 
-    public function test_admin_can_access_page_editor ()
+    public function test_admin_can_access_page_editor()
     {
         $this->actingAs($this->admin)
             ->get(route('page-editor'))
@@ -84,7 +84,7 @@ class AdminConsoleTest extends BlogTestDataSetup
             ->assertStatus(302);
     }
 
-    public function test_page_editor_can_open_an_existing_article ()
+    public function test_page_editor_can_open_an_existing_article()
     {
         $this->actingAs($this->admin)
             ->get(route('page-editor', $this->page1->id))
@@ -92,11 +92,11 @@ class AdminConsoleTest extends BlogTestDataSetup
             ->assertSee($this->page1->intro);
     }
 
-    public function test_a_new_page_can_be_saved ()
+    public function test_a_new_page_can_be_saved()
     {
         $newPage = [
-            "title" => "Test Page", 
-            "intro" => "Just a test", 
+            "title" => "Test Page",
+            "intro" => "Just a test",
             "markup" => "The main contents",
             "publish" => "1"
         ];
@@ -107,22 +107,22 @@ class AdminConsoleTest extends BlogTestDataSetup
     }
 
 
-    public function test_admin_can_edit_page ()
+    public function test_admin_can_edit_page()
     {
-        $this->can_save_page_edit ($this->admin, $this->page2);
+        $this->can_save_page_edit($this->admin, $this->page2);
     }
 
 
     public function test_editor_can_edit_page()
     {
-        $this->can_save_page_edit ($this->editor, $this->page4);
+        $this->can_save_page_edit($this->editor, $this->page4);
     }
 
 
-    public function test_author_can_edit_own_page ()
+    public function test_author_can_edit_own_page()
     {
         // $this->author created page1 and page2
-        $this->can_save_page_edit ($this->author, $this->page2);
+        $this->can_save_page_edit($this->author, $this->page2);
     }
 
     public function test_author_can_not_edit_others_page()
@@ -188,7 +188,7 @@ class AdminConsoleTest extends BlogTestDataSetup
         $this->assertEquals($categoryName, $data["head"]);
     }
 
-    public function test_admin_can_open_category_edit_page ()
+    public function test_admin_can_open_category_edit_page()
     {
         $this->actingAs($this->admin)
             ->get(route('category-edit', $this->category->id))
@@ -196,7 +196,7 @@ class AdminConsoleTest extends BlogTestDataSetup
             ->assertSee($this->category->name);
     }
 
-    public function test_admin_can_update_existing_category ()
+    public function test_admin_can_update_existing_category()
     {
         // load the existing category3 in a new variable "data"
         $data = [
@@ -281,7 +281,7 @@ class AdminConsoleTest extends BlogTestDataSetup
      * Private Functions
      * ------------------------------------------------------------------ */
 
-    private function can_save_page_edit ($user, $page)
+    private function can_save_page_edit($user, $page)
     {
         $editPage = [
             "id" => $page->id,
@@ -306,7 +306,7 @@ class AdminConsoleTest extends BlogTestDataSetup
             ->assertStatus(302);
     }
 
-    private function can_view_admin_category_list ($user)
+    private function can_view_admin_category_list($user)
     {
         $this->actingAs($user)
             ->get(route('category-index'))
@@ -317,7 +317,7 @@ class AdminConsoleTest extends BlogTestDataSetup
             ->assertSee($this->category3->name);
     }
 
-    private function can_not_view_admin_category_list ($user)
+    private function can_not_view_admin_category_list($user)
     {
         $this->actingAs($user)
             ->get(route('category-index'))

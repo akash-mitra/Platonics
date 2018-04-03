@@ -9,7 +9,7 @@ use Tests\BlogTestDataSetup;
 class ModuleTest extends BlogTestDataSetup
 {
 
-    public function test_a_module_can_be_created ()
+    public function test_a_module_can_be_created()
     {
         $data = [
             "name" => str_random(15),
@@ -44,7 +44,7 @@ class ModuleTest extends BlogTestDataSetup
             ->assertStatus(302);
     }
 
-    public function test_existing_module_can_be_updated ()
+    public function test_existing_module_can_be_updated()
     {
         $data = [
             "id" => $this->customModule->id,
@@ -67,10 +67,9 @@ class ModuleTest extends BlogTestDataSetup
         $this->actingAs($this->admin)
                 ->get(route('module-show', ["type" => "custom", "id" => $this->customModule->id]))
                 ->assertSee('TRACER CONTENT');
-
     }
 
-    public function test_existing_module_can_be_deleted ()
+    public function test_existing_module_can_be_deleted()
     {
         $this->actingAs($this->admin)
             ->post(route('module-delete'), ["id" => $this->customModule->id])
@@ -82,7 +81,7 @@ class ModuleTest extends BlogTestDataSetup
     }
 
 
-    public function test_module_position_can_be_saved ()
+    public function test_module_position_can_be_saved()
     {
         $moduleVisibility = [
             "moduleId" => $this->customModule->id,
@@ -114,7 +113,7 @@ class ModuleTest extends BlogTestDataSetup
     }
 
 
-    public function test_module_is_viewable_only_in_category_selected ()
+    public function test_module_is_viewable_only_in_category_selected()
     {
         $moduleVisibility = [
             "moduleId" => $this->customModule2->id,
@@ -144,12 +143,11 @@ class ModuleTest extends BlogTestDataSetup
         // not visible in exception article
         $this->get($this->page4->url)
             ->assertDontSee('Some <b>HTML</b> Texts');
-        
     }
 
 
 
-    public function test_new_comment_module_can_be_created ()
+    public function test_new_comment_module_can_be_created()
     {
         $this->actingAs($this->admin)
             ->patch(route('module-update'), [

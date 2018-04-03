@@ -81,46 +81,47 @@ class RegisterController extends Controller
     }
 
 
-    public function redirectToProvider ($provider)
+    public function redirectToProvider($provider)
     {
-        if (! in_array($provider, $this->drivers)) 
+        if (! in_array($provider, $this->drivers)) {
             return redirect()->route('something_wrong');
+        }
 
-        return Socialite::driver($provider)->redirect();   
-    }   
+        return Socialite::driver($provider)->redirect();
+    }
 
 
 
     /**
-     * This method handles the callback from 
+     * This method handles the callback from
      * social authentication providers and
      * logs in or rejects the user based
      * on if authentication is success
      */
-    public function handleProviderCallback ($provider)
+    public function handleProviderCallback($provider)
     {
-        if (! in_array($provider, $this->drivers)) 
+        if (! in_array($provider, $this->drivers)) {
             return redirect()->route('something_wrong');
+        }
 
-        // attempt to authenticate the user 
+        // attempt to authenticate the user
         // from the social provider
         try {
-            $providerUser = Socialite::driver($provider)->user(); 
+            $providerUser = Socialite::driver($provider)->user();
         } catch (Exception $e) {
             return redirect()->route('auth_fail');
         }
         
-        // now that the user has been authenticated, 
+        // now that the user has been authenticated,
         // check if we already have this user available
         $loginUser = LoginProvider::where('provider_user_id', $providerUser->getId())
                         ->where('provider', $provider)
                         ->first();
         
         // if this login provider for the user already exists
-        if ($loginUser)
-        {
+        if ($loginUser) {
             // get the user
-            $user = $loginUser->user; 
+            $user = $loginUser->user;
 
             // update the avatar in user and login provider
             $user->avatar = $providerUser->getAvatar();
@@ -129,32 +130,31 @@ class RegisterController extends Controller
             // persist the change
             $user->save();
             $loginUser->save();
-        }
-        else // if the login provider for the user does not exist
+        } else // if the login provider for the user does not exist
         {
             // even though there is no login provider for this
             // user, but the user might still exist in user
             // table. If the user email exists we should
-            // retrieve the user and update the user 
+            // retrieve the user and update the user
             // record with the newy received data
-            $user = User::firstOrNew ([
+            $user = User::firstOrNew([
                 'email' => $providerUser->getEmail()
             ]);
 
             // do not update the name and type if already there
             $user->name   = empty($user->name)? $providerUser->getName(): $user->name;
-            $user->type   = empty($user->type)? 'Registered': $user->type; 
+            $user->type   = empty($user->type)? 'Registered': $user->type;
 
 
             // refresh the avatar everytime
             $user->avatar = $providerUser->getAvatar();
-            $user->slug   = uniqid (mt_rand(), true);
+            $user->slug   = uniqid(mt_rand(), true);
 
             // persist the record to database
             $user->save();
 
             // create the login provider
-            $user->providers()->create ([
+            $user->providers()->create([
                 'provider_user_id' => $providerUser->getId(),
                 'provider'         => $provider,
                 'avatar'           => $providerUser->getAvatar(),
@@ -165,6 +165,4 @@ class RegisterController extends Controller
         Auth::login($user, true);
         return redirect()->route('homepage');
     }
-
-
 }

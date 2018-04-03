@@ -8,7 +8,7 @@ use App\Content;
 class Category extends Content
 {
     protected $fillable = [
-    	'name', 'slug', 'parent_id', 'description'
+        'name', 'slug', 'parent_id', 'description'
     ];
 
     // this ensure accessor property is included in the Category object
@@ -19,9 +19,9 @@ class Category extends Content
     /**
      * Returns all the pages under this category
      */
-    public function pages ()
+    public function pages()
     {
-    	return $this->hasMany(Page::class);
+        return $this->hasMany(Page::class);
     }
 
 
@@ -31,7 +31,9 @@ class Category extends Content
     public function subcategories()
     {
         // return if cached to save database hit
-        if (! empty($this->subcategories)) return $this->subcategories;
+        if (! empty($this->subcategories)) {
+            return $this->subcategories;
+        }
 
         $this->subcategories = $this->hasMany(self::class, 'parent_id');
         return $this->subcategories;
@@ -43,20 +45,21 @@ class Category extends Content
      */
     public function parent()
     {
-    	return $this->belongsTo(self::class, 'parent_id');
+        return $this->belongsTo(self::class, 'parent_id');
     }
 
 
     /*
      * Returns true if this category contains other categories
      */
-    public function hasSubCategories ()
+    public function hasSubCategories()
     {
         // check if already available in cache, requery if not
-        if (empty($this->subcategories))
+        if (empty($this->subcategories)) {
             return $this->subcategories()->count() > 0;
-        else 
+        } else {
             return $this->subcategories->count() > 0;
+        }
     }
 
 
@@ -67,5 +70,4 @@ class Category extends Content
     {
         return '/' . $this->slug;
     }
-
 }

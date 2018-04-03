@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Auth;
 
-
 use App\Configuration;
 use Illuminate\Support\Facades\View;
 use App\Http\Controllers\Controller;

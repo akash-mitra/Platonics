@@ -16,7 +16,7 @@ class Author
      */
     public function handle($request, Closure $next)
     {
-        //return $next($request); 
+        //return $next($request);
 
         // if admin
         if (Auth::user() &&  Auth::user()->type == 'Author') {

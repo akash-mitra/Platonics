@@ -12,8 +12,8 @@ class CommentsController extends Controller
 
     public function __construct()
     {
-    	// only posting of comments require logging in
-    	$this->middleware('auth')->only('store');
+        // only posting of comments require logging in
+        $this->middleware('auth')->only('store');
     }
 
 
@@ -21,48 +21,51 @@ class CommentsController extends Controller
      * This function returns JSON for all the comments made
      * by a particular user identified by the $slug
      */
-    public function commentsByUser ($slug)
+    public function commentsByUser($slug)
     {
-    	if (empty($slug)) abort(404);
-    	$comments = Comment::byUser($slug)->get();
-    	return $this->jsonifyResponse($comments);
+        if (empty($slug)) {
+            abort(404);
+        }
+        $comments = Comment::byUser($slug)->get();
+        return $this->jsonifyResponse($comments);
     }
 
 
     /**
      * DEPRECATED - use comments() function instead.
-     * 
+     *
      * This function returns JSON for all the comments made
      * on a particular page/article identified by $id
      */
-    public function commentsByPage ($id)
+    public function commentsByPage($id)
     {
-    	if (empty($id)) abort(404);
-    	$comments = Comment::onPage($id)->get();
-    	return $this->jsonifyResponse($comments);
+        if (empty($id)) {
+            abort(404);
+        }
+        $comments = Comment::onPage($id)->get();
+        return $this->jsonifyResponse($comments);
     }
 
 
 
 
     /**
-     * 
-     * This function returns comments in JSON 
+     *
+     * This function returns comments in JSON
      * format based on a particular page URL
      */
-    public function comments (Request $request)
+    public function comments(Request $request)
     {
         $url = $request->input('url');
         
-        if (empty($url)) 
-        {
+        if (empty($url)) {
             return response()->json([
                 "status" => "failure",
                 "message" => "URL not available"
             ], 404);
         }
         
-        $id = $this->getPageIdFromURL ($url);
+        $id = $this->getPageIdFromURL($url);
 
         $comments = Comment::onPage($id)->get();
         
@@ -79,62 +82,64 @@ class CommentsController extends Controller
 
         $user = Auth::user()->id;
         $text = $request->input('text');
-    	$page = $request->input('pageid');
+        $page = $request->input('pageid');
 
-    	// if mandatory information for a comment
-    	// were not provided, return error
-    	if (empty($text) || empty($user) || empty($page))
-    		return response()->json([
-    			'status' => 'failure', 
-    			'message' => 'invalid comment parameters'
-    			], 422);
+        // if mandatory information for a comment
+        // were not provided, return error
+        if (empty($text) || empty($user) || empty($page)) {
+            return response()->json([
+                'status' => 'failure',
+                'message' => 'invalid comment parameters'
+                ], 422);
+        }
 
 
-    	$comment = new Comment(['body' => $text, 'user_id' => $user, 'page_id' => $page]);
-    	$comment->save();
+        $comment = new Comment(['body' => $text, 'user_id' => $user, 'page_id' => $page]);
+        $comment->save();
 
-    	return response()->json(['status' => 'success','action' => 'save', 'message' => 'Comment saved successfully']);
+        return response()->json(['status' => 'success','action' => 'save', 'message' => 'Comment saved successfully']);
     }
 
 
     /**
-     * A handy function to separate out the 
+     * A handy function to separate out the
      * explicit creation of JSON response
      */
     private function jsonifyResponse($comments)
     {
-    	return response()->json($this->mapper($comments));
+        return response()->json($this->mapper($comments));
     }
 
 
     /**
      * This function converts a database response (received
-     * from the Model as Collection) to a JSON array of 
+     * from the Model as Collection) to a JSON array of
      * objects containing relevant information about
      * comment, page and the user who made the comments
      */
-    private function mapper ($comments) {
+    private function mapper($comments)
+    {
 
-    		return $comments->map(function ($comment) {
-    			return [
-    			// perform some HTML escaping before displaying the untrusted strings
+            return $comments->map(function ($comment) {
+                return [
+                // perform some HTML escaping before displaying the untrusted strings
                 'text' => $this->noHTML($comment->body),
-    			'when' => Carbon::parse($comment->created_at)->diffForHumans(),
-    			'user' => [
-    				'name' => $this->noHTML($comment->name),
-    				'profile' => route('user', $comment->slug),
-    				'avatar' => $comment->avatar,
-    			],
-    			'page' => [
-    				'title' => $this->noHTML($comment->title),
+                'when' => Carbon::parse($comment->created_at)->diffForHumans(),
+                'user' => [
+                    'name' => $this->noHTML($comment->name),
+                    'profile' => route('user', $comment->slug),
+                    'avatar' => $comment->avatar,
+                ],
+                'page' => [
+                    'title' => $this->noHTML($comment->title),
                     'intro' => $this->noHTML($comment->intro),
-    				'url' => '/' 
-    					. (empty($comment->category)? 'general':$comment->category)
-    					. '/' 
-    					. str_slug ($comment->id . ' ' . $comment->title),
-    			]
-    		];
-    	});
+                    'url' => '/'
+                        . (empty($comment->category)? 'general':$comment->category)
+                        . '/'
+                        . str_slug($comment->id . ' ' . $comment->title),
+                ]
+                ];
+            });
     }
 
 
@@ -145,7 +150,7 @@ class CommentsController extends Controller
     }
 
 
-    private function getPageIdFromURL ($url)
+    private function getPageIdFromURL($url)
     {
         $pageSlug = strrchr($url, '/');
 

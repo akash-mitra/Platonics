@@ -55,5 +55,4 @@ class S3MediaUploadTest extends TestCase
         // test if the file is accessible
         $this->assertTrue(Storage::disk('s3')->exists($this->storedFile["name"]));
     }
-
 }

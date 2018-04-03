@@ -18,7 +18,7 @@ class ModuleController extends BaseController
     
 
     
-    public function home ()
+    public function home()
     {
         return view('module.home');
     }
@@ -54,13 +54,10 @@ class ModuleController extends BaseController
      */
     public function showOrCreate($type, $id = null)
     {
-        if (empty($id))
-        {
+        if (empty($id)) {
             $module = new Module();
             $module->type = $type;
-        }
-        else
-        {
+        } else {
             $module = Module::findOrFail($id);
         }
 
@@ -68,7 +65,7 @@ class ModuleController extends BaseController
             "id" => $module->id,
             "name" => $module->name,
             "type" => $module->type,
-            "config" => unserialize ($module->config)
+            "config" => unserialize($module->config)
         ]);
     }
 
@@ -80,8 +77,8 @@ class ModuleController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function updateOrCreate (Request $request)
-    {        
+    public function updateOrCreate(Request $request)
+    {
         $id = $request->input('id');
         $name = $request->input('name');
         $type = $request->input('type');
@@ -125,7 +122,6 @@ class ModuleController extends BaseController
             $meta = serialize($this->meta);
             $this->updateBlogMetaInDB($meta);
             DB::commit();
-
         } catch (\Exception $e) {
             DB::rollback();
             return response()->json([
@@ -144,10 +140,10 @@ class ModuleController extends BaseController
 
 
     /**
-     * Save module visibility related information 
+     * Save module visibility related information
      * in the meta configuration
      */
-    public function saveModuleMeta (Request $request)
+    public function saveModuleMeta(Request $request)
     {
         //TODO
         //validation
@@ -159,22 +155,22 @@ class ModuleController extends BaseController
         
         // create the module position class
         $module  = [
-            "id"         => $request->input ('moduleId'),
-            "position"   => $request->input ('position'),
+            "id"         => $request->input('moduleId'),
+            "position"   => $request->input('position'),
             "visible"    => (array) $request->input('categories'),
             "exceptions" => $exceptions
         ];
 
         // delete the module if present in existing meta
-        $this->deleteModuleInMeta ($moduleId);
+        $this->deleteModuleInMeta($moduleId);
 
         // insert the new module in meta
-        $this->insertOrUpdateModuleInMeta ($module);
+        $this->insertOrUpdateModuleInMeta($module);
 
         // save the entire meta back to database
-        $meta = serialize ($this->meta);
+        $meta = serialize($this->meta);
 
-        $this->updateBlogMetaInDB ($meta);
+        $this->updateBlogMetaInDB($meta);
 
         return response()->json([
             "status" => "success",
@@ -188,7 +184,7 @@ class ModuleController extends BaseController
      * Updates the serialized version of the blog
      * meta information to the database
      */
-    private function updateBlogMetaInDB ($meta)
+    private function updateBlogMetaInDB($meta)
     {
         $config = Configuration::where('key', 'blog')->first();
         
@@ -199,25 +195,25 @@ class ModuleController extends BaseController
 
 
 
-    private function insertOrUpdateModuleInMeta ($module)
+    private function insertOrUpdateModuleInMeta($module)
     {
         $moduleId = $module['id'];
         
         $modulePosition = $module['position'];
         
-        $this->addModuleToMetaPositions ($moduleId, $modulePosition, $module);
+        $this->addModuleToMetaPositions($moduleId, $modulePosition, $module);
 
-        $this->addModuleScriptToMetaScripts ($moduleId);
+        $this->addModuleScriptToMetaScripts($moduleId);
     }
 
 
 
-    private function deleteModuleInMeta ($moduleId)
+    private function deleteModuleInMeta($moduleId)
     {
         
-        $this->removeModuleFromMetaPositions ($moduleId);
+        $this->removeModuleFromMetaPositions($moduleId);
 
-        $this->removeModuleScriptFromMetaScripts ($moduleId);
+        $this->removeModuleScriptFromMetaScripts($moduleId);
     }
 
 
@@ -240,24 +236,21 @@ class ModuleController extends BaseController
 
 
 
-    private function addModuleScriptToMetaScripts ($moduleId)
+    private function addModuleScriptToMetaScripts($moduleId)
     {
         $script = $this->getModuleScript($moduleId);
 
-        if ($script != null && (!in_array($script, $this->meta['scripts']))) 
-        {
+        if ($script != null && (!in_array($script, $this->meta['scripts']))) {
             array_push($this->meta['scripts'], $script);
         }
     }
 
 
 
-    private function removeModuleFromMetaPositions ($moduleId)
+    private function removeModuleFromMetaPositions($moduleId)
     {
-        foreach ($this->meta['positions'] as $position) 
-        {
-            if (array_key_exists($position, $this->meta)) 
-            {
+        foreach ($this->meta['positions'] as $position) {
+            if (array_key_exists($position, $this->meta)) {
                 unset($this->meta[$position][$moduleId]);
             }
         }
@@ -265,12 +258,11 @@ class ModuleController extends BaseController
 
 
 
-    private function removeModuleScriptFromMetaScripts ($moduleId)
+    private function removeModuleScriptFromMetaScripts($moduleId)
     {
         $script = $this->getModuleScript($moduleId);
 
-        if (!$script) 
-        {
+        if (!$script) {
             unset($this->meta['scripts'][$script]);
         }
     }
@@ -281,14 +273,12 @@ class ModuleController extends BaseController
     {
         $config = Module::findOrFail($moduleId)->config;
 
-        $configArray = unserialize ($config);
+        $configArray = unserialize($config);
 
-        if (isset($configArray['script'])) 
-        {
+        if (isset($configArray['script'])) {
             return $configArray['script'];
         }
 
         return null;
-
     }
 }

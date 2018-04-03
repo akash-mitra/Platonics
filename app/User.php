@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-
 class User extends Authenticatable
 {
     use Notifiable;
@@ -36,35 +35,36 @@ class User extends Authenticatable
 
 
     /**
-     * returns all available social login 
+     * returns all available social login
      * providers for the user
      */
-    public function providers ($provider = null)
+    public function providers($provider = null)
     {
-        if (empty($provider))
+        if (empty($provider)) {
             return $this->hasMany(LoginProvider::class);
-        else 
+        } else {
             return $this->hasMany(LoginProvider::class)->where('provider', $provider);
+        }
     }
 
 
     /**
      * Current logic simply returns any of the available providers
      */
-    public function defaultProvider ()
+    public function defaultProvider()
     {
         return $this->providers[0];
     }
 
 
 
-    public function pages ()
+    public function pages()
     {
         return $this->hasMany(Page::class);
     }
 
 
-    public function comments ()
+    public function comments()
     {
         return $this->hasMany(Comment::class);
     }
@@ -73,31 +73,31 @@ class User extends Authenticatable
     /**
      * This function provides a list of user articles with
      * article title, id, category slug and publish date.
-     * This is very similar to pages() method, but unlike 
+     * This is very similar to pages() method, but unlike
      * pages() this does not return article body, which
      * means volume of return data is much lesser and
      * the results are easily cachable.
      */
-    public function articles ()
+    public function articles()
     {
         $articles = DB::table('pages')
                     ->leftjoin('categories', 'pages.category_id', 'categories.id')
                     ->where('user_id', $this->id)
-                    ->select('pages.id','pages.title', 'pages.intro', 'pages.created_at', 'categories.slug', 'categories.name')
+                    ->select('pages.id', 'pages.title', 'pages.intro', 'pages.created_at', 'categories.slug', 'categories.name')
                     ->get();
         return $articles;
     }
 
 
-    public function setType ($type)
+    public function setType($type)
     {
         // error out if provided type is not recognizable
-        if (! in_array($type, ['Admin', 'Registered', 'Author', 'Editor']))
-            abort (422, 'Invalid argument');
+        if (! in_array($type, ['Admin', 'Registered', 'Author', 'Editor'])) {
+            abort(422, 'Invalid argument');
+        }
 
         $this->type = $type;
         return $this->save();
-
     }
 
     // use it as $users = App\User::ofType('admin')->get();
@@ -120,28 +120,24 @@ class User extends Authenticatable
     }
 
 
-    public static function permittedAttributes ()
+    public static function permittedAttributes()
     {
         $authUser = Auth::user();
         
-        if ($authUser->type === 'Registered') 
-        {
+        if ($authUser->type === 'Registered') {
             // no email, no type, no last_updated
             return ['id', 'name', 'avatar', 'created_at', 'slug'];
         }
 
-        if ($authUser->type === 'Author') 
-        {
+        if ($authUser->type === 'Author') {
             // no email
             return ['id', 'name', 'avatar', 'type', 'created_at', 'updated_at', 'slug'];
         }
 
-        if (in_array($authUser->type, ['Admin', 'Editor'])) 
-        {
+        if (in_array($authUser->type, ['Admin', 'Editor'])) {
             return ['id', 'name', 'avatar', 'email', 'type', 'created_at', 'updated_at', 'slug'];
         }
 
         return ['id', 'slug'];
     }
-
 }

@@ -13,18 +13,17 @@ class SpecialPageController extends BaseController
 {
     
 
-    public function __construct ()
+    public function __construct()
     {
         $this->middleware('admin')->except(['showAbout', 'showPrivacy', 'showTerms', 'showContact', 'showSiteMap']);
         parent::__construct();
     }
 
 
-    public function index ()
+    public function index()
     {
         $specialPages = SpecialPage::select('id', 'name', 'type', 'created_at', 'updated_at')->get();
         return view('specialPage.index', compact('specialPages'));
-        
     }
 
 
@@ -34,7 +33,7 @@ class SpecialPageController extends BaseController
     }
 
 
-    protected function showAbout ()
+    protected function showAbout()
     {
         return $this->_show('about');
     }
@@ -50,7 +49,7 @@ class SpecialPageController extends BaseController
     }
 
 
-    protected function showSiteMap ($ext = 'html')
+    protected function showSiteMap($ext = 'html')
     {
         $pages = Page::with('category:id,slug,name')
                 ->select('id', 'title', 'category_id', 'updated_at')
@@ -58,12 +57,10 @@ class SpecialPageController extends BaseController
                 ->orderBy('category_id')
                 ->get();
 
-        if ($ext === 'html')
-        {
+        if ($ext === 'html') {
             $html = '<table class="table"><thead><tr><th>Category</th><th>Page Title</th><th>Modified</th></tr></thead><tbody>';
             
-            foreach ($pages as $page)
-            {
+            foreach ($pages as $page) {
                 $html .= '<tr><td><a href="' . $page->category->url . '">' . $page->category->name . '</a></td><td><a href="' . $page->url . '">' . $page->title . '</a></td><td>' . $page->updated_at . '</td></tr>';
             }
             
@@ -71,9 +68,7 @@ class SpecialPageController extends BaseController
                 'name' => 'Sitemap',
                 'content' => $html . '</tbody></table>'
             ]);
-        }
-        elseif ($ext === 'json')
-        {
+        } elseif ($ext === 'json') {
             $arrayItemsForSiteMap = array_map(function ($page) {
                 return [
                     "title" => $page['title'],
@@ -82,14 +77,10 @@ class SpecialPageController extends BaseController
                     "changefreq" => "daily",
                     "priority" => 0.5
                 ];
-
             }, $pages->toArray());
 
             return response()->json($arrayItemsForSiteMap);
-
-        } 
-        elseif ($ext === 'xml') {
-
+        } elseif ($ext === 'xml') {
             $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"/>');
 
             $arrayItemsForSiteMap = array_map(function ($page) {
@@ -99,7 +90,6 @@ class SpecialPageController extends BaseController
                     "changefreq" => "daily",
                     "priority" => 0.5
                 ];
-                
             }, $pages->toArray());
 
             $this->array_to_sitemap_xml($arrayItemsForSiteMap, $xml);
@@ -107,24 +97,19 @@ class SpecialPageController extends BaseController
             $header['Content-Type'] = 'application/xml';
 
             return response()->make($xml->asXML(), 200, $header);
-        } 
-        elseif ($ext === 'rss') {
+        } elseif ($ext === 'rss') {
             return abort(400, "Are you serious?");
-        }
-        else
-        {
+        } else {
             return abort(400, "Invalid Sitemap format requested");
         }
-        
     }
 
 
     private function array_to_sitemap_xml($data, &$xml_data)
     {
         foreach ($data as $key => $value) {
-            
             if (is_numeric($key)) {
-                $key = 'url' ; 
+                $key = 'url' ;
             }
             if (is_array($value)) {
                 $subnode = $xml_data->addChild($key);
@@ -151,7 +136,7 @@ class SpecialPageController extends BaseController
 
 
 
-    protected function saveAbout (Request $request)
+    protected function saveAbout(Request $request)
     {
         $updated_at = Carbon::now();
 
@@ -171,7 +156,7 @@ class SpecialPageController extends BaseController
 
 
 
-    protected function editContact ()
+    protected function editContact()
     {
         $page = SpecialPage::where('type', '=', 'Contact')->first();
         
@@ -201,7 +186,7 @@ class SpecialPageController extends BaseController
             "status" => "success",
             "message" => "Contact page saved successfully",
             "data" => ["updated_at" => $updated_at->diffForHumans()]
-        ]); 
+        ]);
     }
 
 
@@ -281,5 +266,4 @@ class SpecialPageController extends BaseController
             'content' => unserialize($page->markup)['content']
         ]);
     }
-
 }

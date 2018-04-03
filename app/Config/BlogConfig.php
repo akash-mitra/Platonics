@@ -39,11 +39,11 @@ class BlogConfig
 
     /**
      * Sets the blog layout
-     * 
+     *
      * @param string layout
-     * 
+     *
      */
-    public function layout ($layout)
+    public function layout($layout)
     {
         $this->layout = $layout;
         return $this;
@@ -53,9 +53,9 @@ class BlogConfig
 
     /**
      * Sets the blog Name
-     * 
+     *
      * @param string blogName
-     * 
+     *
      */
     public function blogName($blogName)
     {
@@ -67,9 +67,9 @@ class BlogConfig
 
     /**
      * Sets the blog Description
-     * 
+     *
      * @param string blogDesc
-     * 
+     *
      */
     public function blogDesc($blogDesc)
     {
@@ -78,7 +78,7 @@ class BlogConfig
     }
 
 
-    public function bgColorPrimary ($color)
+    public function bgColorPrimary($color)
     {
         $this->bgColorPrimary = $color;
         return $this;

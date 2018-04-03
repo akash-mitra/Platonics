@@ -103,10 +103,10 @@ Route::post('/admin/page/delete/{id}', 'AdminController@destroyPage')->name('pag
  | Blogging related routes that only admin can access
  |--------------------------------------------------------------------------
  */
-Route::get('/admin/modules',        'ModuleController@home')->name('module-home');
-Route::post('/admin/modules',       'ModuleController@index')->name('module-index');
-Route::get('/admin/module/{type}/{id?}',   'ModuleController@showOrCreate')->name('module-show');
-Route::patch('/admin/module/save',  'ModuleController@updateOrCreate')->name('module-update');
+Route::get('/admin/modules', 'ModuleController@home')->name('module-home');
+Route::post('/admin/modules', 'ModuleController@index')->name('module-index');
+Route::get('/admin/module/{type}/{id?}', 'ModuleController@showOrCreate')->name('module-show');
+Route::patch('/admin/module/save', 'ModuleController@updateOrCreate')->name('module-update');
 Route::post('/admin/module/delete', 'ModuleController@destroy')->name('module-delete');
 Route::post('/admin/module/visibility', 'ModuleController@saveModuleMeta')->name('module-visibility');
 

@@ -11,11 +11,11 @@ use Illuminate\Support\Facades\View;
  */
 class BaseController extends Controller
 {
-    protected $meta; 
+    protected $meta;
 
-    public function __construct ()
-    {   
-        $this->meta = unserialize (Configuration::where('key', 'blog')->first()->value); 
+    public function __construct()
+    {
+        $this->meta = unserialize(Configuration::where('key', 'blog')->first()->value);
 
         View::share('meta', $this->meta);
     }

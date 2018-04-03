@@ -20,7 +20,7 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
         'name' => $faker->name,
         'email' => $faker->unique()->safeEmail,
         'type' => 'Registered',
-        'slug' => uniqid (mt_rand(), true),
+        'slug' => uniqid(mt_rand(), true),
         'password' => $password ?: $password = bcrypt('secret'),
         'remember_token' => str_random(10),
         'created_at' => $faker->dateTime(),
@@ -69,17 +69,17 @@ $factory->define(App\SpecialPage::class, function () {
 
 $factory->define(App\Configuration::class, function () {
     $configs = [
-        "bg-color-primary"=> "#FFFFFF", 
-        "enable-terms" => "1", 
-        "enable-privacy" => "1", 
-        "layout" => "right", 
-        "blogName" => "Platonics", 
+        "bg-color-primary"=> "#FFFFFF",
+        "enable-terms" => "1",
+        "enable-privacy" => "1",
+        "layout" => "right",
+        "blogName" => "Platonics",
         "blogDesc" => "Blog for the perfectionists.",
         "positions" => ["hidden", "banner", "left", "right", "top", "bottom"],
         "scripts" => []
     ];
     return [
-        'key' => 'blog', 
+        'key' => 'blog',
         'value' => serialize($configs)
     ];
 });

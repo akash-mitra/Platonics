@@ -12,7 +12,7 @@ class LocalMediaUploadTest extends TestCase
 
     protected $user, $fakeJPGImage, $storedFile;
 
-    public function setUp ()
+    public function setUp()
     {
         parent::setUp();
 
@@ -24,7 +24,7 @@ class LocalMediaUploadTest extends TestCase
     }
 
 
-    public function tearDown ()
+    public function tearDown()
     {
         // delete all test files from the respective storages
         Storage::disk('local')->delete($this->storedFile["name"]);
@@ -32,7 +32,7 @@ class LocalMediaUploadTest extends TestCase
 
 
 
-    public function test_unauthenticated_users_cant_upload_media ()
+    public function test_unauthenticated_users_cant_upload_media()
     {
         $this->post(route('media-store'), ['file' => $this->fakeJPGImage])
             ->assertStatus(302);
@@ -40,7 +40,7 @@ class LocalMediaUploadTest extends TestCase
 
 
 
-    public function test_media_is_uploaded_and_exists_in_local_storage ()
+    public function test_media_is_uploaded_and_exists_in_local_storage()
     {
         // post a fake image file
         $response = $this->actingAs($this->user)
@@ -51,11 +51,10 @@ class LocalMediaUploadTest extends TestCase
         $this->storedFile = $response->decodeResponseJson();
 
         // test the file exists
-        $this->assertTrue (Storage::disk('local')->exists($this->storedFile["name"]));
+        $this->assertTrue(Storage::disk('local')->exists($this->storedFile["name"]));
 
         // // and the file is accessible
         // \Log::info($this->storedFile["uri"]);
         // $this->get($this->storedFile["uri"])->assertStatus(200);
     }
-
 }
