@@ -39,6 +39,14 @@ class RenderModule
             {
                 return self::_renderCustomHTMLModule($config);
             }
+
+            if ($contents->type === 'related') 
+            {
+                self::$scripts["related.js"] = true;
+
+                return self::_renderRelatedArticlesModule ($config, $pageMeta);
+            }
+
         }
 
         return '';
@@ -56,7 +64,7 @@ class RenderModule
 
         foreach(self::$scripts as $script => $value)
         {
-            $scriptsUrl .= '<script src="' . url('/js/' . $script) . '"></script>' . PHP_EOL;
+            $scriptsUrl .= '<script defer src="' . url('/js/' . $script) . '"></script>' . PHP_EOL;
         }
 
         return $scriptsUrl;
@@ -69,6 +77,27 @@ class RenderModule
     private static function _renderCustomHTMLModule ($config)
     {
         return $config['content'];
+    }
+
+
+
+    /**
+     * Helper function for Related Articles (articles under the same category)
+     */
+    private static function _renderRelatedArticlesModule($config, $pageMeta)
+    {
+        if (! isset($pageMeta['category_id'])) return;
+
+        $header = (isset($config['header']) ? '<h3>' . $config['header'] . '</h3>' : '');
+        $count  = (isset($config['count']) ? $config['count']: 5);
+        
+        $related = '<div class="related-module" data-category-id="' 
+                        . $pageMeta['category_id'] 
+                        . '" data-max-count="'
+                        . $count
+                        . '"></div>'; 
+        
+        return $header . $related;
     }
 
 

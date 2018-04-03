@@ -48,10 +48,6 @@ class Page extends Content
 		return $this->hasMany(Comment::class);
 	}
 
-	public function getTommyAttribute()
-	{
-		return $this->id;
-	}
 
 	public function getUrlAttribute ()
 	{

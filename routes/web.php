@@ -148,6 +148,7 @@ Route::post('/comments/store', 'CommentsController@store')->name('comments-store
  |--------------------------------------------------------------------------
  */
 Route::get('/api/v1/get/categories', 'API\v1\APICategoryController@getCategories')->name('api-categories');
+Route::get('/api/v1/get/pages/related/{category_id}/{limit?}', 'API\v1\APICategoryController@getRelatedPages')->name('api-related-pages');
 Route::get('/api/v1/get/media', 'API\v1\APIMediaController@getMedia')->name('api-media');
 Route::get('/api/v1/comments', 'CommentsController@comments')->name('comments-on-page');
 

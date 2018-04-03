@@ -45,6 +45,22 @@
                 <!-- comments related parameters will be added here -->
                 <input type="hidden" name="script" value="comments.js" id="hInputScript">
 
+                @elseif ($type === 'related')
+
+                <div class="form-group">
+                    <label for="inputHeader">Module Header</label>
+                    <input type="text" name="header" id="inputHeader" value="{{ $config['header'] }}" class="form-control" placeholder="An optional header for the module">
+                </div>
+
+                <div class="form-group">
+                    <label for="inputCount">Maximum Number of items to show</label>
+                    <input type="number" step="1" min="0" name="count" id="inputCount" value="{{ $config['count'] }}" class="form-control" placeholder="5, 10, ... etc.">
+                </div>
+
+                <input type="hidden" name="script" value="related.js" id="hInputScript">
+
+
+
                 @else 
                     <pre>Type parameter undefined</pre>
 
@@ -80,7 +96,9 @@
                     "type": "{{ $type }}",
                     "config": { 
                         "content": $('#inputContent').val(),
-                        "script": $('#hInputScript').val() 
+                        "script": $('#hInputScript').val(),
+                        "header": $('#inputHeader').val(),
+                        "count": $('#inputCount').val()
                     }
                 },
                 "before": function () { btn.text('Saving...').addClass('disabled') },

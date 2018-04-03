@@ -33,6 +33,7 @@
 			<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
 				<a class="dropdown-item" href="{{ route('module-show', ['module' => 'comments']) }}">Comments</a>
 				<a class="dropdown-item" href="{{ route('module-show', ['module' => 'custom']) }}">Custom HTML</a>
+				<a class="dropdown-item" href="{{ route('module-show', ['module' => 'related']) }}">Related Pages</a>
 				<a class="dropdown-item" href="#">Adsense</a>
 				
 			</div>

@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\API\v1;
 
-use App\Article;
+use App\Page;
 use App\Category;
+use Illuminate\Http\Request;
 use App\Transformers\Transformer;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+
 
 class APICategoryController extends Controller
 {
@@ -27,5 +28,22 @@ class APICategoryController extends Controller
 		return response()->json(
 			$t->transform($categories, $this->field_mapper)
 		);
+	}
+
+
+	protected function getRelatedPages ($category_id, $limit = 10)
+	{
+		$pages = Page::where('category_id', $category_id)
+			->select(['id', 'title', 'category_id'])
+			->orderBy('updated_at', 'desc')
+			->take($limit)
+			->get();
+
+		return response()->json([
+			"status" => "success",
+			"message" => "Related pages",
+			"count" => count($pages),
+			"pages" => $pages
+		]);
 	}
 }
