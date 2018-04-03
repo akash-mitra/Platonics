@@ -86,7 +86,7 @@ class ModuleTest extends BlogTestDataSetup
         $moduleVisibility = [
             "moduleId" => $this->customModule->id,
             "position" => "left",
-            "categories" => array($this->category->id, $this->category3->id),
+            "categories" => [$this->category->id, $this->category3->id],
             "exceptions" => $this->page4->id
         ];
 
@@ -118,7 +118,7 @@ class ModuleTest extends BlogTestDataSetup
         $moduleVisibility = [
             "moduleId" => $this->customModule2->id,
             "position" => "bottom",
-            "categories" => array($this->category3->id),
+            "categories" => [$this->category3->id],
             "exceptions" => $this->page4->id
         ];
 
@@ -163,7 +163,7 @@ class ModuleTest extends BlogTestDataSetup
             ->post(route('module-visibility'), [
                 "moduleId"   => $module->id,
                 "position"   => "bottom",
-                "categories" => array($this->category3->id),
+                "categories" => [$this->category3->id],
                 "exceptions" => '1'
             ])->assertSuccessful();
 

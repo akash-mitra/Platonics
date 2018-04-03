@@ -230,7 +230,7 @@ class ModuleController extends BaseController
             //
             // create the placeholder position itself, then add the module.
             //
-            $this->meta[$modulePosition] = array($moduleId => $module);
+            $this->meta[$modulePosition] = [$moduleId => $module];
         }
     }
 

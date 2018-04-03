@@ -23,7 +23,7 @@ class AdminController extends BaseController
         // all other operations, only admin, author, editor has permissions
         $this->middleware(function ($request, $next) {
             
-            if (Auth::user() && in_array(Auth::user()->type, array('Author', 'Editor', 'Admin'))) {
+            if (Auth::user() && in_array(Auth::user()->type, ['Author', 'Editor', 'Admin'])) {
                 return $next($request);
             }
 

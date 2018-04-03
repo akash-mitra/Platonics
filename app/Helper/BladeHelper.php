@@ -44,7 +44,7 @@ class BladeHelper
     // creates a tree structure using recursion.
     public static function buildTree(array $elements, $parentId = null)
     {
-        $branch = array();
+        $branch = [];
         foreach ($elements as $element) {
             if ($element['parent_id'] === $parentId) {
                 $children = BladeHelper::buildTree($elements, $element['id']);
