@@ -12,7 +12,7 @@
 Route::get('/', 'HomepageController@get')->name('homepage');
 
 
-/* 
+/*
  |--------------------------------------------------------------------------
  | General blogging routes for displaying blog contents
  |--------------------------------------------------------------------------
@@ -21,9 +21,9 @@ Route::get('/admin/pages', 'AdminController@pages')->name('page-index');
 Route::get('/admin/categories', 'AdminController@categories')->name('category-index');
 
 
-/* 
+/*
  |--------------------------------------------------------------------------
- | User authentication and profile related routes 
+ | User authentication and profile related routes
  |--------------------------------------------------------------------------
  */
 // disabling the default login routes as we will only use social login
@@ -32,16 +32,21 @@ Route::get('/admin/categories', 'AdminController@categories')->name('category-in
 Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
 Route::post('logout', 'Auth\LoginController@logout')->name('logout');
 Route::get('/redirect/{provider}', 'Auth\RegisterController@redirectToProvider');
+Route::get('/auth/error/{error?}', function ($error = '') {
+    return 'Whoops! Something went wrong.' . ' [' . $error . ']';
+})->name('auth-fail');
 Route::get('/auth/{provider}/callback', 'Auth\RegisterController@handleProviderCallback');
+
+
 Route::get('/profile', 'ProfileController@user')->name('profile');
 Route::get('/profile/{slug}', 'ProfileController@user')->name('user');
 Route::post('/profile/user/change/type', 'ProfileController@setType')->name('user-change-type');
 Route::post('/profile/user/delete', 'ProfileController@delete')->name('delete-user');
 
 
-/* 
+/*
  |--------------------------------------------------------------------------
- | ADMIN user and related routes 
+ | ADMIN user and related routes
  |--------------------------------------------------------------------------
  */
 Route::get('/admin', 'AdminController@show')->name('admin');
@@ -53,9 +58,9 @@ Route::post('/admin/layout/change', 'ConfigurationController@changeLayout')->nam
 Route::post('/admin/blog/general', 'ConfigurationController@saveBlog')->name('save-blog');
 Route::post('/admin/blog/color', 'ConfigurationController@saveColor')->name('save-color');
 
-/* 
+/*
  |--------------------------------------------------------------------------
- | Special Page related routes 
+ | Special Page related routes
  |--------------------------------------------------------------------------
  */
 Route::get('/admin/special-pages', 'SpecialPageController@index')->name('special-page-index');
@@ -65,7 +70,7 @@ Route::get('/privacy-policy', 'SpecialPageController@showPrivacy')->name('show-p
 Route::get('/terms-of-use', 'SpecialPageController@showTerms')->name('show-terms');
 Route::get('/sitemap/{ext?}', 'SpecialPageController@showSiteMap')->name('show-sitemap');
 
-/* 
+/*
  |--------------------------------------------------------------------------
  | Special Page related routes that only admin can access
  |--------------------------------------------------------------------------
@@ -78,7 +83,7 @@ Route::get('/admin/special-pages/about', 'SpecialPageController@editAbout')->nam
 Route::post('/admin/special-pages/about', 'SpecialPageController@saveAbout')->name('special-pages-about-save');
 Route::get('/admin/special-pages/contact', 'SpecialPageController@editContact')->name('special-pages-contact');
 Route::post('/admin/special-pages/contact', 'SpecialPageController@saveContact')->name('special-pages-contact-save');
-/* 
+/*
  |--------------------------------------------------------------------------
  | Category related routes that only admin can access
  |--------------------------------------------------------------------------
@@ -88,7 +93,7 @@ Route::post('/admin/category/store', 'AdminController@storeCategory')->name('cat
 Route::get('/admin/category/edit/{id}', 'AdminController@editCategory')->name('category-edit');
 Route::patch('/admin/category/save', 'AdminController@saveCategory')->name('category-save');
 
-/* 
+/*
  |--------------------------------------------------------------------------
  | Blogging related routes that only admin can access
  |--------------------------------------------------------------------------
@@ -98,7 +103,7 @@ Route::post('/admin/page/save', 'AdminController@savePage')->name('page-save');
 Route::post('/admin/page/delete/{id}', 'AdminController@destroyPage')->name('page-delete');
 
 
-/* 
+/*
  |--------------------------------------------------------------------------
  | Blogging related routes that only admin can access
  |--------------------------------------------------------------------------
@@ -111,7 +116,7 @@ Route::post('/admin/module/delete', 'ModuleController@destroy')->name('module-de
 Route::post('/admin/module/visibility', 'ModuleController@saveModuleMeta')->name('module-visibility');
 
 
-/* 
+/*
  |--------------------------------------------------------------------------
  | Media management related APIs
  |--------------------------------------------------------------------------
@@ -120,7 +125,7 @@ Route::get('/admin/media', 'MediaController@index')->name('media-index');
 Route::post('/admin/media', 'MediaController@store')->name('media-store');
 
 
-/* 
+/*
  |--------------------------------------------------------------------------
  | Site setup related routes
  |--------------------------------------------------------------------------
@@ -132,7 +137,7 @@ Route::post('/admin/media', 'MediaController@store')->name('media-store');
 Route::get('/admin/config/{config}', 'ConfigurationController@getConfig')->name('get-config');
 Route::post('/admin/config/{config}', 'ConfigurationController@setConfig')->name('set-config');
 
-/* 
+/*
  |--------------------------------------------------------------------------
  | Comments
  |--------------------------------------------------------------------------
@@ -142,7 +147,7 @@ Route::get('/users/{slug}/comments', 'CommentsController@commentsByUser')->name(
 Route::post('/comments/store', 'CommentsController@store')->name('comments-store');
 
 
-/* 
+/*
  |--------------------------------------------------------------------------
  | APIs
  |--------------------------------------------------------------------------
@@ -158,7 +163,7 @@ Route::get('/test/meta', function () {
 });
 
 
-/* 
+/*
  |--------------------------------------------------------------------------
  | Page and Category Related Routes
  |--------------------------------------------------------------------------

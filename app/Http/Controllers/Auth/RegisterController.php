@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
-use App\LoginProvider;
 use App\User;
-use Illuminate\Foundation\Auth\RegistersUsers;
+use App\LoginProvider;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
 use Laravel\Socialite\Facades\Socialite;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Foundation\Auth\RegistersUsers;
 
 class RegisterController extends Controller
 {
@@ -101,15 +101,14 @@ class RegisterController extends Controller
     public function handleProviderCallback($provider)
     {
         if (! in_array($provider, $this->drivers)) {
-            return redirect()->route('something_wrong');
+            return redirect()->route('auth-fail', 'missing-provider');
         }
 
-        // attempt to authenticate the user
-        // from the social provider
+        // attempt to retrieve the user from the social provider
         try {
             $providerUser = Socialite::driver($provider)->user();
         } catch (Exception $e) {
-            return redirect()->route('auth_fail');
+            return redirect()->route('auth-fail', 'missing-user');
         }
         
         // now that the user has been authenticated,
@@ -130,8 +129,8 @@ class RegisterController extends Controller
             // persist the change
             $user->save();
             $loginUser->save();
-        } else // if the login provider for the user does not exist
-        {
+        } else {
+            // if the login provider for the user does not exist
             // even though there is no login provider for this
             // user, but the user might still exist in user
             // table. If the user email exists we should
@@ -163,6 +162,7 @@ class RegisterController extends Controller
         
         // finally log the user in
         Auth::login($user, true);
+
         return redirect()->route('homepage');
     }
 }
