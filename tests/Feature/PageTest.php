@@ -2,11 +2,20 @@
 
 namespace Tests\SIT;
 
+use App\User;
 use Tests\TestCase;
 use Tests\BlogTestDataSetup;
 
 class PageTest extends BlogTestDataSetup
 {
+    protected $admin;
+    
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->admin = factory(User::class)->create(["type" => "Admin"]);
+    }
 
     public function test_if_a_page_is_browsable_via_url()
     {
