@@ -1,12 +1,7 @@
 @extends('layouts.admin')
 
-@section('page.css')
-	
-@endsection
-
-
 @section('aside')
-	@include('partials.admin.menu', ["modules" => true])
+	@include('partials.admin.menu', ["module" => true])
 @endsection
 
 
