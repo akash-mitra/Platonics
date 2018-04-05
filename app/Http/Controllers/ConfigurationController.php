@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Configuration;
 use App\Config\CdnConfig;
 use App\Config\BlogConfig;
+use Illuminate\Http\Request;
 use App\Config\StorageConfig;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Cache;
 
 class ConfigurationController extends BaseController
 {
@@ -18,13 +19,12 @@ class ConfigurationController extends BaseController
         parent::__construct();
     }
 
-
     protected function showStorage()
     {
         $storage = Configuration::retrieveObjectByKey('storage', StorageConfig::class);
+
         return view('storage.setup')->withStorage($storage);
     }
-
 
     protected function saveStorage(Request $req)
     {
@@ -34,15 +34,14 @@ class ConfigurationController extends BaseController
         // create a new storage of given type
         $storage = new StorageConfig();
 
-
         // IMPORTANT
         // if all the storage parameters come as blank, we should remove the storage config
         if (empty($req->input('key'))
             && empty($req->input('secret'))
             && empty($req->input('region'))
             && empty($req->input('bucket'))) {
-                $storage->delete();
-                flash('Storage Configuration Deleted Successfully')->success();
+            $storage->delete();
+            flash('Storage Configuration Deleted Successfully')->success();
         } else {
             // set the relevant params
             $storage->type($req->input('type'))
@@ -58,20 +57,18 @@ class ConfigurationController extends BaseController
         return redirect()->to(route('storage'));
     }
 
-
     protected function showCdn()
     {
         $cdn = Configuration::retrieveObjectByKey('cdn', CDNConfig::class);
-        return view('cdn.setup')->withCdn($cdn);
-        ;
-    }
 
+        return view('cdn.setup')->withCdn($cdn);
+    }
 
     protected function saveCdn(Request $req)
     {
         // validation
         // TODO
-        
+
         // create a new storage of given type
         $cdn = new CDNConfig();
 
@@ -85,9 +82,6 @@ class ConfigurationController extends BaseController
 
         return redirect()->to(route('cdn'));
     }
-
-
-    
 
     // protected function changeLayout(Request $request)
     // {
@@ -110,7 +104,6 @@ class ConfigurationController extends BaseController
     // 	]);
     // }
 
-
     // protected function saveBlog (Request $request)
     // {
     // 	//TODO
@@ -122,7 +115,7 @@ class ConfigurationController extends BaseController
 
     // 	// $blog = new BlogConfig();
     // 	$blog = Configuration::retrieveObjectByKey('blog', BlogConfig::class);
-        
+
     // 	$blog->blogName($blogName)->blogDesc($blogDesc)->save();
 
     // 	return response()->json([
@@ -130,7 +123,6 @@ class ConfigurationController extends BaseController
     // 		"status" => "success"
     // 	]);
     // }
-
 
     // protected function saveColor (Request $request)
     // {
@@ -149,8 +141,6 @@ class ConfigurationController extends BaseController
     // 	]);
     // }
 
-
-
     /**
      * Returns an array object pertaining to the
      * given key from the configuration table.
@@ -159,18 +149,15 @@ class ConfigurationController extends BaseController
     {
         //TODO caching
         $configRecord = Configuration::where('key', $config)->first();
-        
+
         return response()->json(unserialize($configRecord->value));
     }
-
-
 
     /**
      * Stores the serialized value against
      * the configuration key provided. If
      * the configuration key exists, then
      * the values are merged and updated.
-     *
      */
     protected function setConfig($config, Request $request)
     {
@@ -178,27 +165,29 @@ class ConfigurationController extends BaseController
         $newParameters = $request->input('value');
 
         $configRecord = Configuration::where('key', $config)->first();
-        
+
         if ($configRecord) {
             $existingParams = unserialize($configRecord->value ?: '{}');
-            
+
             $newParameters = array_merge($existingParams, $newParameters);
         }
 
         $serializedValueArray = serialize($newParameters);
-        
+
         if (strlen($serializedValueArray) >= 4000) {
             return response()->json([
-                "status" => "failure",
-                "message" => "Configuration exceeds size limit"
+                'status' => 'failure',
+                'message' => 'Configuration exceeds size limit'
             ], 400);
         }
 
         Configuration::updateOrCreate(['key' => $config], ['value' => $serializedValueArray]);
-        
+
+        Cache::forget($config);
+
         return response()->json([
-            "status" => "success",
-            "message" => "Configuration stored successfully"
+            'status' => 'success',
+            'message' => 'Configuration stored successfully'
         ]);
     }
 }

@@ -15,7 +15,7 @@
 
 @section('body')
 	
-	@if($category->hasSubCategories())
+	@if(count($category->subcategories))
 		<div id="category-subcategory" class="p-3 bg-light">
 			<h4>Sub-categories</h4>
 			<p>

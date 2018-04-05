@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Configuration;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Cache;
 
 /**
  * Use BaseController when you need to inject
@@ -15,7 +16,11 @@ class BaseController extends Controller
 
     public function __construct()
     {
-        $this->meta = unserialize(Configuration::where('key', 'blog')->first()->value);
+        $this->meta = Cache::remember('blogmeta', 60, function () {
+            $meta = Configuration::where('key', 'blogmeta')->first()->value;
+
+            return unserialize($meta);
+        });
 
         View::share('meta', $this->meta);
     }

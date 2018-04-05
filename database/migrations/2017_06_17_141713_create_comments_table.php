@@ -19,6 +19,8 @@ class CreateCommentsTable extends Migration
             $table->integer('page_id')->unsigned()->references('id')->on('pages');
             $table->mediumText('body');
             $table->timestamps();
+
+            $table->index('page_id');
         });
     }
 

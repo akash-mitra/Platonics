@@ -25,6 +25,8 @@ class CreatePagesTable extends Migration
             $table->char('publish', 1);
             $table->char('featured', 1)->nullable();
             $table->timestamps();
+
+            $table->index('category_id');
         });
     }
 

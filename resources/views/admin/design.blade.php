@@ -183,7 +183,7 @@
         var updateBlogConfig = function (arrayValue, before, success, error) {
             var param = {
                     "method": "POST",
-                    "to": "{{ route('set-config', 'blog') }}",
+                    "to": "{{ route('set-config', 'blogmeta') }}",
                     "data": {"value": arrayValue},
                     "before": before, 
                     "success": success, 

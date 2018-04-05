@@ -11,7 +11,6 @@
 */
 Route::get('/', 'HomepageController@get')->name('homepage');
 
-
 /*
  |--------------------------------------------------------------------------
  | General blogging routes for displaying blog contents
@@ -19,7 +18,6 @@ Route::get('/', 'HomepageController@get')->name('homepage');
  */
 Route::get('/admin/pages', 'AdminController@pages')->name('page-index');
 Route::get('/admin/categories', 'AdminController@categories')->name('category-index');
-
 
 /*
  |--------------------------------------------------------------------------
@@ -37,12 +35,10 @@ Route::get('/auth/error/{error?}', function ($error = '') {
 })->name('auth-fail');
 Route::get('/auth/{provider}/callback', 'Auth\RegisterController@handleProviderCallback');
 
-
 Route::get('/profile', 'ProfileController@user')->name('profile');
 Route::get('/profile/{slug}', 'ProfileController@user')->name('user');
 Route::post('/profile/user/change/type', 'ProfileController@setType')->name('user-change-type');
 Route::post('/profile/user/delete', 'ProfileController@delete')->name('delete-user');
-
 
 /*
  |--------------------------------------------------------------------------
@@ -102,7 +98,6 @@ Route::get('/admin/page/editor/{id?}', 'AdminController@editor')->name('page-edi
 Route::post('/admin/page/save', 'AdminController@savePage')->name('page-save');
 Route::post('/admin/page/delete/{id}', 'AdminController@destroyPage')->name('page-delete');
 
-
 /*
  |--------------------------------------------------------------------------
  | Blogging related routes that only admin can access
@@ -115,7 +110,6 @@ Route::patch('/admin/module/save', 'ModuleController@updateOrCreate')->name('mod
 Route::post('/admin/module/delete', 'ModuleController@destroy')->name('module-delete');
 Route::post('/admin/module/visibility', 'ModuleController@saveModuleMeta')->name('module-visibility');
 
-
 /*
  |--------------------------------------------------------------------------
  | Media management related APIs
@@ -123,7 +117,6 @@ Route::post('/admin/module/visibility', 'ModuleController@saveModuleMeta')->name
  */
 Route::get('/admin/media', 'MediaController@index')->name('media-index');
 Route::post('/admin/media', 'MediaController@store')->name('media-store');
-
 
 /*
  |--------------------------------------------------------------------------
@@ -146,7 +139,6 @@ Route::get('/users/{slug}/comments', 'CommentsController@commentsByUser')->name(
 
 Route::post('/comments/store', 'CommentsController@store')->name('comments-store');
 
-
 /*
  |--------------------------------------------------------------------------
  | APIs
@@ -157,11 +149,9 @@ Route::get('/api/v1/get/pages/related/{category_id}/{limit?}', 'API\v1\APICatego
 Route::get('/api/v1/get/media', 'API\v1\APIMediaController@getMedia')->name('api-media');
 Route::get('/api/v1/comments', 'CommentsController@comments')->name('comments-on-page');
 
-
 Route::get('/test/meta', function () {
-    return unserialize(App\Configuration::where('key', 'blog')->first()->value);
+    return unserialize(App\Configuration::where('key', 'blogmeta')->first()->value);
 });
-
 
 /*
  |--------------------------------------------------------------------------

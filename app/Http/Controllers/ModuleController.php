@@ -6,6 +6,7 @@ use DB;
 use App\Module;
 use App\Configuration;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class ModuleController extends BaseController
 {
@@ -15,15 +16,11 @@ class ModuleController extends BaseController
 
         parent::__construct();
     }
-    
 
-    
     public function home()
     {
         return view('module.home');
     }
-
-
 
     /**
      * Display a listing of the resource.
@@ -33,23 +30,21 @@ class ModuleController extends BaseController
     public function index()
     {
         $modules = Module::all();
-    
+
         return response()->json([
-            "status" => "success",
-            "message" => "Modules data attached",
-            "count" => count($modules),
-            "data" => $modules
+            'status' => 'success',
+            'message' => 'Modules data attached',
+            'count' => count($modules),
+            'data' => $modules
         ]);
     }
-
-
 
     /**
      * Display the specified resource based on the Id.
      * If the provided Id is empty, displays empty form.
      *
-     * @param  string $type
-     * @param  integer $id
+     * @param  string                    $type
+     * @param  integer                   $id
      * @return \Illuminate\Http\Response
      */
     public function showOrCreate($type, $id = null)
@@ -62,14 +57,12 @@ class ModuleController extends BaseController
         }
 
         return view('module.createOrShow', [
-            "id" => $module->id,
-            "name" => $module->name,
-            "type" => $module->type,
-            "config" => unserialize($module->config)
+            'id' => $module->id,
+            'name' => $module->name,
+            'type' => $module->type,
+            'config' => unserialize($module->config)
         ]);
     }
-
-
 
     /**
      * Update the specified resource in storage.
@@ -83,22 +76,20 @@ class ModuleController extends BaseController
         $name = $request->input('name');
         $type = $request->input('type');
         $config = serialize($request->input('config'));
-     
-        $module = Module::updateOrCreate(["id" => $id], [
-            "name" => $name,
-            "type" => $type,
-            "config" => $config
+
+        $module = Module::updateOrCreate(['id' => $id], [
+            'name' => $name,
+            'type' => $type,
+            'config' => $config
         ]);
 
         return response()->json([
-            "status" => "success",
-            "message" => "Module successfully " . (empty($id)? "created." : "updated."),
-            "module" => $module,
-            "url" => route('module-show', $module->id)
+            'status' => 'success',
+            'message' => 'Module successfully ' . (empty($id) ? 'created.' : 'updated.'),
+            'module' => $module,
+            'url' => route('module-show', $module->id)
         ]);
     }
-
-
 
     /**
      * Remove the specified module.
@@ -115,7 +106,7 @@ class ModuleController extends BaseController
         // before deleting the module, make sure
         // we also delete the module info from meta
         $this->deleteModuleInMeta($id);
-    
+
         DB::beginTransaction();
         try {
             $module->delete();
@@ -124,20 +115,19 @@ class ModuleController extends BaseController
             DB::commit();
         } catch (\Exception $e) {
             DB::rollback();
+
             return response()->json([
-                "status"  => "failure",
-                "message" => "Module (or related metadata info) could not be deleted",
-                "data"    => $e->getErrors()
+                'status' => 'failure',
+                'message' => 'Module (or related metadata info) could not be deleted',
+                'data' => $e->getErrors()
             ]);
         }
 
         return response()->json([
-            "status" => "success",
-            "message" => "Module successfully deleted"
+            'status' => 'success',
+            'message' => 'Module successfully deleted'
         ]);
     }
-
-
 
     /**
      * Save module visibility related information
@@ -148,17 +138,16 @@ class ModuleController extends BaseController
         //TODO
         //validation
 
-        
-        $moduleId        = $request->input('moduleId');
-        $exceptions      = preg_replace('/\s/', '', $request->input('exceptions')); // remove all white spaces
-        $exceptions      = empty($exceptions) ? null : explode(',', $exceptions);
-        
+        $moduleId = $request->input('moduleId');
+        $exceptions = preg_replace('/\s/', '', $request->input('exceptions')); // remove all white spaces
+        $exceptions = empty($exceptions) ? null : explode(',', $exceptions);
+
         // create the module position class
-        $module  = [
-            "id"         => $request->input('moduleId'),
-            "position"   => $request->input('position'),
-            "visible"    => (array) $request->input('categories'),
-            "exceptions" => $exceptions
+        $module = [
+            'id' => $request->input('moduleId'),
+            'position' => $request->input('position'),
+            'visible' => (array) $request->input('categories'),
+            'exceptions' => $exceptions
         ];
 
         // delete the module if present in existing meta
@@ -173,12 +162,11 @@ class ModuleController extends BaseController
         $this->updateBlogMetaInDB($meta);
 
         return response()->json([
-            "status" => "success",
-            "message" => "Module Visibility Stored Successfully",
-            "meta" => $this->meta
+            'status' => 'success',
+            'message' => 'Module Visibility Stored Successfully',
+            'meta' => $this->meta
         ]);
     }
-
 
     /**
      * Updates the serialized version of the blog
@@ -186,37 +174,32 @@ class ModuleController extends BaseController
      */
     private function updateBlogMetaInDB($meta)
     {
-        $config = Configuration::where('key', 'blog')->first();
-        
+        $config = Configuration::where('key', '=', 'blogmeta')->first();
+
         $config->value = $meta;
-        
+
+        Cache::forget('blogmeta');
+
         return $config->save();
     }
-
-
 
     private function insertOrUpdateModuleInMeta($module)
     {
         $moduleId = $module['id'];
-        
+
         $modulePosition = $module['position'];
-        
+
         $this->addModuleToMetaPositions($moduleId, $modulePosition, $module);
 
         $this->addModuleScriptToMetaScripts($moduleId);
     }
 
-
-
     private function deleteModuleInMeta($moduleId)
     {
-        
         $this->removeModuleFromMetaPositions($moduleId);
 
         $this->removeModuleScriptFromMetaScripts($moduleId);
     }
-
-
 
     private function addModuleToMetaPositions($moduleId, $modulePosition, $module)
     {
@@ -234,8 +217,6 @@ class ModuleController extends BaseController
         }
     }
 
-
-
     private function addModuleScriptToMetaScripts($moduleId)
     {
         $script = $this->getModuleScript($moduleId);
@@ -244,8 +225,6 @@ class ModuleController extends BaseController
             array_push($this->meta['scripts'], $script);
         }
     }
-
-
 
     private function removeModuleFromMetaPositions($moduleId)
     {
@@ -256,8 +235,6 @@ class ModuleController extends BaseController
         }
     }
 
-
-
     private function removeModuleScriptFromMetaScripts($moduleId)
     {
         $script = $this->getModuleScript($moduleId);
@@ -266,8 +243,6 @@ class ModuleController extends BaseController
             unset($this->meta['scripts'][$script]);
         }
     }
-
-
 
     private function getModuleScript($moduleId)
     {
