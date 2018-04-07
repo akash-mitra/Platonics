@@ -4,10 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Configuration;
 use App\Config\CdnConfig;
-use App\Config\BlogConfig;
 use Illuminate\Http\Request;
 use App\Config\StorageConfig;
-use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Cache;
 
 class ConfigurationController extends BaseController
@@ -83,64 +81,6 @@ class ConfigurationController extends BaseController
         return redirect()->to(route('cdn'));
     }
 
-    // protected function changeLayout(Request $request)
-    // {
-    // 	//TODO
-    // 	// $validatedData = $request->validate([
-    // 	// 	'layout' => [
-    //  //      'required',
-    // 	// 		Rule::in(['first-zone', 'second-zone']),
-    // 	// 	],
-    // 	// ]);
-    // 	$layout = $request->input('layout');
-
-    // 	$blog = Configuration::retrieveObjectByKey('blog', BlogConfig::class);
-
-    // 	$blog->layout($layout)->save();
-
-    // 	return response()->json([
-    // 		"message" => "Layout saved successfully",
-    // 		"status"  => "success"
-    // 	]);
-    // }
-
-    // protected function saveBlog (Request $request)
-    // {
-    // 	//TODO
-    // 	// validation
-
-    // 	$blogName = $request->input('blogName');
-
-    // 	$blogDesc = $request->input('blogDesc');
-
-    // 	// $blog = new BlogConfig();
-    // 	$blog = Configuration::retrieveObjectByKey('blog', BlogConfig::class);
-
-    // 	$blog->blogName($blogName)->blogDesc($blogDesc)->save();
-
-    // 	return response()->json([
-    // 		"message" => "Layout saved successfully",
-    // 		"status" => "success"
-    // 	]);
-    // }
-
-    // protected function saveColor (Request $request)
-    // {
-    // 	//TODO
-    // 	// validation
-
-    // 	$className  = $request->input('className');
-    // 	$colorValue = $request->input('color');
-
-    // 	$blog = Configuration::retrieveObjectByKey('blog', BlogConfig::class);
-    // 	if ($className === 'bg-color-primary') $blog->bgColorPrimary($colorValue)->save();
-
-    // 	return response()->json([
-    // 		"message" => "Color saved successfully",
-    // 		"status" => "success"
-    // 	]);
-    // }
-
     /**
      * Returns an array object pertaining to the
      * given key from the configuration table.
@@ -159,31 +99,27 @@ class ConfigurationController extends BaseController
      * the configuration key exists, then
      * the values are merged and updated.
      */
-    protected function setConfig($config, Request $request)
+    protected function setConfig($configKey, Request $request)
     {
         //TODO validation
         $newParameters = $request->input('value');
 
-        $configRecord = Configuration::where('key', $config)->first();
+        //TODO This logic needs to be pushed to model
+        //----------------
+        $configRecord = Configuration::where('key', $configKey)->first();
 
         if ($configRecord) {
             $existingParams = unserialize($configRecord->value ?: '{}');
 
-            $newParameters = array_merge($existingParams, $newParameters);
+            if (is_array($existingParams)) {
+                $newParameters = array_merge($existingParams, $newParameters);
+            }
         }
+        //----------------
 
-        $serializedValueArray = serialize($newParameters);
+        Configuration::setConfig($configKey, $newParameters);
 
-        if (strlen($serializedValueArray) >= 4000) {
-            return response()->json([
-                'status' => 'failure',
-                'message' => 'Configuration exceeds size limit'
-            ], 400);
-        }
-
-        Configuration::updateOrCreate(['key' => $config], ['value' => $serializedValueArray]);
-
-        Cache::forget($config);
+        Cache::forget($configKey);
 
         return response()->json([
             'status' => 'success',

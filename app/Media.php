@@ -2,16 +2,10 @@
 
 namespace App;
 
-use App\User;
-use App\Configuration;
-use App\Media;
+use Exception;
 use App\Config\CdnConfig;
-use App\Config\StorageConfig;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
-use Exception;
 
 /**
  * This class represents media object.
@@ -35,8 +29,6 @@ class Media extends Model
         return $this->CDNWrap(url($this->uri));
     }
 
-
-
     /**
      * Returns the user who uploaded the media
      */
@@ -45,8 +37,6 @@ class Media extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
-
-
     /**
      * Validates and Stores an uploded media file based on storage configuration setup
      */
@@ -54,14 +44,12 @@ class Media extends Model
     {
         self::validateAgainstClientErrors($uploadedFile, $allowedExtensions, $maxSize);
 
-        $storageConfig = Configuration::retrieveObjectByKey('storage', StorageConfig::class);
+        $storageConfig = Configuration::getConfig('storage');
         $storageConfig->validate();
         $storageConfig->setUpFileSystem();
 
         return self::_store($uploadedFile, $subDirectoryPath, $storageConfig->type);
     }
-
-
 
     /**
      * Tests the Uploaded File and checks against size and type errors
@@ -77,17 +65,12 @@ class Media extends Model
         }
 
         $size = $uploadedFile->getClientSize(); // bytes
-        
+
         if ($size > ($maxSize * 1024 * 1024) || $size <= 0) {
             self::clientSizeError($uploadedFile, $maxSize);
         }
     }
 
-
-
-    /**
-     *
-     */
     private static function _store($uploadedFile, $subDirectoryPath, $type, $visibility = 'public')
     {
         $path = '';
@@ -97,28 +80,27 @@ class Media extends Model
         if (empty($type)) {
             $type = 'local';
         }
-        
+
         try {
             // put the file in the desired disk, under desired location, with given visibility
             $path = Storage::disk($type)->putFile($subDirectoryPath, $uploadedFile, $visibility);
 
-            
             $size = $uploadedFile->getClientSize();
             $uri = Storage::disk($type)->url($path);
             $media = new Media([
-                "name"     => $path,
-                "size_kb"  => round($size/1024, 2), // killobytes
-                "storage"  => $type,
-                "uri"      => $uri
+                'name' => $path,
+                'size_kb' => round($size / 1024, 2), // killobytes
+                'storage' => $type,
+                'uri' => $uri
             ]);
 
             $authUser->assets()->save($media);
 
             return [
-                "name" => $path,
-                "uri" => $uri,
-                "username" => $authUser->name,
-                "storage_type" => $type
+                'name' => $path,
+                'uri' => $uri,
+                'username' => $authUser->name,
+                'storage_type' => $type
             ];
         } catch (Exception $e) {
             if (Storage::disk($type)->exists($path)) {
@@ -131,75 +113,68 @@ class Media extends Model
         }
     }
 
-
     private static function clientValidityError($uploadedFile)
     {
-         self::clientError(sprintf(
+        self::clientError(sprintf(
              'File [%s] upload error: %s',
              $uploadedFile->getClientOriginalName(),
              $uploadedFile->getErrorMessage()
          ));
     }
-    
 
     private static function clientSizeError($uploadedFile, $size)
     {
-         self::clientError(sprintf(
+        self::clientError(sprintf(
              'File [%s] size is too large (%sMB). Must be less than %sMB.',
              $uploadedFile->getClientOriginalName(),
              round($uploadedFile->getClientSize() / (1024 * 1024), 2),
              $size
          ));
     }
-    
-    
+
     private static function clientExtensionError($uploadedFile)
     {
-         self::clientError(sprintf(
+        self::clientError(sprintf(
              'Type of file [%s] is determined as (%s). This extension type is not accepted.',
              $uploadedFile->getClientOriginalName(),
              $uploadedFile->guessExtension()
          ));
     }
 
-
     private static function clientError($message)
     {
         abort(400, $message);
     }
-
 
     // private static function serverError ($message)
     // {
     // 	self::httpError(500, $message);
     // }
 
-
     // private static function httpError ($httpErrorCode, $message)
     // {
     // 	abort ($httpErrorCode, $message);
     // }
-
 
     private function getStoragePath()
     {
         switch ($this->storage) {
             case 's3':
                 $cdn = Configuration::retrieveObjectByKey('storage', CDNConfig::class);
-                return 'https ://' . $cdn->region . "amazonaws.com/" . $cdn->bucket . "/";
+
+                return 'https ://' . $cdn->region . 'amazonaws.com/' . $cdn->bucket . '/';
 
             default:
-                return env('LOCAL_MEDIA_PATH', "/media/");
+                return env('LOCAL_MEDIA_PATH', '/media/');
         }
     }
-
 
     private function getMediaCDNPath()
     {
         $cdn = Configuration::retrieveObjectByKey('cdn', CDNConfig::class);
+
         return $cdn->mediaCdnPath;
     }
-
 
     private function CDNWrap($fullyQualifiedUrl)
     {

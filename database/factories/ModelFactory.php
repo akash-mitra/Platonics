@@ -31,7 +31,8 @@ $factory->define(App\Category::class, function (Faker\Generator $faker) {
 
     return [
         'name' => $name,
-        'slug' => str_slug($name),
+        // 'slug' => str_slug($name),
+        'slug' => uniqid(),
         'description' => $faker->paragraph(1, true),
     ];
 });

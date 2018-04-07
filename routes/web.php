@@ -112,6 +112,13 @@ Route::post('/admin/module/visibility', 'ModuleController@saveModuleMeta')->name
 
 /*
  |--------------------------------------------------------------------------
+ | Admin - Advance Menu Related Routes
+ |--------------------------------------------------------------------------
+ */
+Route::get('/admin/settings', 'AdminController@showSettings')->name('admin-settings');
+
+/*
+ |--------------------------------------------------------------------------
  | Media management related APIs
  |--------------------------------------------------------------------------
  */
@@ -123,10 +130,6 @@ Route::post('/admin/media', 'MediaController@store')->name('media-store');
  | Site setup related routes
  |--------------------------------------------------------------------------
  */
-//Route::get('/admin/config/storage', 'ConfigurationController@showStorage')->name('storage');
-//Route::post('/admin/config/storage', 'ConfigurationController@saveStorage')->name('storage-store');
-//Route::get('/admin/config/cdn', 'ConfigurationController@showCdn')->name('cdn');
-//Route::post('/admin/config/cdn', 'ConfigurationController@saveCdn')->name('cdn-config-store');
 Route::get('/admin/config/{config}', 'ConfigurationController@getConfig')->name('get-config');
 Route::post('/admin/config/{config}', 'ConfigurationController@setConfig')->name('set-config');
 

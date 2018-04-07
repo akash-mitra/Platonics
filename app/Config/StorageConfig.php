@@ -7,53 +7,62 @@ use Illuminate\Support\Facades\Config;
 
 class StorageConfig
 {
+    public $type;
+    public $region;
+    public $apiKey;
+    public $apiSecret;
+    public $bucket;
 
-    public $type, $region, $apiKey, $apiSecret, $bucket, $user;
-
-    public function save()
+    public function __construct(array $attributes = null)
     {
-        return Configuration::persist('storage', json_encode($this), true);
+        if ($attributes) {
+            $this->type = $attributes['type'];
+            $this->region = $attributes['region'];
+            $this->apiKey = $attributes['apiKey'];
+            $this->apiSecret = $attributes['apiSecret'];
+            $this->bucket = $attributes['bucket'];
+        }
     }
-
 
     public function type($type)
     {
         $this->type = $type;
+
         return $this;
     }
-
 
     public function region($region)
     {
         $this->region = $region;
+
         return $this;
     }
-
 
     public function bucket($bucket)
     {
         $this->bucket = $bucket;
+
         return $this;
     }
-
 
     public function apiKey($apiKey)
     {
         $this->apiKey = $apiKey;
+
         return $this;
     }
 
     public function apiSecret($apiSecret)
     {
         $this->apiSecret = $apiSecret;
+
         return $this;
     }
 
-    public function delete()
-    {
-        return Configuration::remove('storage');
-    }
-
+    // public function delete()
+    // {
+    //     return Configuration::remove('storage');
+    // }
 
     public function validate()
     {
@@ -62,15 +71,12 @@ class StorageConfig
         }
     }
 
-
     public function setUpFileSystem()
     {
-
         if ($this->type === 's3') {
             $this->setUpS3FileSystem();
         }
     }
-
 
     private function setUpS3FileSystem()
     {
@@ -79,7 +85,6 @@ class StorageConfig
         Config::set('filesystems.disks.s3.region', $this->region);
         Config::set('filesystems.disks.s3.bucket', $this->bucket);
     }
-
 
     private function validateS3Parameters()
     {

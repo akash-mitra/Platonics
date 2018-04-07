@@ -1,45 +1,8 @@
 <?php
-use Symfony\Component\Debug\Exception\FatalThrowableError;
+
 
 class BladeHelper
 {
-
-    // public static function render($__php, $__data = array())
-    // {
-    // 	$__data['__env'] = app(\Illuminate\View\Factory::class);
-    // 	$obLevel = ob_get_level();
-    // 	ob_start();
-    // 	extract($__data, EXTR_SKIP);
-    // 	try {
-    // 		eval('?' . '>' . $__php);
-    //  }
-    // 	catch (Exception $e) {
-    //      while (ob_get_level() > $obLevel)
-    // 			ob_end_clean();
-    // 		throw $e;
-    //  }
-    // 	catch (Throwable $e) {
-    //      while (ob_get_level() > $obLevel)
-    // 			ob_end_clean();
-    // 		throw new FatalThrowableError($e);
-    // 	}
-    // 	return ob_get_clean();
-    // }
-
-    // public static function siteMember ()
-    // {
-    //  return
-    // 	in_array(Auth::user()->type, ['Registered', 'Admin', 'Editor', 'Author']);
-    // }
-
-    
-
-    public static function loadModule($name)
-    {
-        $r = DB::table('modules')->where('name', $name)->get();
-        return $r[0]->html ?? null;
-    }
-
     // This function take objects with form {id: "", parent_id: ""} and
     // creates a tree structure using recursion.
     public static function buildTree(array $elements, $parentId = null)
@@ -49,15 +12,16 @@ class BladeHelper
             if ($element['parent_id'] === $parentId) {
                 $children = BladeHelper::buildTree($elements, $element['id']);
                 if ($children) {
-                            $element['children'] = $children;
+                    $element['children'] = $children;
                 }
-                        $branch[$element['id']] = $element;
-                        unset($element);
+                $branch[$element['id']] = $element;
+                unset($element);
             } // if
         } // foreach
         return $branch;
-    }// function
+    }
 
+    // function
 
     // This function builds a HTML list (e.g. by using <ul> and <li>)
     // from a tree structure. The function is very flexible and
@@ -75,26 +39,27 @@ class BladeHelper
         // HTML tag to be used for denoting List
         $nodeTag = 'li'       // HTML tag to be used for denoting each item inside the List
     ) {
-        $value = '<' . $treeTag . ' class="level-'.$level . '">';
+        $value = '<' . $treeTag . ' class="level-' . $level . '">';
         foreach ($tree as $item) {
             if ($maxLevel > 0 && $level > $maxLevel) {
                 return '';
             }
             if (array_key_exists('children', $item)) {
-                $value .= '<' . $nodeTag .  ' class="has-children">'
-                    . (($linkParent || $level == $maxLevel)?('<a href="' . $item['url'] . '">'):'')
+                $value .= '<' . $nodeTag . ' class="has-children">'
+                    . (($linkParent || $level == $maxLevel) ? ('<a href="' . $item['url'] . '">') : '')
                     . $item['name']
-                    . (($linkParent || $level == $maxLevel)?'</a>':'')
+                    . (($linkParent || $level == $maxLevel) ? '</a>' : '')
                     . BladeHelper::buildHTMLListfromTree($item['children'], $level + 1, $linkParent, $maxLevel, $treeTag, $nodeTag)
-                    . '</' .  $nodeTag . '>';
+                    . '</' . $nodeTag . '>';
             } else {
                 $value .= '<' . $nodeTag . '>'
                     . '<a href="' . $item['url'] . '">'
                     . $item['name']
                     . '</a>'
-                    . '</' .  $nodeTag . '>';
+                    . '</' . $nodeTag . '>';
             }
         }
+
         return $value . '</' . $treeTag . '>';
     }
 
@@ -123,10 +88,10 @@ class BladeHelper
                     . '</li>';
             }
         }
+
         return $value . '</ul>';
     }
 
-        
     // ATTENTION : This only applies to Bootstrap version 4
     // This function does not support bootstrap nested submenu dropdown
     public static function buildBootStrap4MenufromTree(array $items, $level = 0, $class = 'nav d-flex justify-content-between')
@@ -135,6 +100,7 @@ class BladeHelper
         foreach ($items as $item) {
             $value .= '<a class="p-2 text-muted" href="' . $item['url'] . '">' . $item['name'] . '</a>';
         }
+
         return $value . '</nav>';
     }
 

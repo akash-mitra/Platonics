@@ -8,34 +8,29 @@ use App\Comment;
 use App\Category;
 use Carbon\Carbon;
 use App\Configuration;
-use App\Config\BlogConfig;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
 class AdminController extends BaseController
 {
-
     public function __construct()
     {
         $this->middleware('admin')->only(['destroyPage', 'deleteComment', 'design']);
 
         // all other operations, only admin, author, editor has permissions
         $this->middleware(function ($request, $next) {
-            
             if (Auth::user() && in_array(Auth::user()->type, ['Author', 'Editor', 'Admin'])) {
                 return $next($request);
             }
 
             flash('You do not have permission to this page')->warning();
-            
+
             return redirect('/');
         });
 
         parent::__construct();
     }
-
-
 
     /**
      * Shows the admin console page
@@ -45,18 +40,15 @@ class AdminController extends BaseController
         return view('admin.show');
     }
 
-
-
     /**
      * Shows a list of all the users registered to the platform
      */
     protected function users()
     {
         $users = User::get(User::permittedAttributes())->all();
+
         return view('admin.users')->withUsers($users);
     }
-
-
 
     /**
      * Returns a page containing the list of all articles
@@ -64,10 +56,9 @@ class AdminController extends BaseController
     protected function pages()
     {
         $pages = $this->listPages();
+
         return view('page.index', compact('pages'));
     }
-
-
 
     /**
      * Opens up a blank page editor if id is not provided.
@@ -83,8 +74,6 @@ class AdminController extends BaseController
 
         return view('page.editor', compact('page'));
     }
-
-
 
     /**
      * Saves a the contents of the page to the database.
@@ -103,17 +92,16 @@ class AdminController extends BaseController
 
         try {
             $page = Auth::user()->pages()->save($page);
+
             return response()->json($page->id, 200);
         } catch (HttpException $e) {
-            return response()->json(["message" => $e->getMessage()], $e->getStatusCode());
+            return response()->json(['message' => $e->getMessage()], $e->getStatusCode());
         } catch (\Exception $e) {
             // if there is something still not caught above within HttpException
             // e.g. Internal Server Errors, we want to catch them here.
-            return response()->json(["message" => "Error"], 500);
+            return response()->json(['message' => 'Error'], 500);
         }
     }
-
-
 
     /**
      * Deletes the page from the database
@@ -128,10 +116,9 @@ class AdminController extends BaseController
         $page->delete();
 
         flash('Page deleted successfully')->success();
+
         return redirect()->route('page-index');
     }
-
-
 
     /**
      * Returns a page containing category listing
@@ -139,10 +126,9 @@ class AdminController extends BaseController
     protected function categories()
     {
         $categories = Category::all();
+
         return view('category.index', compact('categories'));
     }
-
-
 
     /**
      * Shows the create category page
@@ -152,10 +138,9 @@ class AdminController extends BaseController
         if (!$this->checkCategoryActionPermissions('create')) {
             return redirect()->back();
         }
+
         return view('category.create');
     }
-
-
 
     /**
      * Creates a new category.
@@ -176,10 +161,9 @@ class AdminController extends BaseController
         $doc->save();
 
         flash('New category ' . $doc->name . ' created successfully')->success();
+
         return redirect()->route('category-index');
     }
-
-
 
     /**
      * Shows an edit form to edit a given category
@@ -195,14 +179,11 @@ class AdminController extends BaseController
         return view('category.edit', compact('category'));
     }
 
-
-
     /**
      * Saves changes to existing category
      */
     protected function saveCategory(Request $request)
     {
-
         if (!$this->checkCategoryActionPermissions('save')) {
             return redirect()->back();
         }
@@ -226,10 +207,9 @@ class AdminController extends BaseController
         $category->save();
 
         flash('Category saved')->success();
+
         return redirect()->route('category-edit', $id);
     }
-
-
 
     /**
      * Shows a list of all the comments made to any
@@ -241,27 +221,23 @@ class AdminController extends BaseController
                     ->whereDate('comments.created_at', '>=', Carbon::today()->subDays($pastDays)->toDateString())
                     ->orderBy('page_id', 'created_at')
                     ->paginate(50);
-        
+
         return view('admin.comments')->withComments($comments);
     }
-
-
 
     /**
      * Permanently deletes a specific comment
      */
     protected function deleteComment($id)
     {
-        $comment= Comment::findOrFail($id);
-        
+        $comment = Comment::findOrFail($id);
+
         $comment->delete();
-        
+
         flash('Comment deleted successfully')->success();
-        
+
         return redirect()->route('admin-comments');
     }
-
-
 
     /**
      * Shows the design page under admin menu
@@ -271,10 +247,12 @@ class AdminController extends BaseController
         return view('admin.design');
     }
 
-
-
-
-
+    protected function showSettings()
+    {
+        return view('admin.settings', [
+            'storage' => Configuration::getConfig('storage')
+        ]);
+    }
 
     /**
      * A private function to return only the needed data to create
@@ -282,17 +260,14 @@ class AdminController extends BaseController
      */
     private function listPages()
     {
-
         return DB::table('pages')
             ->leftJoin('users', 'pages.user_id', 'users.id')
             ->leftJoin('categories', 'pages.category_id', 'categories.id')
             ->select(DB::raw('pages.id, pages.title, pages.created_at, pages.updated_at, users.name as author, case when categories.name is null then "uncategorized" else categories.name end as category'))
             ->get();
-                // paginatin will be handled in frontend for smaller (less than 5000 entries) lists
+        // paginatin will be handled in frontend for smaller (less than 5000 entries) lists
                 //->paginate(20);
     }
-
-
 
     /**
      * A handy function to get a new or existing page object
@@ -306,8 +281,6 @@ class AdminController extends BaseController
         }
     }
 
-
-
     /**
      * Checks whether the user accessing the page has permission
      * to perform the intended operation, e.g., edit or delete
@@ -316,36 +289,35 @@ class AdminController extends BaseController
     {
         $userType = Auth::user()->type;
 
-            // admin should be able to do anything
+        // admin should be able to do anything
         if ($userType == 'Admin') {
             return true;
         }
-            
-            // editor is like admin, but does not have delete rights
+
+        // editor is like admin, but does not have delete rights
         if ($userType == 'Editor' && $action != 'delete') {
             return true;
         }
 
-            // authors are like editors, but they can only change
-            // their own documents or create new documents
+        // authors are like editors, but they can only change
+        // their own documents or create new documents
         if ($userType == 'Author' && in_array($action, ['edit', 'save'])) {
-                // access editor or save route to create new page is fine
+            // access editor or save route to create new page is fine
             if (empty($resource->id)) {
                 return true;
             }
 
-                // access editor to save own page is fine
+            // access editor to save own page is fine
             if (!empty($resource->id) && $resource->author->id === Auth::user()->id) {
                 return true;
             }
         }
 
-            // for everything else, deny permission
+        // for everything else, deny permission
         flash('You do not have permission to ' . $action . ' this page')->warning();
+
         return false;
     }
-
-
 
     /**
      * Determines whether a specific user has permission
@@ -359,13 +331,12 @@ class AdminController extends BaseController
         if ($type == 'Admin') {
             return true;
         }
-            
+
         // for everything else, deny permission
         flash('You do not have permission to ' . $action . ' category')->warning();
+
         return false;
     }
-
-
 
     /**
      * Checks whether a category is being updated with a

@@ -90,8 +90,8 @@
 			</a>
 		</li>
 		<li class="nav-item">
-			<a class="nav-link {{ isset($advance) ? 'active' : '' }}" href="{{route('category-index')}}">
-				<i class="batch-icon batch-icon-flask-full"></i>&nbsp;Advance
+			<a class="nav-link {{ isset($settings) ? 'active' : '' }}" href="{{route('admin-settings')}}">
+				<i class="batch-icon batch-icon-flask-full"></i>&nbsp;Settings
 			</a>
 		</li>
 
