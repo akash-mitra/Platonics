@@ -37,7 +37,31 @@ class AdminController extends BaseController
      */
     protected function show()
     {
-        return view('admin.show');
+        $growthData = $this->getDayWiseGrowth();
+
+        $cumGrowthData = $this->getCumulativeGrowth($growthData, ['users', 'pages']);
+
+        $xAxisData = array_map(function ($item) {
+            $data['year'] = $item->year;
+            $data['month'] = $item->month;
+            $data['day'] = $item->day;
+
+            return $data;
+        }, $cumGrowthData);
+
+        $yAxisDataPage = array_map(function ($item) {
+            return $item->pages;
+        }, $cumGrowthData);
+
+        $yAxisDataUser = array_map(function ($item) {
+            return $item->users;
+        }, $cumGrowthData);
+
+        return view('admin.show', [
+            'xData' => $xAxisData,
+            'yDataPage' => $yAxisDataPage,
+            'yDataUser' => $yAxisDataUser
+        ]);
     }
 
     /**
@@ -354,5 +378,59 @@ class AdminController extends BaseController
         } else {
             return false;
         }
+    }
+
+    /**
+     * Returns the cumulative count for a list of items.
+     * Eac item in items must contain a 'count' property
+     */
+    private function getCumulativeGrowth(array $items, $cumeColumns)
+    {
+        $previousCount = [];
+        for ($index = 0; $index < count($items); $index++) {
+            foreach ($cumeColumns as $column) {
+                $items[$index]->$column = $items[$index]->$column + ($previousCount[$column] ?? 0);
+                $previousCount[$column] = $items[$index]->$column;
+            }
+        }
+
+        return $items;
+    }
+
+    private function getDayWiseGrowth()
+    {
+        $sql = 'SELECT '
+                    . 'base_data.year, '
+                    . 'base_data.month, '
+                    . 'base_data.day, '
+                    . 'cast(SUM(base_data.users_joined) as unsigned) users, '
+                    . 'cast(SUM(base_data.page_created) as unsigned) pages '
+                . 'FROM ( '
+                    . 'SELECT '
+                        . 'year(created_at) year, '
+                        . 'month(created_at) month, '
+                        . 'day(created_at) day, '
+                        . '1 users_joined, '
+                        . '0 page_created '
+                    . 'FROM users u '
+                    . 'UNION ALL '
+                    . 'SELECT '
+                        . 'year(created_at) year, '
+                        . 'month(created_at) month, '
+                        . 'day(created_at) day, '
+                        . '0 users_joined, '
+                        . '1 page_created '
+                    . 'FROM pages p'
+                . ') base_data '
+                . 'GROUP BY '
+                    . 'base_data.year, '
+                    . 'base_data.month, '
+                    . 'base_data.day '
+                . 'ORDER BY '
+                    . 'base_data.year, '
+                    . 'base_data.month, '
+                    . 'base_data.day ';
+
+        return DB::select($sql);
     }
 }

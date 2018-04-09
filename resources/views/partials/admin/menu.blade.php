@@ -4,7 +4,7 @@
 		<li class="logo-nav-item">
 			<a class="navbar-brand" href="#">
 				<!-- <img src="assets/img/logo-white.png" width="145" height="32.3" alt="QuillPro"> -->
-				BlogVel Admin
+				Platonics
 			</a>
 
 		</li>
